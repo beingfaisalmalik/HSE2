@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Bypass Form View -->
+    <record id="view_hse_bypass_form" model="ir.ui.view">
+        <field name="name">hse.bypass.form</field>
+        <field name="model">hse.bypass</field>
+        <field name="arch" type="xml">
+            <form string="Safety Bypass &amp; Inhibit Certificate">
+                <header>
+                    <button name="action_request" string="Request Authorization" type="object" invisible="state != 'draft'" class="btn-primary"/>
+                    <button name="action_approve" string="Authorize Bypass" type="object" invisible="state != 'requested'" class="btn-warning"/>
+                    <button name="action_apply_bypass" string="Apply Inhibit / Override" type="object" invisible="state != 'approved'" class="btn-danger"/>
+                    <button name="action_reinstate" string="Normalize &amp; Reinstate Safety" type="object" invisible="state != 'active'" class="btn-success"/>
+                    <button name="action_cancel" string="Cancel Request" type="object" invisible="state in ('reinstated', 'cancelled')" class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,requested,approved,active,reinstated"/>
+                </header>
+                <div class="alert alert-danger mb-0" role="alert" invisible="state != 'active'">
+                    <i class="fa fa-exclamation-triangle me-2" aria-label="Critical Safety Alert" role="img">Notice:</i> <strong>CRITICAL SAFETY NOTICE:</strong> An engineered safety protective function is currently BYPASSED. Mandatory compensating controls must be actively manned.
+                </div>
+                    <div class="hse-x-meta" style="display: flex; gap: 16px; align-items: center; margin: -6px 0 10px 6px; font-size: 11px; color: #64748b; flex-wrap: wrap;"><span>🕒 Created <field name="create_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span><span>✏️ Updated <field name="write_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span></div>
+                <sheet>
+                    <div class="hse-x-hero" style="background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%); border-left: 6px solid #fca5a5; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">⛔</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Safety Bypass Management</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">SIS / ESD overrides with tiered authorization</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><div class="hse-x-kpi" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; padding: 4px 12px; text-align: center; min-width: 86px;"><span class="hse-x-kpi-label" style="display: block; font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(203,213,225,0.9); font-weight: 700;">Authorized (h)</span><field name="expected_duration_hours" readonly="1" style="color:#fff;font-weight:800;" widget="hse_smart_counter" /></div><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                    <div class="oe_title">
+                        <span class="text-muted"><field name="name"/></span>
+                        <h1><field name="tag_number"/> - <field name="title" placeholder="Loop Description (e.g. Flare Knockout Drum High Level Trip)"/></h1>
+                    </div>
+                    <group>
+                        <group string="Safety Criticality &amp; Tag">
+                            <field name="tag_number"/>
+                            <field name="bypass_type"/>
+                            <field name="safety_criticality"/>
+                            <field name="location_id"/>
+                            <field name="asset_id"/>
+                        </group>
+                        <group string="Duration &amp; Authorization Matrix">
+                            <field name="expected_duration_hours"/>
+                            <field name="authorization_level"/>
+                            <field name="applied_datetime"/>
+                            <field name="expected_reinstatement"/>
+                            <field name="is_overdue" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Technical Justification">
+                        <field name="reason"/>
+                        <field name="details" placeholder="Detailed engineering reasoning why safety system must be temporarily disabled..."/>
+                    </group>
+                    <notebook>
+                        <page string="Mandatory Compensating Safeguards">
+                            <group>
+                                <group>
+                                    <field name="has_dedicated_watcher" widget="boolean_toggle"/>
+                                    <field name="operating_rate_reduced" widget="boolean_toggle"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="compensating_controls" placeholder="Detail mandatory compensating procedures (e.g. 24/7 dedicated watch stationed at local sight glass, radio checks every 15 mins)..."/>
+                            </group>
+                        </page>
+                        <page string="Authorizations &amp; Reinstatement">
+                            <group>
+                                <group string="Authorization Sign-off">
+                                    <field name="requester_id"/>
+                                    <field name="approver_id"/>
+                                    <field name="approval_datetime"/>
+                                </group>
+                                <group string="Normalization Sign-off">
+                                    <field name="normalized_by_id"/>
+                                    <field name="actual_reinstated_datetime"/>
+                                    <field name="reinstatement_tested" widget="boolean_toggle"/>
+                                </group>
+                            </group>
+                            <field name="normalization_notes" placeholder="Verify loop proof-tested and cleared before signing off..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Bypass Tree View -->
+    <record id="view_hse_bypass_tree" model="ir.ui.view">
+        <field name="name">hse.bypass.tree</field>
+        <field name="model">hse.bypass</field>
+        <field name="arch" type="xml">
+            <tree string="Bypass Management" decoration-danger="state == 'active'" decoration-warning="state == 'approved'" decoration-success="state == 'reinstated'">
+                <field name="name"/>
+                <field name="tag_number"/>
+                <field name="title"/>
+                <field name="bypass_type"/>
+                <field name="safety_criticality"/>
+                <field name="location_id"/>
+                <field name="expected_duration_hours"/>
+                <field name="applied_datetime"/>
+                <field name="expected_reinstatement"/>
+                <field name="is_overdue" column_invisible="1"/>
+                <field name="state" widget="badge" decoration-danger="state == 'active'" decoration-warning="state == 'approved'" decoration-success="state == 'reinstated'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_hse_bypass" model="ir.actions.act_window">
+        <field name="name">Bypass Management (Inhibits &amp; Overrides)</field>
+        <field name="res_model">hse.bypass</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Manage safety instrumented system (SIS) bypasses, ESD overrides, and compensating safeguards.</p>
+        </field>
+    </record>
+</odoo>

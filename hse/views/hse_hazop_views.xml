@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- HAZOP Study Tree View -->
+        <record id="view_hse_hazop_study_tree" model="ir.ui.view">
+            <field name="name">hse.hazop.study.tree</field>
+            <field name="model">hse.hazop.study</field>
+            <field name="arch" type="xml">
+                <tree string="Process Hazard Analysis / HAZOP Studies" decoration-info="state == 'in_session'" decoration-success="state == 'approved'">
+                    <field name="name"/>
+                    <field name="title"/>
+                    <field name="location_id"/>
+                    <field name="study_type"/>
+                    <field name="leader_id"/>
+                    <field name="date"/>
+                    <field name="node_count"/>
+                    <field name="recommendation_count"/>
+                    <field name="open_recommendations_count"/>
+                    <field name="state" widget="badge" decoration-warning="state in ['draft', 'review']" decoration-info="state == 'in_session'" decoration-success="state in ['approved', 'closed']"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- HAZOP Study Form View -->
+        <record id="view_hse_hazop_study_form" model="ir.ui.view">
+            <field name="name">hse.hazop.study.form</field>
+            <field name="model">hse.hazop.study</field>
+            <field name="arch" type="xml">
+                <form string="Hazard and Operability (HAZOP) Study">
+                    <header>
+                        <button name="action_start_session" string="Start Sessions" type="object" invisible="state != 'draft'" class="btn-primary"/>
+                        <button name="action_submit_review" string="Submit for Review" type="object" invisible="state != 'in_session'" class="btn-secondary"/>
+                        <button name="action_approve" string="Approve HAZOP" type="object" invisible="state != 'review'" class="btn-success"/>
+                        <button name="action_track_actions" string="Track Actions" type="object" invisible="state != 'approved'" class="btn-info"/>
+                        <button name="action_close" string="Close Study" type="object" invisible="state != 'action_tracking'" class="btn-secondary"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_session,review,approved,action_tracking,closed"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #2e1065 0%, #7c3aed 100%); border-left: 6px solid #c4b5fd; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">☣️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">HAZOP / Process Hazard Analysis</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Guide-word deviations, nodes &amp; recommendation tracking</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">HAZOP / PHA Study Reference</span>
+                            <h1><field name="name" readonly="1"/></h1>
+                            <h3><field name="title" placeholder="e.g. Flare Knockout Drum &amp; Gas Compression HAZOP 5-Year Revalidation"/></h3>
+                        </div>
+                        <group>
+                            <group string="Facility &amp; Leadership">
+                                <field name="location_id"/>
+                                <field name="study_type"/>
+                                <field name="leader_id"/>
+                                <field name="scribe_id"/>
+                            </group>
+                            <group string="Schedule &amp; Documentation">
+                                <field name="date"/>
+                                <field name="target_completion_date"/>
+                                <field name="actual_completion_date" invisible="state != 'closed'"/>
+                                <field name="pid_references" placeholder="e.g. PID-100-01 Rev 4, PID-100-02 Rev 3"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Scope &amp; Multi-Disciplinary Team" name="scope_team">
+                                <group>
+                                    <field name="scope_description" placeholder="Battery limits, feed streams, normal/upset operating scenarios covered..."/>
+                                    <field name="design_intent" placeholder="Normal flowrates, design pressure, design temperature, metallurgical limits..."/>
+                                    <field name="team_members" placeholder="List participants: Process Engineer, Operations Lead, Instrument Tech, Mechanical Tech, Safety Specialist..."/>
+                                </group>
+                            </page>
+                            <page string="Process Nodes &amp; Deviations" name="nodes">
+                                <field name="node_ids">
+                                    <tree string="HAZOP Nodes">
+                                        <field name="node_number"/>
+                                        <field name="name"/>
+                                        <field name="operating_press_range"/>
+                                        <field name="operating_temp_range"/>
+                                        <field name="flow_medium"/>
+                                        <field name="deviation_count"/>
+                                    </tree>
+                                    <form string="Process Node Worksheet">
+                                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); border-left: 6px solid #94a3b8; border-radius: 10px; padding: 10px 14px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;"><div style="display: flex; align-items: center; gap: 10px;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 8px; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">📋</span><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 13px; letter-spacing: 0.3px;">Process Node Worksheet</div></div><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div>
+                                        <group>
+                                            <group>
+                                                <field name="node_number"/>
+                                                <field name="name"/>
+                                                <field name="flow_medium"/>
+                                            </group>
+                                            <group>
+                                                <field name="operating_press_range"/>
+                                                <field name="operating_temp_range"/>
+                                            </group>
+                                        </group>
+                                        <group>
+                                            <field name="node_boundary"/>
+                                            <field name="design_intent"/>
+                                        </group>
+                                        <notebook>
+                                            <page string="Deviations Evaluated">
+                                                <field name="deviation_ids">
+                                                    <tree string="Deviations" decoration-danger="risk_level == 'critical'" decoration-warning="risk_level == 'high'">
+                                                        <field name="guide_word"/>
+                                                        <field name="parameter"/>
+                                                        <field name="deviation_text"/>
+                                                        <field name="unmitigated_risk_score"/>
+                                                        <field name="mitigated_risk_score"/>
+                                                        <field name="risk_level" widget="badge" decoration-danger="risk_level == 'critical'" decoration-warning="risk_level == 'high'" decoration-info="risk_level == 'medium'" decoration-success="risk_level == 'low'"/>
+                                                        <field name="requires_lopa"/>
+                                                        <field name="sil_target"/>
+                                                    </tree>
+                                                    <form string="HAZOP Deviation Worksheet">
+                                                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); border-left: 6px solid #94a3b8; border-radius: 10px; padding: 10px 14px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;"><div style="display: flex; align-items: center; gap: 10px;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 8px; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">📋</span><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 13px; letter-spacing: 0.3px;">HAZOP Deviation Worksheet</div></div><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div>
+                                                        <group>
+                                                            <group string="Deviation Definition">
+                                                                <field name="guide_word"/>
+                                                                <field name="parameter"/>
+                                                                <field name="deviation_text" readonly="1"/>
+                                                            </group>
+                                                            <group string="Risk &amp; SIL Requirement">
+                                                                <field name="unmitigated_risk_score" readonly="1"/>
+                                                                <field name="mitigated_risk_score" readonly="1"/>
+                                                                <field name="risk_level" readonly="1"/>
+                                                                <field name="requires_lopa"/>
+                                                                <field name="sil_target" invisible="not requires_lopa"/>
+                                                            </group>
+                                                        </group>
+                                                        <group>
+                                                            <field name="causes"/>
+                                                            <field name="consequences"/>
+                                                            <field name="existing_safeguards"/>
+                                                        </group>
+                                                        <group string="Risk Matrix Ranking (1 - 5)">
+                                                            <group string="Unmitigated Risk">
+                                                                <field name="unmitigated_severity"/>
+                                                                <field name="unmitigated_likelihood"/>
+                                                            </group>
+                                                            <group string="Mitigated Risk (With Existing Safeguards)">
+                                                                <field name="mitigated_severity"/>
+                                                                <field name="mitigated_likelihood"/>
+                                                            </group>
+                                                        </group>
+                                                        <notebook>
+                                                            <page string="Recommendations / Actions">
+                                                                <field name="recommendation_ids">
+                                                                    <tree string="Recommendations" editable="bottom">
+                                                                        <field name="name" readonly="1"/>
+                                                                        <field name="recommendation"/>
+                                                                        <field name="action_category"/>
+                                                                        <field name="assigned_department"/>
+                                                                        <field name="responsible_user_id"/>
+                                                                        <field name="target_date"/>
+                                                                        <field name="state" widget="badge" decoration-info="state == 'in_progress'" decoration-success="state == 'verified'"/>
+                                                                    </tree>
+                                                                </field>
+                                                            </page>
+                                                        </notebook>
+                                                    </form>
+                                                </field>
+                                            </page>
+                                        </notebook>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- HAZOP Action Window -->
+        <record id="action_hse_hazop_study" model="ir.actions.act_window">
+            <field name="name">Process Hazard Analysis / HAZOP</field>
+            <field name="res_model">hse.hazop.study</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first Process Hazard Analysis (PHA) / HAZOP Study.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

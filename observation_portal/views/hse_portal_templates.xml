@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ==================================================================
+         MODERN HSE SELF-SERVICE PORTAL (external users / contractors)
+         Pages: Home · Report Observation · Report Incident ·
+                My Submissions · Safety Policies & Documents
+         Fully responsive industrial design (inline CSS + scoped media queries)
+         ================================================================== -->
+
+    <template id="hse_portal_layout_common" name="HSE Portal Common Assets">
+        <style>
+            .hse-portal-wrap { --hp-navy:#0f172a; --hp-blue1:#0c4a6e; --hp-blue2:#0284c7;
+                --hp-red1:#7f1d1d; --hp-red2:#dc2626; --hp-green1:#064e3b; --hp-green2:#059669;
+                --hp-amber1:#78350f; --hp-amber2:#d97706; max-width:1180px; margin:0 auto; padding:0 14px 60px; }
+            .hp-hero { background:linear-gradient(135deg,var(--hp-navy) 0%,#1e3a8a 100%); border-radius:18px;
+                padding:34px 30px; color:#fff; position:relative; overflow:hidden; box-shadow:0 18px 40px rgba(2,6,23,.35); }
+            .hp-hero:after { content:''; position:absolute; right:-70px; top:-70px; width:260px; height:260px;
+                border-radius:50%; background:rgba(56,189,248,.15); }
+            .hp-hero:before { content:''; position:absolute; right:60px; bottom:-90px; width:200px; height:200px;
+                border-radius:50%; background:rgba(52,211,153,.12); }
+            .hp-hero h1 { font-size:1.9rem; font-weight:800; letter-spacing:-.02em; margin-bottom:.4rem; }
+            .hp-hero p { color:#cbd5e1; margin:0; font-size:.98rem; max-width:640px; }
+            .hp-hero .hp-badge { display:inline-flex; align-items:center; gap:.45rem; background:rgba(52,211,153,.15);
+                border:1px solid rgba(52,211,153,.5); color:#6ee7b7; border-radius:999px; padding:.3rem .9rem;
+                font-size:.78rem; font-weight:700; margin-bottom:1rem; }
+            .hp-pulse { width:9px; height:9px; border-radius:50%; background:#34d399; animation:hpPulse 1.6s infinite; }
+            @keyframes hpPulse { 0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,.5)} 50%{box-shadow:0 0 0 8px rgba(52,211,153,0)} }
+            .hp-actions { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin-top:22px; }
+            .hp-action-card { border-radius:16px; padding:22px; color:#fff; text-decoration:none !important; display:block;
+                position:relative; overflow:hidden; transition:transform .18s ease, box-shadow .18s ease;
+                box-shadow:0 8px 22px rgba(2,6,23,.18); border:1px solid rgba(255,255,255,.12); }
+            .hp-action-card:hover { transform:translateY(-5px); box-shadow:0 16px 34px rgba(2,6,23,.3); color:#fff; }
+            .hp-action-card .hp-ico { width:52px; height:52px; border-radius:14px; background:rgba(255,255,255,.16);
+                display:inline-flex; align-items:center; justify-content:center; font-size:24px; margin-bottom:12px; }
+            .hp-action-card h3 { font-size:1.05rem; font-weight:800; margin:0 0 .3rem; }
+            .hp-action-card p { color:rgba(226,232,240,.85); font-size:.8rem; margin:0; }
+            .hp-action-card .hp-arrow { position:absolute; right:18px; top:20px; font-size:1rem; opacity:.8; }
+            .hp-card-red { background:linear-gradient(135deg,var(--hp-red1),var(--hp-red2)); }
+            .hp-card-amber { background:linear-gradient(135deg,var(--hp-amber1),var(--hp-amber2)); }
+            .hp-card-green { background:linear-gradient(135deg,var(--hp-green1),var(--hp-green2)); }
+            .hp-card-blue { background:linear-gradient(135deg,var(--hp-blue1),var(--hp-blue2)); }
+            .hp-card-navy { background:linear-gradient(135deg,#0f172a,#334155); }
+            .hp-card-violet { background:linear-gradient(135deg,#2e1065,#7c3aed); }
+            .hp-section-head { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap;
+                gap:.7rem; margin:34px 0 14px; }
+            .hp-section-head h2 { font-size:1.25rem; font-weight:800; color:#0f172a; margin:0; }
+            .hp-panel { background:#fff; border:1px solid #e2e8f0; border-radius:16px; padding:22px;
+                box-shadow:0 4px 14px rgba(15,23,42,.06); }
+            .hp-form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+            .hp-field { display:flex; flex-direction:column; gap:6px; }
+            .hp-field.full { grid-column:1 / -1; }
+            .hp-field label { font-size:.78rem; font-weight:700; color:#334155; text-transform:uppercase; letter-spacing:.04em; }
+            .hp-field label .req { color:#dc2626; }
+            .hp-input, .hp-select, .hp-textarea { border:1.5px solid #cbd5e1; border-radius:10px; padding:.6rem .8rem;
+                font-size:.92rem; width:100%; background:#f8fafc; transition:border-color .15s ease, box-shadow .15s ease; }
+            .hp-input:focus, .hp-select:focus, .hp-textarea:focus { outline:none; border-color:#0284c7;
+                box-shadow:0 0 0 3px rgba(2,132,199,.15); background:#fff; }
+            .hp-file { border:2px dashed #94a3b8; border-radius:12px; padding:1rem; width:100%; background:#f8fafc; }
+            .hp-btn { display:inline-flex; align-items:center; gap:.5rem; border:none; cursor:pointer; color:#fff;
+                background:linear-gradient(135deg,var(--hp-blue1),var(--hp-blue2)); border-radius:12px;
+                padding:.8rem 1.6rem; font-weight:800; font-size:.95rem; box-shadow:0 8px 18px rgba(2,132,199,.35);
+                transition:transform .15s ease; text-decoration:none; }
+            .hp-btn:hover { transform:translateY(-2px); color:#fff; }
+            .hp-btn-red { background:linear-gradient(135deg,var(--hp-red1),var(--hp-red2)); box-shadow:0 8px 18px rgba(220,38,38,.35); }
+            .hp-btn-ghost { background:#f1f5f9; color:#334155; box-shadow:none; border:1px solid #e2e8f0; }
+            .hp-alert { border-radius:12px; padding:.9rem 1.1rem; margin:16px 0; font-size:.9rem; display:flex; gap:.6rem; align-items:center; }
+            .hp-alert-ok { background:#ecfdf5; border:1px solid #6ee7b7; color:#065f46; }
+            .hp-alert-warn { background:#fffbeb; border:1px solid #fcd34d; color:#92400e; }
+            .hp-sub { display:flex; align-items:center; gap:.8rem; flex-wrap:wrap; background:#fff;
+                border:1px solid #e2e8f0; border-left:5px solid #64748b; border-radius:12px; padding:.8rem 1rem;
+                margin-bottom:.6rem; transition:box-shadow .15s ease; }
+            .hp-sub:hover { box-shadow:0 8px 18px rgba(15,23,42,.08); }
+            .hp-sub .hp-ref { font-weight:800; color:#1d4ed8; font-size:.85rem; min-width:110px; }
+            .hp-sub .hp-main { flex:1; min-width:200px; font-size:.88rem; color:#0f172a; font-weight:600; }
+            .hp-sub .hp-meta { font-size:.72rem; color:#64748b; }
+            .hp-pill { font-size:.68rem; font-weight:800; border-radius:999px; padding:.22rem .7rem; white-space:nowrap; }
+            .hp-pill-draft { background:#e2e8f0; color:#334155; }
+            .hp-pill-progress { background:#dbeafe; color:#1d4ed8; }
+            .hp-pill-locked { background:#dcfce7; color:#15803d; }
+            .hp-pill-rejected { background:#fee2e2; color:#b91c1c; }
+            .hp-pill-reopen { background:#fef3c7; color:#b45309; }
+            .hp-pill-p1 { background:#dcfce7; color:#15803d; }
+            .hp-pill-p2 { background:#fef3c7; color:#b45309; }
+            .hp-pill-p3 { background:#fee2e2; color:#b91c1c; }
+            .hp-stat-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-top:20px; }
+            .hp-stat { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); border-radius:14px;
+                padding:.9rem; text-align:center; color:#fff; }
+            .hp-stat .n { font-size:1.7rem; font-weight:800; }
+            .hp-stat .c { font-size:.72rem; color:#cbd5e1; text-transform:uppercase; letter-spacing:.05em; }
+            .hp-empty { text-align:center; color:#94a3b8; background:#f8fafc; border:1.5px dashed #e2e8f0;
+                border-radius:12px; padding:1.6rem; font-size:.9rem; }
+            .hp-breadcrumb { display:inline-flex; align-items:center; gap:.5rem; color:#64748b; font-size:.85rem;
+                margin:16px 0 0; text-decoration:none; }
+            .hp-breadcrumb:hover { color:#1d4ed8; }
+            .hp-doc { border:1px solid #e2e8f0; border-radius:14px; padding:1.1rem 1.2rem; margin-bottom:.8rem;
+                background:#fff; border-left:5px solid #0284c7; }
+            .hp-doc h4 { font-size:.98rem; font-weight:800; margin:0 0 .25rem; color:#0f172a; }
+            .hp-doc .hp-meta { font-size:.72rem; color:#64748b; }
+            .hp-doc-content { font-size:.85rem; color:#475569; margin-top:.5rem; }
+            @media (max-width:768px) {
+                .hp-form-grid { grid-template-columns:1fr; }
+                .hp-hero { padding:24px 20px; }
+                .hp-hero h1 { font-size:1.4rem; }
+                .hp-sub .hp-main { min-width:100%; order:3; }
+            }
+        </style>
+    </template>
+
+    <!-- ============================ PORTAL HOME ============================ -->
+    <template id="hse_portal_home" name="HSE Portal Home">
+        <t t-call="website.layout">
+            <t t-call="observation_portal.hse_portal_layout_common"/>
+            <div class="hse-portal-wrap">
+                <div class="hp-hero">
+                    <span class="hp-badge"><span class="hp-pulse"/> HSE SELF-SERVICE PORTAL · ONLINE</span>
+                    <h1>Health, Safety &amp; Environment Center</h1>
+                    <p>
+                        One place for every external worker, contractor and visitor to stay safe on site:
+                        report hazards in seconds, raise incidents, follow the progress of your own
+                        submissions and read the life-saving rules that govern this facility.
+                    </p>
+                    <div class="hp-stat-row">
+                        <div class="hp-stat"><div class="n" t-esc="my_obs_count"/><div class="c">My Observations</div></div>
+                        <div class="hp-stat"><div class="n" t-esc="my_inc_count"/><div class="c">My Incident Reports</div></div>
+                        <div class="hp-stat"><div class="n" t-esc="open_count"/><div class="c">In Progress</div></div>
+                        <div class="hp-stat"><div class="n" t-esc="closed_count"/><div class="c">Closed / Resolved</div></div>
+                        <div class="hp-stat"><div class="n" t-esc="policy_count"/><div class="c">Policies Published</div></div>
+                    </div>
+                </div>
+
+                <div class="hp-actions">
+                    <a class="hp-action-card hp-card-amber" href="/hse/portal/observation">
+                        <span class="hp-arrow">➜</span>
+                        <span class="hp-ico">👁️</span>
+                        <h3>Submit Safety Observation</h3>
+                        <p>Spot an unsafe act or condition? Log it in under a minute — photo evidence welcome.</p>
+                    </a>
+                    <a class="hp-action-card hp-card-red" href="/hse/portal/incident">
+                        <span class="hp-arrow">➜</span>
+                        <span class="hp-ico">🚨</span>
+                        <h3>Report an Incident / Near Miss</h3>
+                        <p>Injury, fire, spill or near miss? Raise it immediately for HSE response.</p>
+                    </a>
+                    <a class="hp-action-card hp-card-blue" href="/hse/portal/my-submissions">
+                        <span class="hp-arrow">➜</span>
+                        <span class="hp-ico">📋</span>
+                        <h3>My Submissions &amp; Status</h3>
+                        <p>Track every report you filed and its live HSE review status.</p>
+                    </a>
+                    <a class="hp-action-card hp-card-green" href="/hse/portal/policies">
+                        <span class="hp-arrow">➜</span>
+                        <span class="hp-ico">📜</span>
+                        <h3>Safety Policies &amp; Golden Rules</h3>
+                        <p>Site rules, life-saving rules and approved HSE policies — know before you work.</p>
+                    </a>
+                </div>
+
+                <div class="hp-section-head"><h2>🏅 Life-Saving Rules — Zero Compromise</h2></div>
+                <div class="hp-panel">
+                    <t t-if="not rules">
+                        <div class="hp-empty">Life-saving rules have not been published yet.</div>
+                    </t>
+                    <t t-foreach="rules" t-as="r">
+                        <div class="hp-sub" style="border-left-color:#dc2626;">
+                            <span class="hp-pill hp-pill-p3" t-esc="r.code"/>
+                            <div class="hp-main" style="font-weight:700;">
+                                <t t-esc="r.name"/>
+                                <div class="hp-meta" style="font-weight:400;" t-esc="r.rule_description"/>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+
+                <div class="hp-alert hp-alert-warn" style="margin-top:26px;">
+                    <span style="font-size:1.3rem;">🛑</span>
+                    <div>
+                        <strong>STOP WORK AUTHORITY:</strong> every worker — employee or contractor — has the
+                        unconditional right and duty to stop any task they believe is unsafe. You will never
+                        be criticized for a good-faith stop-work call.
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- ======================= OBSERVATION FORM ======================= -->
+    <template id="hse_portal_observation_form" name="HSE Portal — Safety Observation">
+        <t t-call="website.layout">
+            <t t-call="observation_portal.hse_portal_layout_common"/>
+            <div class="hse-portal-wrap">
+                <a class="hp-breadcrumb" href="/hse/portal">← HSE Portal Home</a>
+                <div class="hp-hero" style="background:linear-gradient(135deg,#78350f 0%,#d97706 100%); margin-top:10px;">
+                    <span class="hp-badge" style="background:rgba(255,255,255,.14); border-color:rgba(255,255,255,.35); color:#fde68a;">
+                        <span class="hp-pulse"/> PROACTIVE REPORTING
+                    </span>
+                    <h1>Submit a Safety Observation</h1>
+                    <p>See something unsafe? Say something. Every observation is reviewed by the HSE team —
+                       anonymous-style reporting is fine, a name simply helps us follow up faster.</p>
+                </div>
+
+                <t t-if="submitted">
+                    <div class="hp-alert hp-alert-ok">
+                        <span style="font-size:1.3rem;">✅</span>
+                        <div><strong>Thank you!</strong> Your observation has been logged and routed to the HSE team.
+                        Track it any time under <a href="/hse/portal/my-submissions">My Submissions</a>.</div>
+                    </div>
+                </t>
+
+                <form class="hp-panel" style="margin-top:18px;" action="/hse/portal/observation/submit"
+                      method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="hp-form-grid">
+                        <div class="hp-field">
+                            <label>Observer Full Name <span class="req">*</span></label>
+                            <input class="hp-input" type="text" name="name" required="required" placeholder="e.g. John Doe"/>
+                        </div>
+                        <div class="hp-field">
+                            <label>Employee / Badge ID <span class="req">*</span></label>
+                            <input class="hp-input" type="text" name="employee_code" required="required" placeholder="e.g. BADGE-1049"/>
+                        </div>
+                        <div class="hp-field">
+                            <label>Hazard Category</label>
+                            <select class="hp-select" name="hazard_type">
+                                <option value="physical">Physical (slips, machinery, working at height)</option>
+                                <option value="chemical">Chemical (spills, vapors, unlabeled containers)</option>
+                                <option value="biological">Biological (waste, hygiene, pests)</option>
+                                <option value="other">Other / Ergonomic</option>
+                            </select>
+                        </div>
+                        <div class="hp-field">
+                            <label>Urgency / Priority</label>
+                            <select class="hp-select" name="priority">
+                                <option value="1">Low — note for improvement</option>
+                                <option value="2" selected="selected">Normal — should be fixed soon</option>
+                                <option value="3">High — immediate danger, act now</option>
+                            </select>
+                        </div>
+                        <div class="hp-field">
+                            <label>Plant Location / Area</label>
+                            <select class="hp-select" name="location_id">
+                                <option value="">— Select area (optional) —</option>
+                                <t t-foreach="locations" t-as="loc">
+                                    <option t-att-value="loc.id" t-esc="loc.name"/>
+                                </t>
+                            </select>
+                        </div>
+                        <div class="hp-field">
+                            <label>Photo Evidence</label>
+                            <input class="hp-file" type="file" name="hazard_photo" accept="image/*"/>
+                        </div>
+                        <div class="hp-field full">
+                            <label>What did you observe? <span class="req">*</span></label>
+                            <textarea class="hp-textarea" name="observation" rows="4" required="required"
+                                      placeholder="Describe exactly what you saw — machinery, behavior, potential consequence…"/>
+                        </div>
+                        <div class="hp-field full">
+                            <label>Immediate Action Taken (if any)</label>
+                            <textarea class="hp-textarea" name="immediate_action" rows="2"
+                                      placeholder="e.g. barricaded the area, informed the supervisor, stopped the task…"/>
+                        </div>
+                    </div>
+                    <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
+                        <button type="submit" class="hp-btn">👁️ Submit Observation</button>
+                        <a class="hp-btn hp-btn-ghost" href="/hse/portal">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </t>
+    </template>
+
+    <!-- ======================= INCIDENT FORM ======================= -->
+    <template id="hse_portal_incident_form" name="HSE Portal — Incident Report">
+        <t t-call="website.layout">
+            <t t-call="observation_portal.hse_portal_layout_common"/>
+            <div class="hse-portal-wrap">
+                <a class="hp-breadcrumb" href="/hse/portal">← HSE Portal Home</a>
+                <div class="hp-hero" style="background:linear-gradient(135deg,#7f1d1d 0%,#dc2626 100%); margin-top:10px;">
+                    <span class="hp-badge" style="background:rgba(255,255,255,.14); border-color:rgba(255,255,255,.35); color:#fecaca;">
+                        <span class="hp-pulse"/> 24/7 INCIDENT REPORTING
+                    </span>
+                    <h1>Report an Incident / Near Miss</h1>
+                    <p>For injuries, fires, transport events, environmental releases and near misses.
+                       In an emergency, always raise the site alarm FIRST, then file this report.</p>
+                </div>
+
+                <t t-if="submitted">
+                    <div class="hp-alert hp-alert-ok">
+                        <span style="font-size:1.3rem;">🚨</span>
+                        <div><strong>Incident logged</strong> — reference
+                        <strong t-esc="created_ref or '—'"/></div>
+                    </div>
+                </t>
+
+                <form class="hp-panel" style="margin-top:18px;" action="/hse/portal/incident/submit"
+                      method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="hp-form-grid">
+                        <div class="hp-field">
+                            <label>Reporter Full Name <span class="req">*</span></label>
+                            <input class="hp-input" type="text" name="reporter_name" required="required" placeholder="Your name"/>
+                        </div>
+                        <div class="hp-field">
+                            <label>Reporter Phone (for follow-up)</label>
+                            <input class="hp-input" type="text" name="reporter_phone" placeholder="e.g. +92 300 1234567"/>
+                        </div>
+                        <div class="hp-field">
+                            <label>Incident Type <span class="req">*</span></label>
+                            <select class="hp-select" name="incident_type" required="required">
+                                <option value="injury">Injury to a person</option>
+                                <option value="near_miss">Near miss (no harm this time)</option>
+                                <option value="fire">Fire / smoke / thermal event</option>
+                                <option value="transport">Transport / vehicle event</option>
+                            </select>
+                        </div>
+                        <div class="hp-field">
+                            <label>Severity / Priority</label>
+                            <select class="hp-select" name="priority">
+                                <option value="1">Low — minor event</option>
+                                <option value="2" selected="selected">Normal</option>
+                                <option value="3">High / Serious — immediate HSE attention</option>
+                            </select>
+                        </div>
+                        <div class="hp-field">
+                            <label>Date of Incident</label>
+                            <input class="hp-input" type="date" name="incident_date" t-att-value="today"/>
+                        </div>
+                        <div class="hp-field">
+                            <label>Exact Location <span class="req">*</span></label>
+                            <input class="hp-input" type="text" name="exact_location" required="required"
+                                   placeholder="e.g. Warehouse 3, north gate, loading bay"/>
+                        </div>
+                        <div class="hp-field">
+                            <label>Your Company (if contractor)</label>
+                            <input class="hp-input" type="text" name="external_company_name" placeholder="Company name"/>
+                        </div>
+                        <div class="hp-field">
+                            <label>Injured / Involved Person (if any)</label>
+                            <input class="hp-input" type="text" name="external_employee_name" placeholder="Full name"/>
+                        </div>
+                        <div class="hp-field full">
+                            <label>What happened? <span class="req">*</span></label>
+                            <textarea class="hp-textarea" name="incident_detail" rows="5" required="required"
+                                      placeholder="Describe the event chronologically — who, what, when, equipment involved, injuries, actions taken…"/>
+                        </div>
+                        <div class="hp-field full">
+                            <label>Immediate Actions Taken</label>
+                            <textarea class="hp-textarea" name="summary_of_incident" rows="2"
+                                      placeholder="First aid, area evacuation, equipment isolation…"/>
+                        </div>
+                    </div>
+                    <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
+                        <button type="submit" class="hp-btn hp-btn-red">🚨 Submit Incident Report</button>
+                        <a class="hp-btn hp-btn-ghost" href="/hse/portal">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </t>
+    </template>
+
+    <!-- ======================= MY SUBMISSIONS ======================= -->
+    <template id="hse_portal_my_submissions" name="HSE Portal — My Submissions">
+        <t t-call="website.layout">
+            <t t-call="observation_portal.hse_portal_layout_common"/>
+            <div class="hse-portal-wrap">
+                <a class="hp-breadcrumb" href="/hse/portal">← HSE Portal Home</a>
+                <div class="hp-hero" style="background:linear-gradient(135deg,#0c4a6e 0%,#0284c7 100%); margin-top:10px;">
+                    <span class="hp-badge" style="background:rgba(255,255,255,.14); border-color:rgba(255,255,255,.35); color:#bae6fd;">
+                        <span class="hp-pulse"/> LIVE STATUS TRACKING
+                    </span>
+                    <h1>My Submissions</h1>
+                    <p>Everything you have reported, with its current position in the HSE workflow:
+                       Draft → In Process → Locked (Closed). Rejected items include rework guidance from HSE.</p>
+                </div>
+
+                <div class="hp-section-head"><h2>👁️ My Safety Observations</h2>
+                    <a class="hp-btn" style="padding:.5rem 1.1rem;" href="/hse/portal/observation">+ New Observation</a>
+                </div>
+                <t t-if="not observations">
+                    <div class="hp-empty">No observations filed yet. See something? <a href="/hse/portal/observation">Report it</a>.</div>
+                </t>
+                <t t-foreach="observations" t-as="o">
+                    <div class="hp-sub">
+                        <span class="hp-ref" t-esc="o.name"/>
+                        <span t-att-class="'hp-pill ' + ('hp-pill-locked' if o.state == 'locked' else 'hp-pill-progress' if o.state == 'in_process' else 'hp-pill-rejected' if o.state == 'rejected' else 'hp-pill-reopen' if o.state == 'reopen' else 'hp-pill-draft')"
+                              t-esc="state_labels.get(o.state, o.state or 'draft')"/>
+                        <span t-att-class="'hp-pill p' + (o.priority or '2')" style="margin-left:2px;"
+                              t-esc="'HIGH' if o.priority == '3' else 'NORMAL' if o.priority == '2' else 'LOW'"/>
+                        <div class="hp-main">
+                            <t t-esc="(o.observation or '')[:120]"/>
+                            <div class="hp-meta">
+                                <t t-esc="hazard_labels.get(o.hazard_type, 'General')"/>
+                                <t t-if="o.location_id"> · 📍 <t t-esc="o.location_id.name"/></t>
+                                <t t-if="o.observation_date"> · 🕒 <t t-esc="o.observation_date"/></t>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <div class="hp-section-head"><h2>🚨 My Incident Reports</h2>
+                    <a class="hp-btn hp-btn-red" style="padding:.5rem 1.1rem;" href="/hse/portal/incident">+ New Incident Report</a>
+                </div>
+                <t t-if="not incidents">
+                    <div class="hp-empty">No incident reports filed under your account.</div>
+                </t>
+                <t t-foreach="incidents" t-as="i">
+                    <div class="hp-sub" style="border-left-color:#dc2626;">
+                        <span class="hp-ref" t-esc="i.name"/>
+                        <span t-att-class="'hp-pill ' + ('hp-pill-locked' if i.state == 'locked' else 'hp-pill-progress' if i.state == 'in_process' else 'hp-pill-rejected' if i.state == 'rejected' else 'hp-pill-draft')"
+                              t-esc="state_labels.get(i.state, i.state or 'draft')"/>
+                        <span t-att-class="'hp-pill p' + (i.priority or '2')" style="margin-left:2px;"
+                              t-esc="'HIGH' if i.priority == '3' else 'NORMAL' if i.priority == '2' else 'LOW'"/>
+                        <div class="hp-main">
+                            <t t-esc="(i.incident_detail or i.ir_description or '')[:120]"/>
+                            <div class="hp-meta">
+                                <t t-esc="inc_type_labels.get(i.incident_type, 'Incident')"/>
+                                <t t-if="i.incident_date"> · 🕒 <t t-esc="i.incident_date"/></t>
+                                <t t-if="i.exact_location"> · 📍 <t t-esc="i.exact_location"/></t>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <!-- ======================= POLICIES & DOCUMENTS ======================= -->
+    <template id="hse_portal_policies" name="HSE Portal — Policies &amp; Documents">
+        <t t-call="website.layout">
+            <t t-call="observation_portal.hse_portal_layout_common"/>
+            <div class="hse-portal-wrap">
+                <a class="hp-breadcrumb" href="/hse/portal">← HSE Portal Home</a>
+                <div class="hp-hero" style="background:linear-gradient(135deg,#064e3b 0%,#059669 100%); margin-top:10px;">
+                    <span class="hp-badge" style="background:rgba(255,255,255,.14); border-color:rgba(255,255,255,.35); color:#a7f3d0;">
+                        <span class="hp-pulse"/> GOVERNANCE LIBRARY
+                    </span>
+                    <h1>Safety Policies &amp; Operating Documents</h1>
+                    <p>Executive HSE policies and approved operating procedures in force at this facility.
+                       Reading them is part of your site induction.</p>
+                </div>
+
+                <div class="hp-section-head"><h2>📜 HSE Policies</h2></div>
+                <t t-if="not policies">
+                    <div class="hp-empty">No approved policies published yet.</div>
+                </t>
+                <t t-foreach="policies" t-as="p">
+                    <div class="hp-doc">
+                        <h4 t-esc="p.name"/>
+                        <div class="hp-meta">
+                            <t t-esc="p.policy_code"/> · effective <t t-esc="p.effective_date"/>
+                            · owner <t t-esc="p.policy_owner_id.name or 'HSE'"/>
+                        </div>
+                        <div class="hp-doc-content" t-esc="(p.core_principles or '')[:400]"/>
+                    </div>
+                </t>
+
+                <div class="hp-section-head"><h2>📖 Approved Operating Procedures</h2></div>
+                <t t-if="not procedures">
+                    <div class="hp-empty">No published procedures yet.</div>
+                </t>
+                <t t-foreach="procedures" t-as="pr">
+                    <div class="hp-doc" style="border-left-color:#7c3aed;">
+                        <h4 t-esc="pr.name"/>
+                        <div class="hp-meta">
+                            <t t-esc="pr.procedure_code"/> · Rev <t t-esc="pr.revision"/>
+                            · <t t-esc="pr.effective_date"/>
+                            <t t-if="pr.is_safety_critical"> · <span style="color:#dc2626; font-weight:700;">SAFETY CRITICAL</span></t>
+                        </div>
+                        <div class="hp-doc-content" t-esc="(pr.purpose_and_scope or '')[:400]"/>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>

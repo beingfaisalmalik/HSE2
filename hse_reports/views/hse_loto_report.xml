@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- LOTO Plan PDF QWeb Template -->
+        <template id="report_hse_loto_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page" style="font-family: Arial, sans-serif; font-size: 11px; line-height: 1.4; color: #1e293b;">
+                            <!-- Header Banner -->
+                            <div style="background: #b91c1c; color: #ffffff; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <h3 style="margin: 0; font-size: 18px; font-weight: bold; color: #ffffff;">DANGER - LOCKOUT / TAGOUT ISOLATION CERTIFICATE</h3>
+                                        <div style="font-size: 10px; color: #fecaca;">Control of Hazardous Energy Sources &amp; Zero Energy State Verification</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 14px; font-weight: bold; color: #ffffff;"><t t-esc="doc.name"/></div>
+                                        <div style="font-size: 10px; color: #fef08a; font-weight: bold; text-transform: uppercase;"><t t-esc="doc.state"/></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Scope & Target Asset -->
+                            <table class="table table-bordered table-sm" style="width: 100%; margin-bottom: 12px;">
+                                <tr style="background: #f1f5f9;">
+                                    <th colspan="4" style="font-size: 12px; font-weight: bold; color: #0f172a;">Section 1: Isolation Boundary &amp; Equipment Tag</th>
+                                </tr>
+                                <tr>
+                                    <td style="width: 25%; font-weight: bold; background: #f8fafc;">Scheme Title:</td>
+                                    <td colspan="3"><strong style="font-size: 12px; color: #b91c1c;"><t t-esc="doc.title"/></strong></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Operating Facility:</td>
+                                    <td><t t-esc="doc.location_id.name"/></td>
+                                    <td style="font-weight: bold; background: #f8fafc;">Target Asset:</td>
+                                    <td><strong><t t-esc="doc.asset_id.name or 'Main Process Loop'"/></strong></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Master Lockbox ID:</td>
+                                    <td><t t-esc="doc.master_lockbox_no or 'LB-PRIMARY'"/></td>
+                                    <td style="font-weight: bold; background: #f8fafc;">Isolation Officer:</td>
+                                    <td><t t-esc="doc.lead_isolation_officer_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Boundary Description:</td>
+                                    <td colspan="3"><t t-esc="doc.system_description"/></td>
+                                </tr>
+                            </table>
+
+                            <!-- Energy Types Identified -->
+                            <table class="table table-bordered table-sm" style="width: 100%; margin-bottom: 12px;">
+                                <tr style="background: #f1f5f9;">
+                                    <th colspan="4" style="font-size: 12px; font-weight: bold; color: #0f172a;">Section 2: Hazardous Energy Types Identified</th>
+                                </tr>
+                                <tr>
+                                    <td>Electrical: <t t-if="doc.energy_electrical"><strong>[X] Yes</strong></t><t t-else="">[ ] No</t></td>
+                                    <td>Mechanical: <t t-if="doc.energy_mechanical"><strong>[X] Yes</strong></t><t t-else="">[ ] No</t></td>
+                                    <td>Hydraulic: <t t-if="doc.energy_hydraulic"><strong>[X] Yes</strong></t><t t-else="">[ ] No</t></td>
+                                    <td>Pneumatic: <t t-if="doc.energy_pneumatic"><strong>[X] Yes</strong></t><t t-else="">[ ] No</t></td>
+                                </tr>
+                                <tr>
+                                    <td>Chemical / Toxic: <t t-if="doc.energy_chemical"><strong>[X] Yes</strong></t><t t-else="">[ ] No</t></td>
+                                    <td>Thermal (Steam/Cryo): <t t-if="doc.energy_thermal"><strong>[X] Yes</strong></t><t t-else="">[ ] No</t></td>
+                                    <td>Gravitational: <t t-if="doc.energy_gravitational"><strong>[X] Yes</strong></t><t t-else="">[ ] No</t></td>
+                                    <td>Zero Energy Method: <strong><t t-esc="doc.zero_energy_method"/></strong></td>
+                                </tr>
+                            </table>
+
+                            <!-- Isolation Points Schedule -->
+                            <table class="table table-bordered table-sm" style="width: 100%; margin-bottom: 12px;">
+                                <tr style="background: #f1f5f9;">
+                                    <th colspan="7" style="font-size: 12px; font-weight: bold; color: #0f172a;">Section 3: Physical Lockout &amp; Tagout Point Assignment</th>
+                                </tr>
+                                <tr style="background: #f8fafc; font-weight: bold; text-align: center;">
+                                    <td>Step #</td>
+                                    <td>Tag / Device Identifier</td>
+                                    <td>Method</td>
+                                    <td>Padlock #</td>
+                                    <td>Danger Tag #</td>
+                                    <td>Applied By</td>
+                                    <td>De-isolated?</td>
+                                </tr>
+                                <t t-foreach="doc.point_ids" t-as="pt">
+                                    <tr style="text-align: center;">
+                                        <td><t t-esc="pt.sequence"/></td>
+                                        <td><strong><t t-esc="pt.point_identifier"/></strong></td>
+                                        <td><t t-esc="pt.isolation_type"/></td>
+                                        <td><span style="color: #b91c1c; font-weight: bold;"><t t-esc="pt.lock_number"/></span></td>
+                                        <td><span style="color: #ea580c; font-weight: bold;"><t t-esc="pt.tag_number"/></span></td>
+                                        <td><t t-esc="pt.applied_by or 'Technician'"/></td>
+                                        <td>
+                                            <t t-if="pt.is_restored"><span style="color: #059669;">Normalized</span></t>
+                                            <t t-else=""><span style="color: #dc2626; font-weight: bold;">LOCKED</span></t>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </table>
+
+                            <!-- Zero Energy & De-Isolation -->
+                            <div class="row">
+                                <div class="col-6">
+                                    <table class="table table-bordered table-sm" style="width: 100%;">
+                                        <tr style="background: #f1f5f9;">
+                                            <th colspan="2" style="font-weight: bold; color: #0f172a;">Zero Energy State Physical Verification</th>
+                                        </tr>
+                                        <tr>
+                                            <td>Zero Energy Verified:</td>
+                                            <td><t t-if="doc.zero_energy_verified"><strong style="color: #059669;">[X] CONFIRMED 0 ENERGY</strong></t><t t-else="">[ ] PENDING</t></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Verified By:</td>
+                                            <td><t t-esc="doc.zero_energy_verified_by.name or 'N/A'"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Verification Date:</td>
+                                            <td><t t-esc="doc.zero_energy_verified_date or 'N/A'"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-6">
+                                    <table class="table table-bordered table-sm" style="width: 100%;">
+                                        <tr style="background: #f1f5f9;">
+                                            <th colspan="2" style="font-weight: bold; color: #0f172a;">De-Isolation Safety Clearance Checklist</th>
+                                        </tr>
+                                        <tr>
+                                            <td>All Tools &amp; Grounds Cleared:</td>
+                                            <td><t t-if="doc.deisolate_tools_cleared"><strong style="color: #059669;">[X] Verified</strong></t><t t-else="">[ ] Pending</t></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Machine Guards Replaced:</td>
+                                            <td><t t-if="doc.deisolate_guards_replaced"><strong style="color: #059669;">[X] Verified</strong></t><t t-else="">[ ] Pending</t></td>
+                                        </tr>
+                                        <tr>
+                                            <td>All Personnel Outside Envelope:</td>
+                                            <td><t t-if="doc.deisolate_personnel_clear"><strong style="color: #059669;">[X] Verified</strong></t><t t-else="">[ ] Pending</t></td>
+                                        </tr>
+                                        <tr>
+                                            <td>De-isolated Inspected By:</td>
+                                            <td><t t-esc="doc.deisolate_inspected_by.name or 'N/A'"/> (<t t-esc="doc.deisolate_datetime or ''"/>)</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- LOTO Report Action -->
+        <record id="action_report_hse_loto" model="ir.actions.report">
+            <field name="name">LOTO Isolation Scheme Certificate</field>
+            <field name="model">hse.loto.plan</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">hse_reports.report_hse_loto_template</field>
+            <field name="report_file">hse_reports.report_hse_loto_template</field>
+            <field name="binding_model_id" ref="hse.model_hse_loto_plan"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

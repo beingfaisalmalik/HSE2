@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- ================================================================= -->
+        <!-- 1. Similar Exposure Groups (SEGs)                                -->
+        <!-- ================================================================= -->
+        <record id="view_hse_ih_seg_tree" model="ir.ui.view">
+            <field name="name">hse.ih.seg.tree</field>
+            <field name="model">hse.ih.seg</field>
+            <field name="arch" type="xml">
+                <tree string="Similar Exposure Groups (SEGs)">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="location_id"/>
+                    <field name="worker_count"/>
+                    <field name="sample_count"/>
+                    <field name="stressor_chemical" widget="boolean_toggle"/>
+                    <field name="stressor_noise" widget="boolean_toggle"/>
+                    <field name="stressor_ergonomic" widget="boolean_toggle"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hse_ih_seg_form" model="ir.ui.view">
+            <field name="name">hse.ih.seg.form</field>
+            <field name="model">hse.ih.seg</field>
+            <field name="arch" type="xml">
+                <form string="Similar Exposure Group (SEG)">
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #3b0764 0%, #9333ea 100%); border-left: 6px solid #d8b4fe; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🫁</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Industrial Hygiene</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Exposure monitoring, audiometry &amp; ergonomics</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">SEG Code</span>
+                            <h1><field name="code" placeholder="e.g. SEG-WELD-01"/></h1>
+                            <h3><field name="name" placeholder="e.g. Pressure Vessel Welders &amp; Fabricators"/></h3>
+                        </div>
+                        <group>
+                            <group string="Operational Context">
+                                <field name="location_id"/>
+                                <field name="worker_count"/>
+                                <field name="job_description"/>
+                            </group>
+                            <group string="Environmental &amp; Physical Stressors">
+                                <field name="stressor_chemical"/>
+                                <field name="stressor_noise"/>
+                                <field name="stressor_radiation"/>
+                                <field name="stressor_thermal"/>
+                                <field name="stressor_ergonomic"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Exposure Samples &amp; Air Monitoring">
+                                <field name="sample_ids">
+                                    <tree string="Samples" decoration-danger="exposure_rating == 'unacceptable'" decoration-warning="exposure_rating == 'action_required'" decoration-success="exposure_rating == 'acceptable'">
+                                        <field name="name"/>
+                                        <field name="sample_date"/>
+                                        <field name="agent_name"/>
+                                        <field name="measured_concentration"/>
+                                        <field name="unit_of_measure"/>
+                                        <field name="twa_8hr"/>
+                                        <field name="osha_pel"/>
+                                        <field name="exposure_rating" widget="badge" decoration-danger="exposure_rating == 'unacceptable'" decoration-warning="exposure_rating == 'action_required'" decoration-success="exposure_rating == 'acceptable'"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hse_ih_seg" model="ir.actions.act_window">
+            <field name="name">Similar Exposure Groups (SEGs)</field>
+            <field name="res_model">hse.ih.seg</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- ================================================================= -->
+        <!-- 2. Exposure Monitoring & Sampling                                -->
+        <!-- ================================================================= -->
+        <record id="view_hse_ih_sample_tree" model="ir.ui.view">
+            <field name="name">hse.ih.sample.tree</field>
+            <field name="model">hse.ih.sample</field>
+            <field name="arch" type="xml">
+                <tree string="IH Sampling" decoration-danger="exposure_rating == 'unacceptable'" decoration-warning="exposure_rating == 'action_required'" decoration-success="exposure_rating == 'acceptable'">
+                    <field name="name"/>
+                    <field name="sample_date"/>
+                    <field name="seg_id"/>
+                    <field name="employee_id"/>
+                    <field name="sampling_type"/>
+                    <field name="agent_name"/>
+                    <field name="measured_concentration"/>
+                    <field name="unit_of_measure"/>
+                    <field name="twa_8hr"/>
+                    <field name="osha_pel"/>
+                    <field name="exposure_rating" widget="badge" decoration-danger="exposure_rating == 'unacceptable'" decoration-warning="exposure_rating == 'action_required'" decoration-success="exposure_rating == 'acceptable'"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hse_ih_sample_form" model="ir.ui.view">
+            <field name="name">hse.ih.sample.form</field>
+            <field name="model">hse.ih.sample</field>
+            <field name="arch" type="xml">
+                <form string="Industrial Hygiene Exposure Sample">
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #3b0764 0%, #9333ea 100%); border-left: 6px solid #d8b4fe; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🫁</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Industrial Hygiene</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Exposure monitoring, audiometry &amp; ergonomics</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">Sampling Event Ref</span>
+                            <h1><field name="name" readonly="1"/></h1>
+                            <h3><field name="agent_name" placeholder="e.g. Benzene Vapor / Respirable Crystalline Silica"/></h3>
+                        </div>
+                        <group>
+                            <group string="Sampling Assignment">
+                                <field name="seg_id"/>
+                                <field name="employee_id"/>
+                                <field name="hygienist_id"/>
+                                <field name="sample_date"/>
+                                <field name="sampling_type"/>
+                                <field name="sampling_duration_minutes"/>
+                            </group>
+                            <group string="Analytical Results &amp; Limits">
+                                <field name="measured_concentration"/>
+                                <field name="unit_of_measure"/>
+                                <field name="twa_8hr" readonly="1" style="font-weight: bold;"/>
+                                <field name="osha_pel"/>
+                                <field name="acgih_tlv"/>
+                                <field name="action_level" readonly="1"/>
+                                <field name="exposure_rating" readonly="1" widget="badge" decoration-danger="exposure_rating == 'unacceptable'" decoration-warning="exposure_rating == 'action_required'" decoration-success="exposure_rating == 'acceptable'"/>
+                            </group>
+                        </group>
+                        <group string="Corrective Engineering Safeguards">
+                            <field name="corrective_control" placeholder="Local exhaust ventilation, cartridge respirator change, enclosed glovebox..."/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hse_ih_sample" model="ir.actions.act_window">
+            <field name="name">IH Exposure Monitoring &amp; Sampling</field>
+            <field name="res_model">hse.ih.sample</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- ================================================================= -->
+        <!-- 3. Audiometry & Hearing Conservation Views                       -->
+        <!-- ================================================================= -->
+        <record id="view_hse_ih_audiometry_tree" model="ir.ui.view">
+            <field name="name">hse.ih.audiometry.tree</field>
+            <field name="model">hse.ih.audiometry</field>
+            <field name="arch" type="xml">
+                <tree string="Audiometric Tests" decoration-danger="is_osha_recordable_sts == True" decoration-warning="has_sts == True">
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="test_date"/>
+                    <field name="test_type"/>
+                    <field name="left_avg_234"/>
+                    <field name="right_avg_234"/>
+                    <field name="has_sts" widget="boolean_toggle"/>
+                    <field name="is_osha_recordable_sts" widget="badge" decoration-danger="is_osha_recordable_sts == True"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hse_ih_audiometry_form" model="ir.ui.view">
+            <field name="name">hse.ih.audiometry.form</field>
+            <field name="model">hse.ih.audiometry</field>
+            <field name="arch" type="xml">
+                <form string="Audiometric Hearing Test Record">
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #3b0764 0%, #9333ea 100%); border-left: 6px solid #d8b4fe; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🫁</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Industrial Hygiene</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Exposure monitoring, audiometry &amp; ergonomics</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">Audiogram Ref</span>
+                            <h1><field name="name" readonly="1"/></h1>
+                        </div>
+                        <group>
+                            <group string="Patient &amp; Protocol">
+                                <field name="employee_id"/>
+                                <field name="test_date"/>
+                                <field name="test_type"/>
+                                <field name="audiologist_name"/>
+                                <field name="baseline_audiogram_id" invisible="test_type == 'baseline'"/>
+                            </group>
+                            <group string="Standard Threshold Shift (STS) Analysis">
+                                <field name="left_avg_234" readonly="1"/>
+                                <field name="right_avg_234" readonly="1"/>
+                                <field name="has_sts" readonly="1" widget="badge" decoration-warning="has_sts == True"/>
+                                <field name="is_osha_recordable_sts" readonly="1" widget="badge" decoration-danger="is_osha_recordable_sts == True"/>
+                            </group>
+                        </group>
+                        <group string="Pure-Tone Thresholds (dB Hearing Level)">
+                            <group string="Left Ear (OSHA 2k, 3k, 4k)">
+                                <field name="l_500"/>
+                                <field name="l_1000"/>
+                                <field name="l_2000"/>
+                                <field name="l_3000"/>
+                                <field name="l_4000"/>
+                                <field name="l_6000"/>
+                            </group>
+                            <group string="Right Ear (OSHA 2k, 3k, 4k)">
+                                <field name="r_500"/>
+                                <field name="r_1000"/>
+                                <field name="r_2000"/>
+                                <field name="r_3000"/>
+                                <field name="r_4000"/>
+                                <field name="r_6000"/>
+                            </group>
+                        </group>
+                        <group string="Physician Follow-up &amp; Hearing Protection">
+                            <field name="recommendations"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hse_ih_audiometry" model="ir.actions.act_window">
+            <field name="name">Audiometry &amp; Hearing Conservation</field>
+            <field name="res_model">hse.ih.audiometry</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- ================================================================= -->
+        <!-- 4. Respirator Fit Testing Views                                  -->
+        <!-- ================================================================= -->
+        <record id="view_hse_ih_respirator_tree" model="ir.ui.view">
+            <field name="name">hse.ih.respirator.tree</field>
+            <field name="model">hse.ih.respirator</field>
+            <field name="arch" type="xml">
+                <tree string="Respirator Fit Tests" decoration-danger="fit_test_passed == False" decoration-success="fit_test_passed == True">
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="fit_test_date"/>
+                    <field name="next_due_date"/>
+                    <field name="respirator_type"/>
+                    <field name="manufacturer_model"/>
+                    <field name="mask_size"/>
+                    <field name="quantitative_fit_factor"/>
+                    <field name="fit_test_passed" widget="boolean_toggle"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hse_ih_respirator_form" model="ir.ui.view">
+            <field name="name">hse.ih.respirator.form</field>
+            <field name="model">hse.ih.respirator</field>
+            <field name="arch" type="xml">
+                <form string="Respirator Fit Test Record">
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #3b0764 0%, #9333ea 100%); border-left: 6px solid #d8b4fe; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🫁</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Industrial Hygiene</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Exposure monitoring, audiometry &amp; ergonomics</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">Fit Test Ref</span>
+                            <h1><field name="name" readonly="1"/></h1>
+                            <h3><field name="manufacturer_model" placeholder="e.g. 3M 6800 Full-Face Respirator"/></h3>
+                        </div>
+                        <group>
+                            <group string="Personnel &amp; Medical Clearance">
+                                <field name="employee_id"/>
+                                <field name="fit_test_date"/>
+                                <field name="next_due_date"/>
+                                <field name="medical_clearance_status"/>
+                                <field name="clean_shaven_verified"/>
+                            </group>
+                            <group string="Respirator &amp; Test Method">
+                                <field name="respirator_type"/>
+                                <field name="mask_size"/>
+                                <field name="test_method"/>
+                                <field name="quantitative_fit_factor"/>
+                                <field name="fit_test_passed" widget="badge" decoration-danger="fit_test_passed == False" decoration-success="fit_test_passed == True"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hse_ih_respirator" model="ir.actions.act_window">
+            <field name="name">Respirator Protection &amp; Fit Tests</field>
+            <field name="res_model">hse.ih.respirator</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- ================================================================= -->
+        <!-- 5. Ergonomics Assessments Views                                  -->
+        <!-- ================================================================= -->
+        <record id="view_hse_ih_ergonomics_tree" model="ir.ui.view">
+            <field name="name">hse.ih.ergonomics.tree</field>
+            <field name="model">hse.ih.ergonomics</field>
+            <field name="arch" type="xml">
+                <tree string="Ergonomic Assessments" decoration-danger="risk_level in ['high', 'very_high']" decoration-warning="risk_level == 'medium'">
+                    <field name="name"/>
+                    <field name="job_task_name"/>
+                    <field name="location_id"/>
+                    <field name="assessment_date"/>
+                    <field name="assessment_tool"/>
+                    <field name="lifting_index"/>
+                    <field name="risk_level" widget="badge" decoration-danger="risk_level in ['high', 'very_high']" decoration-warning="risk_level == 'medium'" decoration-success="risk_level in ['negligible', 'low']"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hse_ih_ergonomics_form" model="ir.ui.view">
+            <field name="name">hse.ih.ergonomics.form</field>
+            <field name="model">hse.ih.ergonomics</field>
+            <field name="arch" type="xml">
+                <form string="Ergonomics Risk Evaluation">
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #3b0764 0%, #9333ea 100%); border-left: 6px solid #d8b4fe; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🫁</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Industrial Hygiene</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Exposure monitoring, audiometry &amp; ergonomics</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">Ergonomics Assessment Ref</span>
+                            <h1><field name="name" readonly="1"/></h1>
+                            <h3><field name="job_task_name" placeholder="e.g. Drum Stacking onto Pallets at Packaging Line"/></h3>
+                        </div>
+                        <group>
+                            <group string="Task &amp; Assessor">
+                                <field name="location_id"/>
+                                <field name="assessor_id"/>
+                                <field name="assessment_date"/>
+                                <field name="assessment_tool"/>
+                            </group>
+                            <group string="Scoring &amp; Risk Outcome">
+                                <field name="reba_score" invisible="assessment_tool != 'reba'"/>
+                                <field name="rula_score" invisible="assessment_tool != 'rula'"/>
+                                <field name="recommended_weight_limit" readonly="1" invisible="assessment_tool != 'niosh'"/>
+                                <field name="lifting_index" readonly="1" invisible="assessment_tool != 'niosh'"/>
+                                <field name="risk_level" readonly="1" widget="badge" decoration-danger="risk_level in ['high', 'very_high']" decoration-warning="risk_level == 'medium'" decoration-success="risk_level in ['negligible', 'low']"/>
+                            </group>
+                        </group>
+                        <group string="NIOSH Lifting Parameters" invisible="assessment_tool != 'niosh'">
+                            <group>
+                                <field name="load_weight_kg"/>
+                                <field name="horizontal_distance_cm"/>
+                                <field name="vertical_height_cm"/>
+                            </group>
+                            <group>
+                                <field name="vertical_travel_cm"/>
+                                <field name="asymmetry_angle_deg"/>
+                                <field name="lifting_frequency_min"/>
+                            </group>
+                        </group>
+                        <group string="Corrective Workstation Redesign">
+                            <field name="remedial_measures" placeholder="Install scissor lift table, vacuum lifter, rotate workers every 2 hours..."/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hse_ih_ergonomics" model="ir.actions.act_window">
+            <field name="name">Ergonomics Assessments (REBA/NIOSH)</field>
+            <field name="res_model">hse.ih.ergonomics</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

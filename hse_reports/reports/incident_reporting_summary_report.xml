@@ -1,0 +1,78 @@
+<odoo>
+    <data>
+        <template id="hse_incident_reporting_report">
+            <t t-call="web.html_container">
+                <t t-call="web.basic_layout">
+                    <h1>Summary Report Of Incident Reporting</h1>
+                    <t t-if="data">
+                        <div class="page" style="padding: 40px; font-family: 'Arial', sans-serif; line-height: 1.6;">
+
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td>
+                                            Name:
+                                        </td>
+                                        <td>
+                                            Type:
+                                        </td>
+                                        <td>
+                                            Description:
+                                        </td>
+                                        <td>
+                                            Incident Report Date:
+                                        </td>
+                                        <td>
+                                            Level Of Potential Harm:
+                                        </td>
+                                        <td>
+                                            Assigned To:
+                                        </td>
+                                        <td>
+                                            Injury Type:
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                     <t t-foreach="data.items()" t-as="t">
+                                        <tr>
+                                            <td>
+                                                <t t-esc="t[1]['name']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="t[1]['incident_type']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="t[1]['ir_description']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="t[1]['incident_report_date']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="t[1]['near_miss_harm_level']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="t[1]['assigned_to.name']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="t[1]['injury_type']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="page"
+                             style="padding: 40px; font-family: 'Arial', sans-serif; line-height: 1.6; text-align: center;">
+                            <p>No data found for the selected date range.</p>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

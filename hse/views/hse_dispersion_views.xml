@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Dispersion Tree View -->
+        <record id="view_hse_dispersion_scenario_tree" model="ir.ui.view">
+            <field name="name">hse.dispersion.scenario.tree</field>
+            <field name="model">hse.dispersion.scenario</field>
+            <field name="arch" type="xml">
+                <tree string="Chemical Dispersion &amp; Consequence Scenarios"
+                      decoration-danger="state == 'active_emergency'"
+                      decoration-success="state == 'verified'"
+                      decoration-info="state == 'modeled'">
+                    <field name="name" bold="1"/>
+                    <field name="chemical_name"/>
+                    <field name="location_id"/>
+                    <field name="release_type"/>
+                    <field name="wind_speed_m_s"/>
+                    <field name="stability_class"/>
+                    <field name="erpg_3_dist_m" string="ERPG-3 Life Threatening (m)"/>
+                    <field name="lfl_100_dist_m" string="100% LFL Cloud (m)"/>
+                    <field name="rad_37_5_kw_m" string="37.5 kW/m² Fire (m)"/>
+                    <field name="blast_10_psi_m" string="10 psi Blast (m)"/>
+                    <field name="recommended_evacuation_radius_m" string="Evacuation Zone (m)" bold="1"/>
+                    <field name="state" widget="badge" decoration-danger="state == 'active_emergency'"
+                           decoration-success="state == 'verified'" decoration-info="state == 'modeled'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Dispersion Form View -->
+        <record id="view_hse_dispersion_scenario_form" model="ir.ui.view">
+            <field name="name">hse.dispersion.scenario.form</field>
+            <field name="model">hse.dispersion.scenario</field>
+            <field name="arch" type="xml">
+                <form string="Quantitative Chemical Dispersion &amp; Consequence Scenario">
+                    <header>
+                        <button name="action_model" string="Recalculate Dispersion Footprint" type="object"
+                                class="btn-primary" invisible="state == 'active_emergency'"/>
+                        <button name="action_verify" string="Verify Simulation (Process Safety Lead)" type="object"
+                                class="btn-success" invisible="state != 'modeled'"/>
+                        <button name="action_activate_emergency" string="Activate in Emergency Response" type="object"
+                                class="btn-danger" invisible="state == 'active_emergency'"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,modeled,verified,active_emergency"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #2e1065 0%, #7c3aed 100%); border-left: 6px solid #c4b5fd; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🌫️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Dispersion &amp; Consequence Modeling</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">ALOHA-style plume, fire &amp; blast footprint QRA</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <field name="recommended_evacuation_radius_m" invisible="1"/>
+                        <div class="oe_title">
+                            <label for="name" string="Consequence Scenario Name"/>
+                            <h1><field name="name" placeholder="e.g. Rupture of Ammonia Refrigeration Header"/></h1>
+                            <h3><field name="chemical_name" placeholder="Hazardous Chemical / Gas"/></h3>
+                        </div>
+
+                        <group>
+                            <group string="Release Source &amp; Chemical Properties">
+                                <field name="location_id"/>
+                                <field name="sds_id"/>
+                                <field name="release_type"/>
+                                <field name="release_phase"/>
+                                <field name="total_mass_kg"/>
+                                <field name="release_rate_kg_s"/>
+                                <field name="molecular_weight"/>
+                                <field name="boiling_point_c"/>
+                                <field name="vapor_pressure_kpa"/>
+                            </group>
+                            <group string="Meteorological / Atmospheric Boundary">
+                                <field name="wind_speed_m_s"/>
+                                <field name="wind_direction_deg"/>
+                                <field name="stability_class"/>
+                                <field name="ambient_temp_c"/>
+                                <field name="relative_humidity_pct"/>
+                                <field name="erpg_3_ppm"/>
+                                <field name="erpg_2_ppm"/>
+                                <field name="erpg_1_ppm"/>
+                                <field name="lfl_percent"/>
+                            </group>
+                        </group>
+
+                        <div class="alert alert-danger d-flex align-items-center mb-4" role="alert"
+                             invisible="recommended_evacuation_radius_m &lt;= 0">
+                            <i class="fa fa-exclamation-triangle fa-2x me-3"/>
+                            <div>
+                                <h4 class="alert-heading mb-1 font-weight-bold">
+                                    Computed Public Evacuation Exclusion Radius:
+                                    <field name="recommended_evacuation_radius_m" readonly="1" class="font-weight-bold"/> meters
+                                </h4>
+                                <span class="text-dark">Encompassing maximum downwind extent of toxic concentration, flammable vapor cloud, thermal radiation, and explosion overpressure envelopes.</span>
+                            </div>
+                        </div>
+
+                        <notebook>
+                            <page string="Consequence Hazard Zones (Meters)" name="hazard_zones">
+                                <group>
+                                    <group string="Toxic Plume Exposure Distances (ERPG / AEGL)">
+                                        <field name="erpg_3_dist_m"/>
+                                        <field name="erpg_2_dist_m"/>
+                                        <field name="erpg_1_dist_m"/>
+                                    </group>
+                                    <group string="Flammable Vapor Cloud Extents">
+                                        <field name="lfl_100_dist_m"/>
+                                        <field name="lfl_50_dist_m"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group string="Thermal Radiation (Pool / Jet Fire)">
+                                        <field name="rad_37_5_kw_m"/>
+                                        <field name="rad_12_5_kw_m"/>
+                                        <field name="rad_4_7_kw_m"/>
+                                        <field name="rad_1_6_kw_m"/>
+                                    </group>
+                                    <group string="Vapor Cloud Explosion (VCE Overpressure)">
+                                        <field name="blast_10_psi_m"/>
+                                        <field name="blast_3_psi_m"/>
+                                        <field name="blast_1_psi_m"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Shelter-in-Place &amp; Public Protection" name="shelter">
+                                <field name="shelter_in_place_instructions" placeholder="Shelter in place instructions..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_hse_dispersion_scenario" model="ir.actions.act_window">
+            <field name="name">Consequence &amp; Dispersion Modeling (QRA)</field>
+            <field name="res_model">hse.dispersion.scenario</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Run Quantitative Chemical Dispersion &amp; Fire/Explosion Consequence Simulations.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

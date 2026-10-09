@@ -1,0 +1,100 @@
+<odoo>
+    <data>
+        <template id="hse_ra_jsa_report">
+            <t t-call="web.html_container">
+                <t t-call="web.basic_layout">
+                    <h1>Summary Report Of RA/JSA</h1>
+                    <!--                <t t-esc="data"/>-->
+                    <t t-if="data">
+                        <!--                    <t t-foreach="data.items()" t-as="t">-->
+                        <div class="page" style="padding: 40px; font-family: 'Arial', sans-serif; line-height: 1.6;">
+
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td>
+                                            Name:
+                                        </td>
+                                        <td>
+                                            Type:
+                                        </td>
+                                        <td>
+                                            Description:
+                                        </td>
+                                        <td>
+                                            Due Date:
+                                        </td>
+                                        <td>
+                                            Department:
+                                        </td>
+                                        <td>
+                                            Responsible Person:
+                                        </td>
+                                        <td>
+                                            Team Members:
+                                        </td>
+                                        <td>
+                                            Status:
+                                        </td>
+                                        <td>
+                                            Priority:
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="data.items()" t-as="t">
+                                        <tr>
+                                            <td>
+                                                <t t-esc="t[1]['name']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="t[1]['type']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="t[1]['description']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="t[1]['due_date']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="t[1]['select_department.name']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="t[1]['responsible_person.name']"/>
+                                            </td>
+                                            <td>
+                                                <!--                                                <t t-esc="t[1]['team_member_id.name']"/>-->
+                                                <t t-esc="t[1]['team_members']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="t[1]['state']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="t[1]['set_priority']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <!--                            <p>Name:-->
+
+                            <!--                                <t t-esc="t[1]['name']"/>-->
+                            <!--                            </p>-->
+                            <!--                            <p>Type:-->
+                            <!--                                <t t-esc="t[1]['type']"/>-->
+                            <!--                            </p>-->
+                        </div>
+                    </t>
+                    <!--                </t>-->
+                    <t t-else="">
+                        <div class="page"
+                             style="padding: 40px; font-family: 'Arial', sans-serif; line-height: 1.6; text-align: center;">
+                            <p>No data found for the selected date range.</p>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

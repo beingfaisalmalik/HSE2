@@ -1,0 +1,47 @@
+<odoo>
+    <template id="report_transit_filtered_pdf">
+        <t t-call="web.basic_layout">
+            <div class="page">
+                <h2 style="text-align: center; margin-bottom: 20px;">HSE Meeting Report</h2>
+                <h3>From Date: <t t-esc="data.get('from_date')"/></h3>
+                <h3>To Date: <t t-esc="data.get('to_date')"/></h3>
+
+                <table style="width: 100%; border-collapse: collapse;" border="1">
+                    <!-- Table Header -->
+                    <thead style="background-color: #f0f0f0;">
+                        <tr>
+                            <th style="padding: 8px;">Reference</th>
+                            <th style="padding: 8px;">Meeting Datetime</th>
+                            <th style="padding: 8px;">Department</th>
+                            <th style="padding: 8px;">Meeting Type(s)</th>
+                            <th style="padding: 8px;">Total Employees</th>
+                            <th style="padding: 8px;">Present Employees</th>
+                            <th style="padding: 8px;">Employees in Meeting</th>
+                            <th style="padding: 8px;">% Attendance</th>
+                        </tr>
+                    </thead>
+
+                    <!-- Table Body -->
+                    <tbody>
+                        <t t-foreach="docs" t-as="o">
+                            <tr>
+                                <td style="padding: 8px;"><t t-esc="o.name"/></td>
+                                <td style="padding: 8px;"><t t-esc="o.meeting_datetime"/></td>
+                                <td style="padding: 8px;"><t t-esc="o.department_id.name"/></td>
+                                <td style="padding: 8px;">
+                                    <t t-foreach="o.meeting_type_ids" t-as="mt">
+                                        <t t-esc="mt.name"/><br/>
+                                    </t>
+                                </td>
+                                <td style="padding: 8px;"><t t-esc="o.total_employees"/></td>
+                                <td style="padding: 8px;"><t t-esc="o.present_employees"/></td>
+                                <td style="padding: 8px;"><t t-esc="o.meeting_attend_employees"/></td>
+                                <td style="padding: 8px;"><t t-esc="o.percentage_total_attendees"/>%</td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+</odoo>

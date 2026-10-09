@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hse.DispersionPlumeWidget">
+        <div class="hse-dispersion-panel p-3 rounded-3 shadow-sm border bg-dark text-white mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom border-secondary">
+                <div class="d-flex align-items-center gap-2">
+                    <div style="width: 32px; height: 32px; background: #dc2626; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa fa-bullseye text-white"/>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 font-weight-bold text-white">Atmospheric Dispersion &amp; Threat Zones</h6>
+                        <span class="text-white-50 small">Concentric Hazard Footprint (ALOHA Plume Simulation)</span>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <span class="badge bg-secondary">
+                        <i class="fa fa-flag me-1"/> <t t-esc="scenario.windSpeed"/> m/s
+                    </span>
+                    <span class="badge bg-info">
+                        Stability <t t-esc="scenario.stability"/>
+                    </span>
+                    <span class="badge bg-danger">
+                        Evac <t t-esc="scenario.evacRadius"/> m
+                    </span>
+                </div>
+            </div>
+
+            <div class="row align-items-center">
+                <div class="col-md-7 text-center">
+                    <svg viewBox="0 0 400 400" width="100%" height="280" style="overflow: visible;">
+                        <defs>
+                            <radialGradient id="gradRed" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#ef4444" stop-opacity="0.8"/>
+                                <stop offset="100%" stop-color="#b91c1c" stop-opacity="0.4"/>
+                            </radialGradient>
+                            <radialGradient id="gradOrange" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#f97316" stop-opacity="0.5"/>
+                                <stop offset="100%" stop-color="#c2410c" stop-opacity="0.2"/>
+                            </radialGradient>
+                            <radialGradient id="gradYellow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#eab308" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="#854d0e" stop-opacity="0.1"/>
+                            </radialGradient>
+                        </defs>
+
+                        <!-- Compass & Grid Lines -->
+                        <circle cx="200" cy="200" r="180" fill="none" stroke="#334155" stroke-dasharray="4,4"/>
+                        <circle cx="200" cy="200" r="120" fill="none" stroke="#334155" stroke-dasharray="2,2"/>
+                        <circle cx="200" cy="200" r="60" fill="none" stroke="#334155" stroke-dasharray="2,2"/>
+                        <line x1="20" y1="200" x2="380" y2="200" stroke="#1e293b"/>
+                        <line x1="200" y1="20" x2="200" y2="380" stroke="#1e293b"/>
+
+                        <!-- Cardinal Directions -->
+                        <text x="200" y="15" fill="#94a3b8" text-anchor="middle" font-size="12" font-weight="bold">N</text>
+                        <text x="390" y="204" fill="#94a3b8" text-anchor="start" font-size="12" font-weight="bold">E</text>
+                        <text x="200" y="395" fill="#94a3b8" text-anchor="middle" font-size="12" font-weight="bold">S</text>
+                        <text x="10" y="204" fill="#94a3b8" text-anchor="end" font-size="12" font-weight="bold">W</text>
+
+                        <!-- Evacuation Boundary -->
+                        <circle cx="200" cy="200" t-att-r="rEvac" fill="none" stroke="#f43f5e" stroke-width="2" stroke-dasharray="5,5"/>
+
+                        <!-- Yellow Zone (ERPG-1 Advisory) -->
+                        <circle cx="200" cy="200" t-att-r="r1" fill="url(#gradYellow)" stroke="#eab308" stroke-width="1.5"/>
+
+                        <!-- Orange Zone (ERPG-2 Injury) -->
+                        <circle cx="200" cy="200" t-att-r="r2" fill="url(#gradOrange)" stroke="#f97316" stroke-width="2"/>
+
+                        <!-- Red Zone (ERPG-3 Lethal) -->
+                        <circle cx="200" cy="200" t-att-r="r3" fill="url(#gradRed)" stroke="#ef4444" stroke-width="2.5"/>
+
+                        <!-- Release Point Center -->
+                        <circle cx="200" cy="200" r="6" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+                        <circle cx="200" cy="200" r="2" fill="#ef4444"/>
+                    </svg>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="d-flex flex-column gap-2">
+                        <div class="p-2 rounded bg-black bg-opacity-50 border-start border-4 border-danger">
+                            <span class="text-danger font-weight-bold d-block small">RED ZONE (ERPG-3 / LETHAL)</span>
+                            <span class="h6 mb-0 text-white font-weight-bold"><t t-esc="scenario.erpg3"/> m</span>
+                            <span class="text-white-50 d-block" style="font-size:10px;">Life threatening toxic exposure</span>
+                        </div>
+                        <div class="p-2 rounded bg-black bg-opacity-50 border-start border-4 border-warning">
+                            <span class="text-warning font-weight-bold d-block small">ORANGE ZONE (ERPG-2 / INJURY)</span>
+                            <span class="h6 mb-0 text-white font-weight-bold"><t t-esc="scenario.erpg2"/> m</span>
+                            <span class="text-white-50 d-block" style="font-size:10px;">Irreversible health effects / incapacitation</span>
+                        </div>
+                        <div class="p-2 rounded bg-black bg-opacity-50 border-start border-4 border-info">
+                            <span class="text-info font-weight-bold d-block small">YELLOW ZONE (ERPG-1 / ODOR)</span>
+                            <span class="h6 mb-0 text-white font-weight-bold"><t t-esc="scenario.erpg1"/> m</span>
+                            <span class="text-white-50 d-block" style="font-size:10px;">Perceptible odor and eye irritation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

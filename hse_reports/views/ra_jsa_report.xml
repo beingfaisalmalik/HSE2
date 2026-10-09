@@ -1,0 +1,104 @@
+<odoo>
+    <data>
+
+        <!-- Define the Report Template with Professional Styling -->
+        <template id="rs_jsa_report_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+
+                        <div class="page" style="padding: 40px; font-family: 'Arial', sans-serif; line-height: 1.6;">
+                            <!-- Header Section -->
+                            <div style="text-align: center; margin-bottom: 30px;">
+                                <h2 style="color: #003366; font-size: 28px; font-weight: bold;">RA JSA REPORT</h2>
+                                <p style="font-size: 14px; color: #777;">Date: <t t-esc="doc.create_date"/></p>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p><strong>Reference Number:</strong> <t t-esc="doc.name"/></p>
+                                        <p><strong>Assessment Type:</strong> <t t-esc="doc.type"/></p>
+                                        <p><strong>Description:</strong> <t t-esc="doc.description"/></p>
+                                        <p><strong>External Team:</strong> <t t-esc="doc.external_team_"/></p>
+                                        <p><strong>Due Date:</strong> <t t-esc="doc.due_date"/></p>
+                                        <p><strong>Show Pre-Control:</strong> <t t-esc="doc.show_pre_control"/></p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p><strong>Main Location:</strong> <t t-esc="doc.location.name"/></p>
+                                        <p><strong>Exact Location:</strong> <t t-esc="doc.exact_location"/></p>
+                                        <p><strong>Department:</strong> <t t-esc="doc.select_department.name"/></p>
+                                        <p><strong>Responsible Person:</strong> <t t-esc="doc.responsible_person.name"/></p>
+                                        <p><strong>Assigned Team Lead:</strong> <t t-esc="doc.team_lead_ids.name"/></p>
+                                        <p><strong>Team Members:</strong>
+                                            <t t-foreach="doc.team_member_id" t-as="member">
+                                                <t t-esc="member.name"/> <t t-if="member != doc.team_member_id[-1]">, </t>
+                                            </t>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Hazards Table -->
+                            <table class="table table-bordered" style="width:100%; margin-top:20px;">
+                                <thead>
+                                    <tr style="background-color:#f2f2f2;">
+                                        <th>Select Hazard</th>
+                                        <th>Hazard Event</th>
+                                        <th>Consequences</th>
+                                        <th>Likelihood</th>
+                                        <th>Severity Level</th>
+                                        <th>Risk Level</th>
+                                        <th>Control Measures</th>
+                                        <th>Control Description</th>
+                                        <th>Post Likelihood</th>
+                                        <th>Post Severity Level</th>
+                                        <th>Post Risk Level</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="doc.hazard_ids" t-as="line">
+                                        <tr>
+                                            <td><t t-esc="line.hazards_selection.name"/></td>
+                                            <td><t t-esc="line.description"/></td>
+                                            <td><t t-esc="line.consequences"/></td>
+                                            <td><t t-esc="line.likelihood"/></td>
+                                            <td><t t-esc="line.severity_level"/></td>
+                                            <td><t t-esc="line.risk_level"/></td>
+                                            <td>
+                                                <t t-foreach="line.control_ids" t-as="control">
+                                                    <t t-esc="control.control_measure"/>
+                                                    <t t-if="control != line.control_ids[-1]">, </t>
+                                                </t>
+                                            </td>
+                                            <td><t t-esc="line.control_description"/></td>
+                                            <td><t t-esc="line.post_likelihood"/></td>
+                                            <td><t t-esc="line.post_severity_level"/></td>
+                                            <td><t t-esc="line.risk_level_"/></td>
+
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Define the Report Action -->
+        <record id="action_ra_jsa_report" model="ir.actions.report">
+            <field name="name">RA/JSA Report</field>
+            <field name="model">ra_jsa.model</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">hse_reports.rs_jsa_report_template</field>
+            <field name="report_file">hse_reports.rs_jsa_report_template</field>
+            <field name="binding_model_id" ref="hse.model_ra_jsa_model"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>

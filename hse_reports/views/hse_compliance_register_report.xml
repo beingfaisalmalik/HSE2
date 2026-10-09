@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Regulatory Compliance Obligation Register Report (dynamic) -->
+        <template id="report_hse_compliance_register_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page" style="font-family: Arial, sans-serif; font-size: 11px; line-height: 1.4; color: #1e293b;">
+                            <div style="background: linear-gradient(135deg, #064e3b 0%, #10b981 100%); color: #ffffff; padding: 14px 18px; border-radius: 8px; margin-bottom: 16px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                                    <div>
+                                        <h3 style="margin: 0; font-size: 18px; font-weight: bold; color: #ffffff;">REGULATORY COMPLIANCE OBLIGATION</h3>
+                                        <div style="font-size: 10px; color: #d1fae5;">
+                                            <t t-esc="doc.regulation_id.code"/> · <t t-esc="doc.regulation_id.regulatory_body"/>
+                                            <t t-if="doc.regulation_id.jurisdiction"> · <t t-esc="doc.regulation_id.jurisdiction"/></t>
+                                        </div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 14px; font-weight: bold; color: #ffffff;"><t t-esc="doc.clause_code"/></div>
+                                        <div style="font-size: 10px; color: #d1fae5;"><t t-esc="doc.regulation_id.name"/></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table table-bordered table-sm" style="width: 100%; margin-bottom: 12px;">
+                                <tr style="background: #ecfdf5;">
+                                    <th colspan="2" style="font-size: 12px;">Requirement</th>
+                                </tr>
+                                <tr>
+                                    <td style="width: 26%; font-weight: bold; background: #f8fafc;">Summary:</td>
+                                    <td><strong><t t-esc="doc.name"/></strong></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Full Legal Mandate:</td>
+                                    <td><t t-esc="doc.mandatory_rule or ''"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Verification Frequency:</td>
+                                    <td><t t-esc="dict(doc._fields['monitoring_frequency'].selection).get(doc.monitoring_frequency, doc.monitoring_frequency or '')"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Responsible Specialist:</td>
+                                    <td><t t-esc="doc.responsible_id.name or '— Unassigned —'"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Site Compliance Status:</td>
+                                    <td>
+                                        <span t-att-style="'display:inline-block; padding:2px 10px; border-radius:999px; font-weight:bold; font-size:10px; ' + ('background:#fef2f2; color:#b91c1c;' if doc.compliance_status == 'non_compliant' else 'background:#fffbeb; color:#b45309;' if doc.compliance_status == 'partial' else 'background:#f0fdf4; color:#15803d;')">
+                                            <t t-esc="dict(doc._fields['compliance_status'].selection).get(doc.compliance_status, doc.compliance_status or '')"/>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <record id="action_report_hse_compliance_register" model="ir.actions.report">
+            <field name="name">Compliance Obligation Sheet</field>
+            <field name="model">hse.compliance.obligation</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">hse_reports.report_hse_compliance_register_template</field>
+            <field name="report_file">hse_reports.report_hse_compliance_register_template</field>
+            <field name="binding_model_id" ref="hse.model_hse_compliance_obligation"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hse.RiskMatrixWidget">
+        <div class="hse-interactive-risk-widget p-3 rounded-3 shadow-sm border bg-white">
+            <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                <div>
+                    <h5 class="mb-0 font-weight-bold text-dark d-flex align-items-center gap-2">
+                        <i class="fa fa-th text-primary"/> Interactive 5x5 ALARP Risk Matrix
+                    </h5>
+                    <span class="text-muted small">Click any cell to dynamically assign Severity &amp; Likelihood</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge px-3 py-2 rounded-pill font-weight-bold" t-att-class="currentRiskLevel.class" t-attf-style="background-color: #{currentRiskLevel.color}; color: white; font-size: 0.9rem;">
+                        Score: <t t-esc="currentScore"/> - <t t-esc="currentRiskLevel.name"/>
+                    </span>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="risk-matrix-interactive-table w-100">
+                    <thead>
+                        <tr>
+                            <th class="text-muted small" style="width: 100px;">Likelihood</th>
+                            <th>1 - Negligible</th>
+                            <th>2 - Minor</th>
+                            <th>3 - Moderate</th>
+                            <th>4 - Major</th>
+                            <th>5 - Catastrophic</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="matrixRows" t-as="row" t-key="row.likelihood">
+                            <tr>
+                                <td class="matrix-axis-label">
+                                    <t t-if="row.likelihood == 5">5 - Almost Certain</t>
+                                    <t t-elif="row.likelihood == 4">4 - Likely</t>
+                                    <t t-elif="row.likelihood == 3">3 - Possible</t>
+                                    <t t-elif="row.likelihood == 2">2 - Unlikely</t>
+                                    <t t-else="">1 - Rare</t>
+                                </td>
+                                <t t-foreach="row.cols" t-as="cell" t-key="cell.consequence">
+                                    <td t-att-class="cell.class"
+                                        t-on-click="() => this.selectCell(cell.consequence, cell.likelihood)"
+                                        t-att-title="'Severity ' + cell.consequence + ' x Likelihood ' + cell.likelihood + ' = Score ' + cell.score">
+                                        <div class="cell-inner">
+                                            <span class="score-text"><t t-esc="cell.score"/></span>
+                                            <t t-if="cell.isSelected">
+                                                <i class="fa fa-check-circle selected-icon"/>
+                                            </t>
+                                        </div>
+                                    </td>
+                                </t>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top text-muted small">
+                <div class="d-flex gap-3">
+                    <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#10b981;"/> Low (1-3)</span>
+                    <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#f59e0b;"/> Medium (4-9)</span>
+                    <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#f97316;"/> High (10-15)</span>
+                    <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#ef4444;"/> Critical (16-25)</span>
+                </div>
+                <div class="text-muted font-italic">
+                    Selected: <strong>S: <t t-esc="currentSeverity"/> | L: <t t-esc="currentLikelihood"/></strong>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Action First -->
+        <record id="action_hse_barrier_element" model="ir.actions.act_window">
+            <field name="name">Safety Barrier Integrity Elements</field>
+            <field name="res_model">hse.barrier.element</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Barrier Tree View -->
+        <record id="view_hse_barrier_element_tree" model="ir.ui.view">
+            <field name="name">hse.barrier.element.tree</field>
+            <field name="model">hse.barrier.element</field>
+            <field name="arch" type="xml">
+                <tree string="Safety Barrier Integrity Register"
+                      decoration-success="health_status == 'effective'"
+                      decoration-warning="health_status == 'degraded'"
+                      decoration-info="health_status == 'bypassed'"
+                      decoration-danger="health_status == 'failed'">
+                    <field name="name" bold="1"/>
+                    <field name="location_id"/>
+                    <field name="barrier_type" widget="badge"/>
+                    <field name="barrier_role" widget="badge"/>
+                    <field name="sece_id"/>
+                    <field name="sif_id"/>
+                    <field name="health_status" widget="badge"
+                           decoration-success="health_status == 'effective'"
+                           decoration-warning="health_status == 'degraded'"
+                           decoration-danger="health_status == 'failed'"/>
+                    <field name="is_impaired" widget="boolean_toggle"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Barrier Form View -->
+        <record id="view_hse_barrier_element_form" model="ir.ui.view">
+            <field name="name">hse.barrier.element.form</field>
+            <field name="model">hse.barrier.element</field>
+            <field name="arch" type="xml">
+                <form string="Safety Barrier Integrity Element">
+                    <header>
+                        <button name="action_set_healthy" string="Restore Barrier to Healthy" type="object"
+                                class="btn-success" invisible="health_status == 'effective'"/>
+                        <button name="action_set_degraded" string="Mark Degraded" type="object"
+                                class="btn-warning" invisible="health_status == 'degraded'"/>
+                        <button name="action_set_bypassed" string="Log Barrier Bypass" type="object"
+                                class="btn-info" invisible="health_status == 'bypassed'"/>
+                        <button name="action_set_failed" string="Declare FAILED Barrier" type="object"
+                                class="btn-danger" invisible="health_status == 'failed'"/>
+                        <field name="health_status" widget="statusbar" statusbar_visible="effective,degraded,bypassed,failed"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%); border-left: 6px solid #7dd3fc; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🧱</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Safety Barrier Elements</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Hardware / human / organizational barrier health</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                        <div class="oe_title">
+                            <label for="name" string="Barrier Tag / Identifier"/>
+                            <h1><field name="name" placeholder="e.g. BARRIER-ESD-201"/></h1>
+                        </div>
+
+                        <div class="alert alert-danger d-flex align-items-center mb-3" role="alert"
+                             invisible="not is_impaired">
+                            <i class="fa fa-shield fa-2x me-3"/>
+                            <div>
+                                <h5 class="mb-0 font-weight-bold">BARRIER IMPAIRED</h5>
+                                <span>Compensatory controls must be active to maintain safe operational risk.</span>
+                            </div>
+                        </div>
+
+                        <field name="is_impaired" invisible="1"/>
+
+                        <group>
+                            <group string="Barrier Classification">
+                                <field name="location_id"/>
+                                <field name="barrier_type"/>
+                                <field name="barrier_role"/>
+                            </group>
+                            <group string="Associated Safety Assets">
+                                <field name="sece_id" invisible="barrier_type != 'hardware'"/>
+                                <field name="sif_id" invisible="barrier_type != 'hardware'"/>
+                                <field name="procedure_id" invisible="barrier_type == 'hardware'"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Impairment Cause &amp; Compensatory Controls" name="impairment">
+                                <group>
+                                    <field name="impairment_reason" placeholder="Corrosion thinning, delayed proof test, physical damage..."/>
+                                    <field name="compensatory_measures" placeholder="Dedicated fire watch, manual operator station, lowered alarm limits..."/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

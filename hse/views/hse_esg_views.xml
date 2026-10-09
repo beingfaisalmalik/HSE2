@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- ESG Accounting Tree View -->
+        <record id="view_hse_esg_accounting_tree" model="ir.ui.view">
+            <field name="name">hse.esg.accounting.tree</field>
+            <field name="model">hse.esg.accounting</field>
+            <field name="arch" type="xml">
+                <tree string="ESG Carbon Accounting &amp; Environmental Stewardship"
+                      decoration-success="state == 'published'"
+                      decoration-info="state == 'third_party_assured'"
+                      decoration-warning="state == 'internal_review'">
+                    <field name="name" bold="1"/>
+                    <field name="reporting_year"/>
+                    <field name="reporting_period"/>
+                    <field name="location_id"/>
+                    <field name="total_scope1_co2e" string="Scope 1 (tCO₂e)"/>
+                    <field name="scope2_market_based_co2e" string="Scope 2 (tCO₂e)"/>
+                    <field name="total_scope3_co2e" string="Scope 3 (tCO₂e)"/>
+                    <field name="total_net_ghg_co2e" string="Net GHG (tCO₂e)" bold="1"/>
+                    <field name="ghg_intensity_per_tonne" string="Carbon Intensity"/>
+                    <field name="water_recycling_ratio_pct" string="Water Circularity %"/>
+                    <field name="landfill_diversion_rate_pct" string="Zero-Waste-to-Landfill %"/>
+                    <field name="state" widget="badge" decoration-success="state == 'published'"
+                           decoration-info="state == 'third_party_assured'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- ESG Accounting Form View -->
+        <record id="view_hse_esg_accounting_form" model="ir.ui.view">
+            <field name="name">hse.esg.accounting.form</field>
+            <field name="model">hse.esg.accounting</field>
+            <field name="arch" type="xml">
+                <form string="ESG Carbon Accounting &amp; Environmental Stewardship">
+                    <header>
+                        <button name="action_internal_review" string="Submit for Environmental Audit" type="object"
+                                class="btn-primary" invisible="state != 'draft'"/>
+                        <button name="action_third_party_assure" string="Record Third-Party Assurance (ISAE 3000)" type="object"
+                                class="btn-info" invisible="state != 'internal_review'"/>
+                        <button name="action_publish" string="Publish in Annual ESG Report" type="object"
+                                class="btn-success" invisible="state != 'third_party_assured'"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,internal_review,third_party_assured,published"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #064e3b 0%, #059669 100%); border-left: 6px solid #6ee7b7; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🌍</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">ESG &amp; Carbon Accounting</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Scope 1-3 GHG inventory, water &amp; circularity</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_title">
+                            <label for="name" string="ESG Accounting Record #"/>
+                            <h1><field name="name"/></h1>
+                            <h3>Year <field name="reporting_year"/> — <field name="reporting_period"/></h3>
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-3">
+                                <div class="card p-3 bg-light border-0">
+                                    <span class="text-muted small">Total Net Corporate GHG</span>
+                                    <h3 class="mb-0 text-success font-weight-bold"><field name="total_net_ghg_co2e" readonly="1"/> tCO₂e</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card p-3 bg-light border-0">
+                                    <span class="text-muted small">Carbon Intensity Ratio</span>
+                                    <h3 class="mb-0 text-primary font-weight-bold"><field name="ghg_intensity_per_tonne" readonly="1"/> t/t</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card p-3 bg-light border-0">
+                                    <span class="text-muted small">Water Recycling Ratio</span>
+                                    <h3 class="mb-0 text-info font-weight-bold"><field name="water_recycling_ratio_pct" readonly="1"/> %</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card p-3 bg-light border-0">
+                                    <span class="text-muted small">Zero Waste Diversion Rate</span>
+                                    <h3 class="mb-0 text-warning font-weight-bold"><field name="landfill_diversion_rate_pct" readonly="1"/> %</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <group>
+                            <group string="Facility Context &amp; Production">
+                                <field name="location_id"/>
+                                <field name="production_output_tonnes"/>
+                            </group>
+                            <group string="Carbon Offsets &amp; Removal">
+                                <field name="carbon_credits_purchased_t"/>
+                                <field name="carbon_capture_storage_t"/>
+                                <field name="total_gross_ghg_co2e"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Scope 1: Direct Operations GHG" name="scope1">
+                                <group>
+                                    <group string="Combustion &amp; Process Sources">
+                                        <field name="scope1_fuel_gas_tonnes"/>
+                                        <field name="scope1_diesel_tonnes"/>
+                                        <field name="scope1_flaring_tonnes"/>
+                                        <field name="scope1_fugitive_tonnes"/>
+                                    </group>
+                                    <group string="Scope 1 Total">
+                                        <field name="total_scope1_co2e" bold="1"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Scope 2: Purchased Electricity GHG" name="scope2">
+                                <group>
+                                    <group string="Power Grid &amp; Renewables">
+                                        <field name="electricity_consumed_mwh"/>
+                                        <field name="grid_emission_factor_kg_kwh"/>
+                                        <field name="renewable_energy_recs_mwh"/>
+                                    </group>
+                                    <group string="Scope 2 Accounting Methods">
+                                        <field name="scope2_location_based_co2e"/>
+                                        <field name="scope2_market_based_co2e" bold="1"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Scope 3: Upstream &amp; Downstream Value Chain" name="scope3">
+                                <group>
+                                    <group string="Categories 1 - 4 (Upstream)">
+                                        <field name="scope3_cat1_purchased_goods"/>
+                                        <field name="scope3_cat3_fuel_energy"/>
+                                        <field name="scope3_cat4_logistics"/>
+                                    </group>
+                                    <group string="Categories 5 - 7 (Operations &amp; Travel)">
+                                        <field name="scope3_cat5_waste"/>
+                                        <field name="scope3_cat6_travel"/>
+                                        <field name="scope3_cat7_commuting"/>
+                                        <field name="total_scope3_co2e" bold="1"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Water Stewardship &amp; Balance" name="water">
+                                <group>
+                                    <group string="Inflow &amp; Consumption">
+                                        <field name="water_fresh_withdrawn_m3"/>
+                                        <field name="water_recycled_m3"/>
+                                    </group>
+                                    <group string="Effluent &amp; Intensity">
+                                        <field name="water_discharged_m3"/>
+                                        <field name="water_intensity_per_tonne"/>
+                                        <field name="water_recycling_ratio_pct"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Solid Waste &amp; Circular Economy" name="waste">
+                                <group>
+                                    <group string="Waste Generation (Tonnes)">
+                                        <field name="hazardous_waste_t"/>
+                                        <field name="non_hazardous_waste_t"/>
+                                    </group>
+                                    <group string="Diversion &amp; Disposal">
+                                        <field name="waste_recycled_t"/>
+                                        <field name="waste_landfilled_t"/>
+                                        <field name="landfill_diversion_rate_pct"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_hse_esg_accounting" model="ir.actions.act_window">
+            <field name="name">ESG Carbon Accounting &amp; Circular Economy</field>
+            <field name="res_model">hse.esg.accounting</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

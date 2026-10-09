@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Statutory equipment certifications, personnel certifications,
+         competency records, training-gap matrix, meetings, operator log,
+         failure reporting, defect elimination, continuous improvement. -->
+    <data noupdate="1">
+
+        <!-- ================= Equipment statutory certifications ========= -->
+        <record id="dd_cert_pv" model="hse.equipment.certification">
+            <field name="certificate_number">PV-2019-0442</field>
+            <field name="title">V-101 slug catcher — statutory internal &amp; external inspection</field>
+            <field name="asset_id" ref="dd_asset_vessel"/>
+            <field name="location_id" ref="dd_loc_unit100"/>
+            <field name="cert_type">pressure_vessel</field>
+            <field name="certifying_authority">DNV Inspection Services</field>
+            <field name="inspector_name">Certified API 510 Inspector #510-8842</field>
+            <field name="issue_date" eval="(datetime.now() - timedelta(days=395)).strftime('%Y-%m-%d')"/>
+            <field name="expiry_date" eval="(datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')"/>
+            <field name="inspection_interval_months">12</field>
+            <field name="design_pressure_psi">690</field>
+            <field name="test_pressure_psi">1035</field>
+            <field name="inspection_findings">Wall thickness readings within t-min except nozzle N-3 (recommend UT follow-up in next window).</field>
+        </record>
+        <record id="dd_cert_psv" model="hse.equipment.certification">
+            <field name="certificate_number">PSV-2026-0117</field>
+            <field name="title">PSV-101/A relief valve bench test &amp; certification</field>
+            <field name="asset_id" ref="dd_asset_vessel"/>
+            <field name="location_id" ref="dd_loc_unit100"/>
+            <field name="cert_type">relief_valve</field>
+            <field name="certifying_authority">TÜV SÜD Valve Services</field>
+            <field name="issue_date" eval="(datetime.now() - timedelta(days=340)).strftime('%Y-%m-%d')"/>
+            <field name="expiry_date" eval="(datetime.now() + timedelta(days=25)).strftime('%Y-%m-%d')"/>
+            <field name="test_pressure_psi">700</field>
+        </record>
+        <record id="dd_cert_crane" model="hse.equipment.certification">
+            <field name="certificate_number">LOLER-2026-0088</field>
+            <field name="title">Gantry Crane G-05 — 125% proof load test</field>
+            <field name="asset_id" ref="dd_asset_crane"/>
+            <field name="location_id" ref="dd_loc_wh"/>
+            <field name="cert_type">lifting_equipment</field>
+            <field name="certifying_authority">Lloyd's Register</field>
+            <field name="issue_date" eval="(datetime.now() - timedelta(days=85)).strftime('%Y-%m-%d')"/>
+            <field name="expiry_date" eval="(datetime.now() + timedelta(days=280)).strftime('%Y-%m-%d')"/>
+            <field name="safe_working_load_ton">20</field>
+            <field name="inspection_findings">Brakes, limit switches and load cell verified; no defects.</field>
+        </record>
+        <record id="dd_cert_atex" model="hse.equipment.certification">
+            <field name="certificate_number">ATEX-2026-0301</field>
+            <field name="title">Zone-1 junction boxes JB-210..215 explosion-proof verification</field>
+            <field name="asset_id" ref="dd_asset_reactor"/>
+            <field name="location_id" ref="dd_loc_unit200"/>
+            <field name="cert_type">atex_hazardous</field>
+            <field name="certifying_authority">SGS Baseefa</field>
+            <field name="issue_date" eval="(datetime.now() - timedelta(days=60)).strftime('%Y-%m-%d')"/>
+            <field name="expiry_date" eval="(datetime.now() + timedelta(days=400)).strftime('%Y-%m-%d')"/>
+        </record>
+
+        <!-- ================= Personnel certifications =================== -->
+        <record id="dd_pcert_ahmed" model="hse.personnel.certification">
+            <field name="certification_name">Authorized Gas Tester Card</field>
+            <field name="certificate_number">AGT-2291</field>
+            <field name="certification_type">other</field>
+            <field name="person_type">employee</field>
+            <field name="employee_id" ref="dd_emp_ahmed"/>
+            <field name="issuing_body">OPITO Approved Center</field>
+            <field name="issue_date" eval="(datetime.now() - timedelta(days=375)).strftime('%Y-%m-%d')"/>
+            <field name="expiry_date" eval="(datetime.now() - timedelta(days=10)).strftime('%Y-%m-%d')"/>
+            <field name="state">expired</field>
+        </record>
+        <record id="dd_pcert_sara" model="hse.personnel.certification">
+            <field name="certification_name">Confined Space Entrant Certificate</field>
+            <field name="certificate_number">CSE-7756</field>
+            <field name="certification_type">confined_space</field>
+            <field name="person_type">employee</field>
+            <field name="employee_id" ref="dd_emp_sara"/>
+            <field name="issuing_body">IOSH Approved Provider</field>
+            <field name="issue_date" eval="(datetime.now() - timedelta(days=330)).strftime('%Y-%m-%d')"/>
+            <field name="expiry_date" eval="(datetime.now() + timedelta(days=40)).strftime('%Y-%m-%d')"/>
+            <field name="state">expiring</field>
+        </record>
+        <record id="dd_pcert_bilal" model="hse.personnel.certification">
+            <field name="certification_name">Rigging &amp; Slinging Level-2</field>
+            <field name="certificate_number">RIG-4410</field>
+            <field name="certification_type">crane_rigging</field>
+            <field name="person_type">employee</field>
+            <field name="employee_id" ref="dd_emp_bilal"/>
+            <field name="issuing_body">LEEA Approved Center</field>
+            <field name="issue_date" eval="(datetime.now() - timedelta(days=65)).strftime('%Y-%m-%d')"/>
+            <field name="expiry_date" eval="(datetime.now() + timedelta(days=300)).strftime('%Y-%m-%d')"/>
+            <field name="state">valid</field>
+        </record>
+
+        <!-- ================= Employee competencies ====================== -->
+        <record id="dd_ec_ahmed" model="hse.employee.competency">
+            <field name="employee_id" ref="dd_emp_ahmed"/>
+            <field name="competency_id" ref="dd_comp_agt"/>
+            <field name="proficiency_level">level3</field>
+            <field name="expiry_date" eval="(datetime.now() + timedelta(days=200)).strftime('%Y-%m-%d')"/>
+            <field name="evidence_notes">Re-assessed on live permit simulation; gas chart interpretation excellent.</field>
+            <field name="state">active</field>
+        </record>
+        <record id="dd_ec_sara" model="hse.employee.competency">
+            <field name="employee_id" ref="dd_emp_sara"/>
+            <field name="competency_id" ref="dd_comp_ptw"/>
+            <field name="proficiency_level">level2</field>
+            <field name="expiry_date" eval="(datetime.now() - timedelta(days=15)).strftime('%Y-%m-%d')"/>
+            <field name="evidence_notes">Re-assessment scheduled; permit authorizing rights suspended until renewal.</field>
+            <field name="state">expired</field>
+        </record>
+        <record id="dd_ec_bilal" model="hse.employee.competency">
+            <field name="employee_id" ref="dd_emp_bilal"/>
+            <field name="competency_id" ref="dd_comp_loto"/>
+            <field name="proficiency_level">level3</field>
+            <field name="expiry_date" eval="(datetime.now() + timedelta(days=30)).strftime('%Y-%m-%d')"/>
+            <field name="evidence_notes">Practical zero-energy verification observed with minor coaching notes.</field>
+            <field name="state">under_reassessment</field>
+        </record>
+
+        <!-- ================= Training & competency gap matrix =========== -->
+        <record id="dd_tm_2026" model="hse.training.matrix">
+            <field name="name">Annual Training Gap Matrix — Operations &amp; Maintenance 2026</field>
+            <field name="department_id" ref="dd_dept_operations"/>
+            <field name="state">calculated</field>
+        </record>
+        <record id="dd_tml_1" model="hse.training.matrix.line">
+            <field name="matrix_id" ref="dd_tm_2026"/>
+            <field name="employee_id" ref="dd_emp_ahmed"/>
+            <field name="job_id" ref="dd_job_operator"/>
+            <field name="competency_id" ref="dd_comp_agt"/>
+            <field name="required_level">level3</field>
+            <field name="current_level">level3</field>
+            <field name="expiry_date" eval="(datetime.now() + timedelta(days=200)).strftime('%Y-%m-%d')"/>
+            <field name="status">compliant</field>
+        </record>
+        <record id="dd_tml_2" model="hse.training.matrix.line">
+            <field name="matrix_id" ref="dd_tm_2026"/>
+            <field name="employee_id" ref="dd_emp_sara"/>
+            <field name="job_id" ref="dd_job_operator"/>
+            <field name="competency_id" ref="dd_comp_ptw"/>
+            <field name="required_level">level3</field>
+            <field name="current_level">level2</field>
+            <field name="status">expired</field>
+        </record>
+        <record id="dd_tml_3" model="hse.training.matrix.line">
+            <field name="matrix_id" ref="dd_tm_2026"/>
+            <field name="employee_id" ref="dd_emp_john"/>
+            <field name="job_id" ref="dd_job_tech"/>
+            <field name="competency_id" ref="dd_comp_cse"/>
+            <field name="required_level">level2</field>
+            <field name="current_level">level2</field>
+            <field name="expiry_date" eval="(datetime.now() + timedelta(days=45)).strftime('%Y-%m-%d')"/>
+            <field name="status">expiring_soon</field>
+        </record>
+        <record id="dd_tml_4" model="hse.training.matrix.line">
+            <field name="matrix_id" ref="dd_tm_2026"/>
+            <field name="employee_id" ref="dd_emp_bilal"/>
+            <field name="job_id" ref="dd_job_tech"/>
+            <field name="competency_id" ref="dd_comp_loto"/>
+            <field name="required_level">level3</field>
+            <field name="current_level">none</field>
+            <field name="status">missing</field>
+        </record>
+        <record id="dd_tml_5" model="hse.training.matrix.line">
+            <field name="matrix_id" ref="dd_tm_2026"/>
+            <field name="employee_id" ref="dd_emp_sara"/>
+            <field name="job_id" ref="dd_job_operator"/>
+            <field name="competency_id" ref="dd_comp_cse"/>
+            <field name="required_level">level2</field>
+            <field name="current_level">level2</field>
+            <field name="expiry_date" eval="(datetime.now() + timedelta(days=40)).strftime('%Y-%m-%d')"/>
+            <field name="status">expiring_soon</field>
+        </record>
+
+        <!-- ================= Safety meetings ============================ -->
+        <record id="dd_meet_1" model="hse.meeting">
+            <field name="department_id" ref="dd_meetdept_operations"/>
+            <field name="meeting_type_ids" ref="dd_mtype_toolbox"/>
+            <field name="topic">Dropped Object Prevention &amp; Tool Tethering</field>
+            <field name="present_employees">45</field>
+            <field name="meeting_attend_employees">41</field>
+            <field name="duration">0.5</field>
+            <field name="meeting_datetime" eval="(datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d 06:15:00')"/>
+            <field name="minutes_of_meeting">&lt;p&gt;Crew briefed on Unit-200 scaffold clamp dropped object. Actions: tether audit at each PTW round; DROPS toolbox repeated for night shift.&lt;/p&gt;</field>
+        </record>
+        <record id="dd_meet_2" model="hse.meeting">
+            <field name="department_id" ref="dd_meetdept_operations"/>
+            <field name="meeting_type_ids" ref="dd_mtype_mgmt"/>
+            <field name="topic">Monthly HSE Performance Review — KPIs, LTI Investigation &amp; Compliance</field>
+            <field name="present_employees">14</field>
+            <field name="meeting_attend_employees">12</field>
+            <field name="duration">1.5</field>
+            <field name="meeting_datetime" eval="(datetime.now() - timedelta(days=20)).strftime('%Y-%m-%d 14:00:00')"/>
+            <field name="minutes_of_meeting">&lt;p&gt;Reviewed TRIR trend, days-without-LTI counter, ISO audit findings and MOC governance. CAPA overdue list assigned owners with dates.&lt;/p&gt;</field>
+        </record>
+
+        <!-- ================= Operator shift log ========================= -->
+        <record id="dd_oplog_1" model="hse.operator.log">
+            <field name="location_id" ref="dd_loc_unit100"/>
+            <field name="shift_type">day</field>
+            <field name="operating_status">normal</field>
+            <field name="production_output">Ethylene 1,240 t; flare &lt;1% loss</field>
+            <field name="field_operators">Ahmed Raza, Sara Khan</field>
+            <field name="state">open</field>
+        </record>
+
+        <!-- ================= Equipment failure (ISO 14224) ============== -->
+        <record id="dd_fail_k301" model="hse.failure.report">
+            <field name="asset_id" ref="dd_asset_compressor"/>
+            <field name="location_id" ref="dd_loc_unit100"/>
+            <field name="failure_date" eval="(datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d 03:40:00')"/>
+            <field name="equipment_class">compressor</field>
+            <field name="failure_mechanism">fatigue</field>
+            <field name="failure_cause">lubrication</field>
+            <field name="detection_method">alarm</field>
+            <field name="impact_level">shutdown</field>
+            <field name="failed_component">Drive-end bearing</field>
+            <field name="failure_mode">vib_high</field>
+            <field name="state">rcfa</field>
+        </record>
+
+        <!-- ================= Defect elimination ========================= -->
+        <record id="dd_defect_k301" model="hse.defect.elimination">
+            <field name="title">K-301 recurring summer high-temperature trips</field>
+            <field name="asset_id" ref="dd_asset_compressor"/>
+            <field name="location_id" ref="dd_loc_unit100"/>
+            <field name="failures_last_12_months">24</field>
+            <field name="defect_category">repeat_trip</field>
+            <field name="defect_description">Two trips per month during ambient peaks; each trip flares &gt;2t and stresses the steam system.</field>
+            <field name="underlying_cause">Undersized suction air cooler plus fouled inter-stage piping elevating discharge temperature.</field>
+            <field name="elimination_strategy">Trim intercoolder capacity, adopt condition-based cleaning from vibration/temperature trending, update alarm rationalization.</field>
+            <field name="state">action_execution</field>
+        </record>
+
+        <!-- ================= Continuous improvement ===================== -->
+        <record id="dd_impr_drums" model="hse.improvement">
+            <field name="title">Mechanical drum handling at warehouse decant station</field>
+            <field name="initiative_type">suggestion</field>
+            <field name="category">safety</field>
+            <field name="current_state">Manual handling of 200L drums; two near-miss hand injuries and recurring ergonomic complaints.</field>
+            <field name="proposed_solution">Introduce ATEX drum trolleys, re-layout decant station and add task to BBS checklist.</field>
+            <field name="state">approved</field>
+        </record>
+
+    </data>
+</odoo>

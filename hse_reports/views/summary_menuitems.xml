@@ -1,0 +1,10 @@
+<odoo>
+        <menuitem id="menu_summary_report" name="Summary Report Of RA/JSA" parent="hse.menu_risk_assessment_main" action="hse_wizard_report_window_action" sequence="25">
+        </menuitem>
+        <menuitem id="menu_summary_report_obs" name="Summary Report Of Observation" parent="hse.menu_observation_main" action="observation_wizard_window_action" sequence="26">
+        </menuitem>
+        <menuitem id="menu_summary_report_rep" name="Summary Report Of Incident Reporting" parent="hse.menu_incident_reporting_main" action="incident_reporting_wizard_window_action" sequence="26">
+        </menuitem>
+        <menuitem id="menu_summary_report_inv" name="Summary Report Of Incident Investigation" parent="hse.menu_incident_investigation_main" action="incident_investigation_wizard_window_action" sequence="26">
+        </menuitem>
+</odoo>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Preparation Activity Form -->
+    <record id="view_hse_preparation_activity_form" model="ir.ui.view">
+        <field name="name">hse.preparation.activity.form</field>
+        <field name="model">hse.preparation.activity</field>
+        <field name="arch" type="xml">
+            <form string="Work Package Preparation Activity">
+                <header>
+                    <button name="action_start_prep" string="Start Preparation" type="object" invisible="state != 'draft'" class="btn-primary"/>
+                    <button name="action_evaluate_gates" string="Review Readiness Gates" type="object" invisible="state != 'in_prep'" class="btn-primary"/>
+                    <button name="action_authorize_ready" string="Authorize: Ready for Execution" type="object" invisible="state != 'gate_review'" class="btn-success"/>
+                    <button name="action_complete" string="Complete Package" type="object" invisible="state != 'ready'" class="btn-primary"/>
+                    <button name="action_cancel" string="Cancel" type="object" invisible="state in ('completed', 'cancelled')" class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in_prep,gate_review,ready,completed"/>
+                </header>
+                <sheet>
+                    <div class="hse-x-hero" style="background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%); border-left: 6px solid #7dd3fc; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🧰</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Preparation Activities</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Turnaround readiness gates and pre-job task packages</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                    <div class="oe_title">
+                        <span class="text-muted"><field name="name"/></span>
+                        <h1><field name="title" placeholder="Preparation Work Package Title"/></h1>
+                    </div>
+                    <group>
+                        <group string="Package Scope">
+                            <field name="activity_type"/>
+                            <field name="location_id"/>
+                            <field name="asset_id"/>
+                            <field name="scheduled_date"/>
+                            <field name="coordinator_id"/>
+                        </group>
+                        <group string="Readiness &amp; Associated Plans">
+                            <field name="readiness_progress" widget="progressbar"/>
+                            <field name="permit_id"/>
+                            <field name="loto_plan_id"/>
+                        </group>
+                    </group>
+                    <group string="Readiness Gates (Gatekeeper Authorization)">
+                        <group>
+                            <field name="gate1_planning" widget="boolean_toggle"/>
+                            <field name="gate2_isolation" widget="boolean_toggle"/>
+                        </group>
+                        <group>
+                            <field name="gate3_site_prep" widget="boolean_toggle"/>
+                            <field name="gate4_ready" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Preparation Checklist Tasks">
+                            <field name="task_ids">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="task_category"/>
+                                    <field name="name"/>
+                                    <field name="responsible_person"/>
+                                    <field name="is_completed" widget="boolean_toggle"/>
+                                    <field name="completion_datetime"/>
+                                    <field name="notes"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Preparation Activity Tree -->
+    <record id="view_hse_preparation_activity_tree" model="ir.ui.view">
+        <field name="name">hse.preparation.activity.tree</field>
+        <field name="model">hse.preparation.activity</field>
+        <field name="arch" type="xml">
+            <tree string="Preparation Activities" decoration-success="state == 'ready'" decoration-info="state == 'in_prep'">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="activity_type"/>
+                <field name="location_id"/>
+                <field name="scheduled_date"/>
+                <field name="readiness_progress" widget="progressbar"/>
+                <field name="coordinator_id"/>
+                <field name="state" widget="badge" decoration-warning="state == 'gate_review'" decoration-success="state == 'ready'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_hse_preparation_activity" model="ir.actions.act_window">
+        <field name="name">Preparation Activities</field>
+        <field name="res_model">hse.preparation.activity</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Manage work package preparation activities, scaffolding, and readiness gates.</p>
+        </field>
+    </record>
+</odoo>

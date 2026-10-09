@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Competency Form -->
+    <record id="view_hse_competency_form" model="ir.ui.view">
+        <field name="name">hse.competency.form</field>
+        <field name="model">hse.competency</field>
+        <field name="arch" type="xml">
+            <form string="Safety Competency Standard">
+                <sheet>
+                    <div class="hse-x-hero" style="background: linear-gradient(135deg, #1e1b4b 0%, #4f46e5 100%); border-left: 6px solid #a5b4fc; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🎓</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Competency Assurance</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Role qualifications, assessments &amp; training matrix</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                    <div class="oe_title">
+                        <span class="text-muted"><field name="code"/></span>
+                        <h1><field name="name" placeholder="Competency Title (e.g. Authorized Gas Tester)"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category"/>
+                            <field name="validity_months"/>
+                            <field name="mandatory_for_permits" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description" placeholder="Competency performance standards and evaluation criteria..."/>
+                    </group>
+                    <notebook>
+                        <page string="Certified Workforce Matrix">
+                            <field name="assessment_ids">
+                                <tree>
+                                    <field name="employee_id"/>
+                                    <field name="proficiency_level"/>
+                                    <field name="assessment_date"/>
+                                    <field name="expiry_date"/>
+                                    <field name="assessor_id"/>
+                                    <field name="state" widget="badge" decoration-success="state == 'active'" decoration-danger="state == 'expired'"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+                    <div class="hse-x-meta" style="display: flex; gap: 16px; align-items: center; margin: -6px 0 10px 6px; font-size: 11px; color: #64748b; flex-wrap: wrap;"><span>🕒 Created <field name="create_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span><span>✏️ Updated <field name="write_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span></div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Competency Tree -->
+    <record id="view_hse_competency_tree" model="ir.ui.view">
+        <field name="name">hse.competency.tree</field>
+        <field name="model">hse.competency</field>
+        <field name="arch" type="xml">
+            <tree string="Competency Library">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="category"/>
+                <field name="validity_months"/>
+                <field name="mandatory_for_permits" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Employee Competency Form -->
+    <record id="view_hse_employee_competency_form" model="ir.ui.view">
+        <field name="name">hse.employee.competency.form</field>
+        <field name="model">hse.employee.competency</field>
+        <field name="arch" type="xml">
+            <form string="Worker Qualification Record">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="active,under_reassessment,expired"/>
+                </header>
+                <sheet>
+                    <div class="hse-x-hero" style="background: linear-gradient(135deg, #1e1b4b 0%, #4f46e5 100%); border-left: 6px solid #a5b4fc; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🎓</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Competency Assurance</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Role qualifications, assessments &amp; training matrix</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                    <div class="hse-x-meta" style="display: flex; gap: 16px; align-items: center; margin: -6px 0 10px 6px; font-size: 11px; color: #64748b; flex-wrap: wrap;"><span>🕒 Created <field name="create_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span><span>✏️ Updated <field name="write_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span></div>
+                    <group>
+                        <group string="Worker &amp; Competency">
+                            <field name="employee_id"/>
+                            <field name="competency_id"/>
+                            <field name="proficiency_level"/>
+                        </group>
+                        <group string="Assessment Details">
+                            <field name="assessment_date"/>
+                            <field name="expiry_date"/>
+                            <field name="assessor_id"/>
+                            <field name="is_expired" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="evidence_notes" placeholder="Practical assessment notes, written exam score, field demonstration..."/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Employee Competency Tree -->
+    <record id="view_hse_employee_competency_tree" model="ir.ui.view">
+        <field name="name">hse.employee.competency.tree</field>
+        <field name="model">hse.employee.competency</field>
+        <field name="arch" type="xml">
+            <tree string="Workforce Competency Records" decoration-danger="state == 'expired'" decoration-warning="state == 'under_reassessment'" decoration-success="state == 'active'">
+                <field name="employee_id"/>
+                <field name="competency_id"/>
+                <field name="proficiency_level"/>
+                <field name="assessment_date"/>
+                <field name="expiry_date"/>
+                <field name="assessor_id"/>
+                <field name="state" widget="badge" decoration-success="state == 'active'" decoration-danger="state == 'expired'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_hse_competency" model="ir.actions.act_window">
+        <field name="name">Competency Standards</field>
+        <field name="res_model">hse.competency</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_hse_employee_competency" model="ir.actions.act_window">
+        <field name="name">Workforce Competency Assurance</field>
+        <field name="res_model">hse.employee.competency</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

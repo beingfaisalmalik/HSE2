@@ -1,0 +1,12 @@
+<templates xml:space="preserve">
+
+    <t t-name="hse.SmartCounter" owl="1">
+        <span class="hse-smart-counter" t-esc="display"/>
+    </t>
+
+    <t t-name="hse.RelativeDateBadge" owl="1">
+        <span t-if="info" t-att-class="'hse-rel ' + info.cls" t-esc="info.label" t-att-title="info.exact"/>
+        <span t-else="" class="hse-rel hse-rel-none">—</span>
+    </t>
+
+</templates>

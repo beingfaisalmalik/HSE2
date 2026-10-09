@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- CAPA action engine, audits & findings, compliance register/tasks. -->
+    <data noupdate="1">
+
+        <!-- ================= CAPA / action tracking ==================== -->
+        <record id="dd_capa_1" model="hse.action">
+            <field name="title">Re-issue restart checklist with mandatory interruption point</field>
+            <field name="source_type">incident</field>
+            <field name="description">Update SOP-OPS-014 work instruction and K-301 area checklist; brief all shift crews; effectiveness check after 30 days.</field>
+            <field name="action_type">corrective</field>
+            <field name="priority">3</field>
+            <field name="target_date" eval="(datetime.now() - timedelta(days=6)).strftime('%Y-%m-%d')"/>
+            <field name="state">in_progress</field>
+            <field name="source_reference">dd_inc_lti1</field>
+        </record>
+        <record id="dd_capa_2" model="hse.action">
+            <field name="title">Thermographic scan of all LV distribution boards</field>
+            <field name="source_type">incident</field>
+            <field name="description">Quarterly IR scan program for LV switchboards following generator-room terminal fire.</field>
+            <field name="action_type">corrective</field>
+            <field name="priority">2</field>
+            <field name="target_date" eval="(datetime.now() - timedelta(days=2)).strftime('%Y-%m-%d')"/>
+            <field name="state">assigned</field>
+            <field name="source_reference">dd_inc_fire</field>
+        </record>
+        <record id="dd_capa_3" model="hse.action">
+            <field name="title">Tool tethering requirement for work at height</field>
+            <field name="source_type">observation</field>
+            <field name="description">Introduce mandatory tether points on all scaffold tools; audit during daily PTW round.</field>
+            <field name="action_type">preventive</field>
+            <field name="priority">2</field>
+            <field name="target_date" eval="(datetime.now() + timedelta(days=10)).strftime('%Y-%m-%d')"/>
+            <field name="state">in_progress</field>
+            <field name="source_reference">dd_inc_nm</field>
+        </record>
+        <record id="dd_capa_4" model="hse.action">
+            <field name="title">Anti-slip coating for warehouse dock ramp</field>
+            <field name="source_type">incident</field>
+            <field name="description">Apply anti-slip surface and add drainage improvement per engineering note EN-2211.</field>
+            <field name="action_type">corrective</field>
+            <field name="priority">1</field>
+            <field name="target_date" eval="(datetime.now() - timedelta(days=300)).strftime('%Y-%m-%d')"/>
+            <field name="state">verified</field>
+            <field name="source_reference">dd_inc_lti0</field>
+        </record>
+        <record id="dd_capa_5" model="hse.action">
+            <field name="title">Dropped-object prevention toolbox for all crews</field>
+            <field name="source_type">observation</field>
+            <field name="description">Standard DROPS presentation delivered at all shift handovers for one week; attendance recorded.</field>
+            <field name="action_type">containment</field>
+            <field name="priority">3</field>
+            <field name="target_date" eval="(datetime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="state">draft</field>
+            <field name="source_reference">dd_inc_nm</field>
+        </record>
+        <record id="dd_capa_6" model="hse.action">
+            <field name="title">Banksman refresher for site transport drivers</field>
+            <field name="source_type">incident</field>
+            <field name="description">Classroom + practical refresher covering reversing, spotting and blind-zone management.</field>
+            <field name="action_type">preventive</field>
+            <field name="priority">1</field>
+            <field name="target_date" eval="(datetime.now() + timedelta(days=21)).strftime('%Y-%m-%d')"/>
+            <field name="state">implemented</field>
+            <field name="source_reference">dd_inc_transport</field>
+        </record>
+
+        <!-- ================= HSE audits & checklist findings ============ -->
+        <record id="dd_audit_iso" model="hse.audit">
+            <field name="title">ISO 45001 Internal Audit — Unit-100 Operations &amp; Warehouse</field>
+            <field name="location_id" ref="dd_loc_unit100"/>
+            <field name="audit_team">Lead: Admin User; Members: Sara Khan (Ops), John Dsouza (Maintenance), HSE Advisor</field>
+            <field name="protocol">iso45001</field>
+            <field name="audit_date" eval="(datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d')"/>
+            <field name="target_end_date" eval="(datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d')"/>
+            <field name="state">fieldwork</field>
+        </record>
+        <record id="dd_chk_iso_1" model="hse.audit.checklist">
+            <field name="audit_id" ref="dd_audit_iso"/>
+            <field name="sequence">10</field>
+            <field name="requirement_clause">ISO 45001 §8.1.2 — Eliminating hazards and reducing OH&amp;S risks</field>
+            <field name="verification_criteria">Hierarchy-of-controls documented for top 5 site risks; temporary works risk-reviewed.</field>
+            <field name="finding_type">compliant</field>
+            <field name="evidence_notes">Risk register rev-7 reviewed; temporary pump skid guard RA-2024-118 on file.</field>
+        </record>
+        <record id="dd_chk_iso_2" model="hse.audit.checklist">
+            <field name="audit_id" ref="dd_audit_iso"/>
+            <field name="sequence">20</field>
+            <field name="requirement_clause">ISO 45001 §7.2 — Competence</field>
+            <field name="verification_criteria">Training matrix current; AGT certificates within validity for all permit authorizers.</field>
+            <field name="finding_type">major_nc</field>
+            <field name="evidence_notes">One permit authorizer (S. Khan) found with expired AGT card — personnel cert AGT-2291 expired.</field>
+        </record>
+        <record id="dd_chk_iso_3" model="hse.audit.checklist">
+            <field name="audit_id" ref="dd_audit_iso"/>
+            <field name="sequence">30</field>
+            <field name="requirement_clause">ISO 45001 §6.1 — Hazard identification &amp; legal requirements</field>
+            <field name="verification_criteria">Compliance obligations register maintained and reviewed quarterly.</field>
+            <field name="finding_type">minor_nc</field>
+            <field name="evidence_notes">Register last reviewed two quarters ago; update action raised as CAPA.</field>
+        </record>
+
+        <record id="dd_audit_psm" model="hse.audit">
+            <field name="title">OSHA PSM Compliance Audit — 3-Year Cycle</field>
+            <field name="location_id" ref="dd_loc_unit200"/>
+            <field name="audit_team">Corporate PSM Team + External Specialist (process safety)</field>
+            <field name="protocol">osha_psm</field>
+            <field name="audit_date" eval="(datetime.now() - timedelta(days=40)).strftime('%Y-%m-%d')"/>
+            <field name="target_end_date" eval="(datetime.now() - timedelta(days=33)).strftime('%Y-%m-%d')"/>
+            <field name="audit_summary">PSM system substantially conformant; 1 major NC on MOC field-close-out documentation, 2 minor NCs on PHA schedule tracking. All CAPAs assigned with dates.</field>
+            <field name="compliance_score_percent">88.5</field>
+            <field name="state">approved</field>
+        </record>
+
+        <!-- ================= Compliance obligations & tasks ============= -->
+        <record id="dd_obl_psm_e" model="hse.compliance.obligation">
+            <field name="regulation_id" ref="dd_reg_osha_psm"/>
+            <field name="clause_code">1910.119(e)</field>
+            <field name="name">Process Hazard Analysis (PHA) every 5 years for covered processes</field>
+            <field name="mandatory_rule">Initial PHA and revalidation at least every five (5) years with documented team methodology and resolution schedule.</field>
+            <field name="monitoring_frequency">annual</field>
+            <field name="compliance_status">compliant</field>
+        </record>
+        <record id="dd_obl_psm_j" model="hse.compliance.obligation">
+            <field name="regulation_id" ref="dd_reg_osha_psm"/>
+            <field name="clause_code">1910.119(j)</field>
+            <field name="name">Mechanical Integrity — inspection &amp; testing per RAGAGEP</field>
+            <field name="mandatory_rule">Equipment classified per API 510/570/653 inspected and tested at documented frequencies.</field>
+            <field name="monitoring_frequency">continuous</field>
+            <field name="compliance_status">partial</field>
+        </record>
+        <record id="dd_obl_psm_m" model="hse.compliance.obligation">
+            <field name="regulation_id" ref="dd_reg_osha_psm"/>
+            <field name="clause_code">1910.119(m)</field>
+            <field name="name">Incident Investigation within 48 hours</field>
+            <field name="mandatory_rule">Each incident resulting in or could reasonably have resulted in a catastrophic release investigated within 48h.</field>
+            <field name="monitoring_frequency">monthly</field>
+            <field name="compliance_status">compliant</field>
+        </record>
+        <record id="dd_obl_iso_ctx" model="hse.compliance.obligation">
+            <field name="regulation_id" ref="dd_reg_iso45001"/>
+            <field name="clause_code">§6.1.3</field>
+            <field name="name">Determination of legal &amp; other compliance requirements</field>
+            <field name="mandatory_rule">Maintain a documented register of legal requirements and how they apply; evaluate compliance periodically.</field>
+            <field name="monitoring_frequency">quarterly</field>
+            <field name="compliance_status">non_compliant</field>
+        </record>
+        <record id="dd_obl_titlev" model="hse.compliance.obligation">
+            <field name="regulation_id" ref="dd_reg_titlev"/>
+            <field name="clause_code">Part 70.6(a)(1)</field>
+            <field name="name">Semi-annual compliance certification &amp; deviation reporting</field>
+            <field name="mandatory_rule">Submit semi-annual monitoring reports and compliance certifications to the authority by the stated deadlines.</field>
+            <field name="monitoring_frequency">quarterly</field>
+            <field name="compliance_status">compliant</field>
+        </record>
+
+        <record id="dd_ctask_1" model="hse.compliance.task">
+            <field name="name">Q3 PSM compliance calendar submission to plant manager</field>
+            <field name="regulatory_body">OSHA</field>
+            <field name="task_type">statutory_filing</field>
+            <field name="frequency">quarterly</field>
+            <field name="due_date" eval="(datetime.now() - timedelta(days=3)).strftime('%Y-%m-%d')"/>
+        </record>
+        <record id="dd_ctask_2" model="hse.compliance.task">
+            <field name="name">Update legal register with revised environmental permit conditions</field>
+            <field name="regulatory_body">EPA</field>
+            <field name="task_type">permit_renewal</field>
+            <field name="frequency">one_off</field>
+            <field name="due_date" eval="(datetime.now() + timedelta(days=12)).strftime('%Y-%m-%d')"/>
+        </record>
+
+    </data>
+</odoo>

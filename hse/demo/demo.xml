@@ -1,0 +1,624 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Demo Assets -->
+        <record id="demo_asset_pump" model="assets.form">
+            <field name="name">P-101A Main Crude Charge Pump</field>
+            <field name="assets_type">equipment</field>
+            <field name="location">Crude Distillation Unit (CDU-100)</field>
+            <field name="description">Multistage centrifugal pump driven by 450 kW 4160V electric motor.</field>
+            <field name="status">active</field>
+        </record>
+
+        <record id="demo_asset_compressor" model="assets.form">
+            <field name="name">K-201A Wet Gas Centrifugal Compressor</field>
+            <field name="assets_type">equipment</field>
+            <field name="location">High Pressure Gas Compression Train A</field>
+            <field name="description">Centrifugal gas compressor driven by 3.2 MW steam turbine.</field>
+            <field name="status">active</field>
+        </record>
+
+        <record id="demo_asset_vessel" model="assets.form">
+            <field name="name">V-102 High Pressure Three-Phase Separator</field>
+            <field name="assets_type">equipment</field>
+            <field name="location">Crude Distillation Unit (CDU-100)</field>
+            <field name="description">ASME Section VIII Div 1 separator vessel with demister pads and automated level control.</field>
+            <field name="status">active</field>
+        </record>
+
+        <!-- Demo Permit to Work -->
+        <record id="demo_permit_hotwork" model="hse.permit">
+            <field name="title">Hot Tapping &amp; Welding on Flare Knock-Out Line 14-FL-08</field>
+            <field name="permit_type">hot_work</field>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="asset_id" ref="demo_asset_pump"/>
+            <field name="work_order_ref">WO-2026-8841</field>
+            <field name="performing_company">contractor</field>
+            <field name="contractor_name">Apex Specialized Industrial Welding Ltd</field>
+            <field name="receiver_name">Michael Davies</field>
+            <field name="receiver_phone">+1-555-0199</field>
+            <field name="workers_count">4</field>
+            <field name="hazard_flammable">True</field>
+            <field name="hazard_toxic">True</field>
+            <field name="hazard_high_pressure">True</field>
+            <field name="req_gas_test">True</field>
+            <field name="req_fire_watch">True</field>
+            <field name="state">active</field>
+        </record>
+
+        <!-- Demo Permit Gas Test -->
+        <record id="demo_gas_test_1" model="hse.permit.gas.test">
+            <field name="permit_id" ref="demo_permit_hotwork"/>
+            <field name="tester_name">Sarah Jenkins (AGT Level 2)</field>
+            <field name="tester_certification_no">AGT-CERT-9044</field>
+            <field name="oxygen_percent">20.9</field>
+            <field name="lel_percent">0.0</field>
+            <field name="h2s_ppm">0.0</field>
+            <field name="co_ppm">1.2</field>
+            <field name="is_safe_to_work">True</field>
+        </record>
+
+        <!-- Demo LOTO Plan -->
+        <record id="demo_loto_plan_pump" model="hse.loto.plan">
+            <field name="title">Positive Isolation &amp; Double Block Bleed for P-101A Overhaul</field>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="asset_id" ref="demo_asset_pump"/>
+            <field name="system_description">Suction, discharge, minimum flow bypass, and 4.16 kV electrical breaker isolation for pump impeller replacement.</field>
+            <field name="energy_electrical">True</field>
+            <field name="energy_mechanical">True</field>
+            <field name="energy_hydraulic">True</field>
+            <field name="energy_thermal">True</field>
+            <field name="zero_energy_method">combination</field>
+            <field name="zero_energy_verified">True</field>
+            <field name="master_lockbox_no">LB-CDU-042</field>
+            <field name="state">isolated</field>
+        </record>
+
+        <!-- Demo LOTO Isolation Points -->
+        <record id="demo_loto_pt_1" model="hse.loto.point">
+            <field name="plan_id" ref="demo_loto_plan_pump"/>
+            <field name="sequence">10</field>
+            <field name="point_identifier">MCC-4A-BKR-12</field>
+            <field name="isolation_type">breaker_open</field>
+            <field name="location_desc">Substation 2, 4.16 kV Switchgear Room</field>
+            <field name="lock_number">RED-PAD-1044</field>
+            <field name="tag_number">TAG-DANGER-8821</field>
+            <field name="applied_by">Robert Taylor (Lead Electrician)</field>
+        </record>
+
+        <record id="demo_loto_pt_2" model="hse.loto.point">
+            <field name="plan_id" ref="demo_loto_plan_pump"/>
+            <field name="sequence">20</field>
+            <field name="point_identifier">V-P101A-SUC-01</field>
+            <field name="isolation_type">valve_closed</field>
+            <field name="location_desc">Pump P-101A Suction Manifold</field>
+            <field name="lock_number">BLUE-PAD-5012</field>
+            <field name="tag_number">TAG-DANGER-8822</field>
+            <field name="applied_by">David Chen (Area Operator)</field>
+        </record>
+
+        <!-- Demo Management of Change (MOC) -->
+        <record id="demo_moc_seal" model="hse.moc">
+            <field name="title">Upgrade Mechanical Seal Flushing Plan to API 682 Plan 53B on P-101A</field>
+            <field name="change_type">permanent</field>
+            <field name="category">equipment</field>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="asset_id" ref="demo_asset_pump"/>
+            <field name="description_of_change">Replace single component mechanical seal with dual pressurized cartridge seal and external bladder accumulator barrier fluid system (API Plan 53B).</field>
+            <field name="justification">Eliminate volatile hydrocarbon vapor emissions and increase mean time between failures (MTBF) from 8 months to 36 months.</field>
+            <field name="estimated_cost">35000.0</field>
+            <field name="initial_risk_score">15</field>
+            <field name="residual_risk_score">3</field>
+            <field name="pssr_required">True</field>
+            <field name="state">approved</field>
+        </record>
+
+        <!-- Demo Non-Conformance (NCR) -->
+        <record id="demo_ncr_flange" model="hse.ncr">
+            <field name="title">Alloy Discrepancy - Flange Fasteners Delivered as B7 Instead of B8M Stainless</field>
+            <field name="ncr_source">inspection</field>
+            <field name="severity">major</field>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="problem_description">Positive Material Identification (PMI) incoming test revealed 48 stud bolts were low-alloy Grade B7 instead of required SS 316 Grade B8M for sour service.</field>
+            <field name="specification_requirement">NACE MR0175 / ISO 15156 Sour Gas Fastener Metallurgy Specification.</field>
+            <field name="is_quarantined">True</field>
+            <field name="quarantine_tag_no">QUAR-TAG-2026-11</field>
+            <field name="quarantine_location">Warehouse Bay 4 Quarantine Cage</field>
+            <field name="disposition">rtv</field>
+            <field name="conc_material_cost">2400.0</field>
+            <field name="conc_labor_cost">450.0</field>
+            <field name="state">quarantined</field>
+        </record>
+
+        <!-- Demo Safety Bypass -->
+        <record id="demo_bypass_level" model="hse.bypass">
+            <field name="title">High-High Level Trip Sensor Inhibit for Transmitter Replacement</field>
+            <field name="tag_number">LSHH-102B</field>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="asset_id" ref="demo_asset_vessel"/>
+            <field name="bypass_type">sis</field>
+            <field name="safety_criticality">sil2</field>
+            <field name="reason">fault</field>
+            <field name="details">Radar level transmitter electronics failed high; isolating loop for 6 hours to replace transmitter sensor head and proof-test.</field>
+            <field name="compensating_controls">Dedicated outside board operator stationed at magnetic level indicator gauge; hourly radio confirmation to control room.</field>
+            <field name="has_dedicated_watcher">True</field>
+            <field name="expected_duration_hours">6.0</field>
+            <field name="state">active</field>
+        </record>
+
+        <!-- Demo Operator Log -->
+        <record id="demo_op_log_day" model="hse.operator.log">
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="shift_type">day</field>
+            <field name="operating_status">normal</field>
+            <field name="production_output">52,400 BPD Crude Throughput</field>
+            <field name="state">open</field>
+        </record>
+
+        <!-- Demo Shift Log Entry -->
+        <record id="demo_log_entry_1" model="hse.operator.log.entry">
+            <field name="log_id" ref="demo_op_log_day"/>
+            <field name="category">routine</field>
+            <field name="priority">low</field>
+            <field name="description">Shift handover completed from Night watch. Unit steady at 52.4 kbd. Ambient temp 24C, wind south-east 8 knots.</field>
+        </record>
+
+        <!-- Demo Equipment Certification -->
+        <record id="demo_cert_vessel" model="hse.equipment.certification">
+            <field name="certificate_number">ASME-U-STAMP-78219</field>
+            <field name="title">Statutory Internal Visual &amp; Ultrasonic Thickness Survey</field>
+            <field name="asset_id" ref="demo_asset_vessel"/>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="cert_type">pressure_vessel</field>
+            <field name="certifying_authority">Lloyd's Register EMEA</field>
+            <field name="design_pressure_psi">650.0</field>
+            <field name="test_pressure_psi">975.0</field>
+            <field name="issue_date">2026-02-15</field>
+            <field name="expiry_date">2028-02-14</field>
+            <field name="state">valid</field>
+        </record>
+
+        <!-- Demo ISO 14224 Failure Report -->
+        <record id="demo_failure_pump" model="hse.failure.report">
+            <field name="asset_id" ref="demo_asset_pump"/>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="equipment_class">pump</field>
+            <field name="failed_component">Primary Mechanical Seal Face (Silicon Carbide)</field>
+            <field name="failure_mode">ext_leak</field>
+            <field name="failure_mechanism">wear</field>
+            <field name="failure_cause">lubrication</field>
+            <field name="detection_method">alarm</field>
+            <field name="impact_level">standby_switch</field>
+            <field name="downtime_hours">4.5</field>
+            <field name="repair_time_hours">12.0</field>
+            <field name="remedial_action_taken">Switched online duty to standby pump P-101B; de-pressurized and isolated pump P-101A for cartridge seal changeout.</field>
+            <field name="state">repaired</field>
+        </record>
+
+        <!-- Demo Proven Solution -->
+        <record id="demo_solution_plan53" model="hse.solution">
+            <field name="name">Installation of Pressurized Dual Barrier Seal System (API Plan 53B)</field>
+            <field name="category">mechanical</field>
+            <field name="applicable_equipment">pumps</field>
+            <field name="problem_symptoms">Frequent seal face blistering and premature failure on light hydrocarbon charge pumps operating near bubble point.</field>
+            <field name="root_cause_addressed">Vaporization of process fluid between seal faces causing dry running and thermal fracture.</field>
+            <field name="detailed_solution">&lt;p&gt;Convert seal arrangement from single unpressurized seal to API 682 Dual Pressurized Cartridge Seal with Plan 53B bladder accumulator reservoir filled with synthetic ISO VG 32 barrier fluid maintained at 25 PSI above maximum seal chamber pressure.&lt;/p&gt;</field>
+            <field name="engineering_standards">API Standard 682 4th Edition</field>
+            <field name="estimated_implementation_cost">28000.0</field>
+            <field name="estimated_annual_cost_avoidance">75000.0</field>
+            <field name="rating">3</field>
+            <field name="times_applied">6</field>
+            <field name="state">published</field>
+        </record>
+
+        <!-- Demo Defect Elimination -->
+        <record id="demo_defect_vibration" model="hse.defect.elimination">
+            <field name="title">Elimination of Chronic Seal Flush Line Vibration &amp; Fatigue Cracking</field>
+            <field name="asset_id" ref="demo_asset_pump"/>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="defect_category">vibration_resonance</field>
+            <field name="failures_last_12_months">5</field>
+            <field name="annual_maintenance_spend">18500.0</field>
+            <field name="annual_production_loss">45000.0</field>
+            <field name="defect_description">Small-bore 3/4-inch tubing on seal flush piping vibrates excessively at 120 Hz, causing fatigue cracking at socket weld nipples every 2-3 months.</field>
+            <field name="underlying_cause">Overhung cantilevered orifice assembly vibrating in resonance with 2x running speed of the motor.</field>
+            <field name="elimination_strategy">Install heavy-wall Sch 160 welded bracing gussets and stiffening clamp to rigid pump casing, shifting natural frequency above 250 Hz.</field>
+            <field name="state">eliminated</field>
+            <field name="track_30_days">True</field>
+            <field name="track_60_days">True</field>
+            <field name="track_90_days">True</field>
+        </record>
+
+        <!-- Demo Regulatory Compliance -->
+        <record id="demo_reg_compliance" model="hse.regulation">
+            <field name="name">OSHA 1910.119 Process Safety Management Statutory Compliance Standard</field>
+            <field name="code">29 CFR 1910.119</field>
+            <field name="regulatory_body">US Occupational Safety &amp; Health Administration (OSHA)</field>
+            <field name="jurisdiction">Federal / State OSHA</field>
+            <field name="category">process_safety</field>
+            <field name="summary">Mandatory statutory compliance tracking for written procedures, testing and inspection intervals, and training for process equipment integrity.</field>
+            <field name="state">active</field>
+        </record>
+
+        <!-- Demo Preparation Activities -->
+        <record id="demo_prep_activity" model="hse.preparation.activity">
+            <field name="name">De-inventory, Nitrogen Purge &amp; Blind Installation for Vessel V-102</field>
+            <field name="activity_type">purging</field>
+            <field name="priority">high</field>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="asset_id" ref="demo_asset_vessel"/>
+            <field name="estimated_duration_hours">8.0</field>
+            <field name="hazards_identified">Trapped hydrocarbons, pyrophoric iron sulfide scale, oxygen depletion from N2.</field>
+            <field name="precautions_required">Continuous hydrocarbon and O2 monitoring, deluge water hose ready, proper ESD grounding.</field>
+            <field name="state">approved</field>
+        </record>
+
+        <!-- Demo Operating Procedure (SOP) -->
+        <record id="demo_sop_pump_startup" model="hse.operating.procedure">
+            <field name="procedure_code">SOP-CDU-P101-001</field>
+            <field name="title">Crude Charge Pump P-101A/B Pre-Start Alignment and Normal Startup</field>
+            <field name="procedure_type">sop</field>
+            <field name="category">startup</field>
+            <field name="version">3.2</field>
+            <field name="effective_date">2026-01-01</field>
+            <field name="review_due_date">2027-01-01</field>
+            <field name="scope">Covers all steps required by operations personnel to verify valve lineup, auxiliary systems, seal flush, and electric motor start for P-101A.</field>
+            <field name="consequences_of_deviation">Dry run seal damage, overpressure of casing, vapor lock, potential hydrocarbon release and fire.</field>
+            <field name="state">active</field>
+        </record>
+
+        <!-- Demo Operating Policy -->
+        <record id="demo_policy_zero_harm" model="hse.operating.policy">
+            <field name="policy_code">POL-HSE-CORP-001</field>
+            <field name="title">Corporate Stop Work Authority (SWA) and Zero Harm Commitment</field>
+            <field name="category">safety</field>
+            <field name="version">5.0</field>
+            <field name="effective_date">2026-01-01</field>
+            <field name="mandatory_compliance">True</field>
+            <field name="penalties_applicable">False</field>
+            <field name="purpose">Empower every worker and contractor with unconditional authority and responsibility to stop any unsafe act or condition without fear of retribution.</field>
+            <field name="policy_statement">&lt;p&gt;Safety is our non-negotiable core value. No job is so urgent that it cannot be done safely. Everyone on site has full Stop Work Authority.&lt;/p&gt;</field>
+            <field name="state">published</field>
+        </record>
+
+        <!-- Demo Continuous Improvement (CI) -->
+        <record id="demo_ci_energy" model="hse.improvement">
+            <field name="title">Implementation of Automated Smart Bypass Logging and Interlock Alerting</field>
+            <field name="initiative_type">safety</field>
+            <field name="category">digitalization</field>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="current_state">Manual paper bypass forms occasionally led to delays in re-instating SECE safety critical alarms after maintenance was finished.</field>
+            <field name="proposed_solution">Digitize bypass authorization workflow with real-time expiration countdown and automated push notifications to shift superintendent.</field>
+            <field name="implementation_budget">12000.0</field>
+            <field name="estimated_annual_savings">85000.0</field>
+            <field name="state">implemented</field>
+        </record>
+
+        <!-- Demo Competency Matrix -->
+        <record id="demo_competency_agt" model="hse.competency">
+            <field name="name">Authorized Gas Tester (AGT Level 2)</field>
+            <field name="code">COMP-AGT-L2</field>
+            <field name="category">hse_critical</field>
+            <field name="description">Qualification for atmospheric testing in confined spaces and hot work areas using multi-gas detectors, photoionization detectors, and chemical detector tubes.</field>
+            <field name="validity_months">24</field>
+            <field name="mandatory_for_permits">True</field>
+        </record>
+
+        <!-- Demo Personnel Certification -->
+        <record id="demo_personnel_cert" model="hse.personnel.certification">
+            <field name="certification_name">Authorized Gas Tester Level II - Industrial Atmospheric Sampling</field>
+            <field name="certificate_number">AGT-INT-2026-041</field>
+            <field name="issuing_body">National Board of Industrial Safety Certifications</field>
+            <field name="issue_date">2026-03-01</field>
+            <field name="expiry_date">2028-03-01</field>
+            <field name="state">valid</field>
+        </record>
+
+        <!-- Demo Benefits and Losses -->
+        <record id="demo_benefit_loss_pump" model="hse.benefit.loss">
+            <field name="title">Financial HSE Impact Analysis: Crude Pump P-101A Mechanical Seal Failure</field>
+            <field name="event_type">loss</field>
+            <field name="event_date">2026-08-14</field>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="asset_id" ref="demo_asset_pump"/>
+            <field name="loss_equipment_repair">18500.0</field>
+            <field name="loss_production_cost">42000.0</field>
+            <field name="loss_environmental_cleanup">8000.0</field>
+            <field name="downtime_hours">4.5</field>
+            <field name="notes">Quantification of unscheduled shutdown, flaring, maintenance labor, expedited replacement parts, and environmental monitoring impact.</field>
+            <field name="state">audited</field>
+        </record>
+
+        <!-- Demo Action (CAPA) -->
+        <record id="demo_capa_action" model="hse.action">
+            <field name="title">Install Rigid Bracing Bracket on P-101A Flush Tubing</field>
+            <field name="action_type">preventive</field>
+            <field name="source_type">defect</field>
+            <field name="source_reference">DEF-001</field>
+            <field name="priority">2</field>
+            <field name="description">Fabricate and bolt structural gusset plate support between pump casing and 3/4 inch seal flush tubing to eliminate acoustic fatigue.</field>
+            <field name="target_date">2026-10-31</field>
+            <field name="progress">100</field>
+            <field name="state">verified</field>
+            <field name="verification_status">effective</field>
+            <field name="verification_notes">Vibration frequency sweep confirmed reduction from 14.2 mm/s RMS to 1.1 mm/s RMS. Zero vibration detected.</field>
+        </record>
+
+        <!-- Demo Chemical Inventory -->
+        <record id="demo_chem_h2s" model="hse.location.chemical">
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="chemical_name">Hydrogen Sulfide (H₂S)</field>
+            <field name="cas_number">7783-06-4</field>
+            <field name="physical_state">gas</field>
+            <field name="nfpa_health">4</field>
+            <field name="nfpa_flammability">4</field>
+            <field name="nfpa_instability">0</field>
+            <field name="quantity_stored">450.0</field>
+            <field name="unit_of_measure">kg</field>
+            <field name="ghs_toxic">True</field>
+            <field name="ghs_flammable">True</field>
+        </record>
+
+        <record id="demo_chem_crude" model="hse.location.chemical">
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="chemical_name">Light Sour Crude Oil</field>
+            <field name="cas_number">8002-05-9</field>
+            <field name="physical_state">liquid</field>
+            <field name="nfpa_health">2</field>
+            <field name="nfpa_flammability">3</field>
+            <field name="nfpa_instability">0</field>
+            <field name="quantity_stored">25000.0</field>
+            <field name="unit_of_measure">Bbl</field>
+            <field name="ghs_flammable">True</field>
+        </record>
+
+        <!-- Demo Defeated / Standing Alarm -->
+        <record id="demo_alarm_1" model="hse.operator.log.alarm">
+            <field name="log_id" ref="demo_shift_log"/>
+            <field name="tag_number">TAHH-104B</field>
+            <field name="description">Atmospheric Tower Top Tray High-High Temperature Trip</field>
+            <field name="priority">critical</field>
+            <field name="status">defeated</field>
+            <field name="reason">Thermowell RTD sensor failure producing spurious spikes. Transmitter replacement in progress.</field>
+            <field name="compensating_measure">Dedicated field operator monitoring local dial bi-metal thermometer TI-104 every 30 minutes.</field>
+        </record>
+
+        <!-- ============================================================= -->
+        <!-- Deep Enterprise Process Safety & Environmental Demo Records    -->
+        <!-- ============================================================= -->
+        <!-- Demo HAZOP Study -->
+        <record id="demo_hazop_study_1" model="hse.hazop.study">
+            <field name="title">Crude Distillation Unit (CDU-100) 5-Year Process Hazard Revalidation</field>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="study_type">hazop</field>
+            <field name="leader_id" ref="base.user_admin"/>
+            <field name="team_members">Lead Process Engineer, Operations Superintendent, Instrumentation Tech, Safety Specialist</field>
+            <field name="scope_description">Atmospheric tower C-101, crude charge furnace F-101, and flare knockout drum V-102</field>
+            <field name="pid_references">PID-100-01 Rev 5, PID-100-02 Rev 4</field>
+            <field name="design_intent">Continuous separation of desalted crude oil at 350°C and 2.5 barg</field>
+            <field name="state">approved</field>
+        </record>
+
+        <!-- Demo LOPA Study -->
+        <record id="demo_lopa_study_1" model="hse.lopa.study">
+            <field name="title">Overpressure of Separator V-102 Due to Offgas Control Valve Fail Closed</field>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="severity_category">cat3</field>
+            <field name="target_mitigated_frequency">0.0001</field>
+            <field name="initiating_event_desc">PCV-102 control valve fails closed due to diaphragm rupture</field>
+            <field name="initiating_event_freq">0.1</field>
+            <field name="participants">Process Safety Lead, Lead Instrument Engineer, Operations Lead</field>
+            <field name="consequence_description">Vessel overpressure, flange leakage, vapor cloud formation and potential flash fire</field>
+            <field name="state">approved</field>
+        </record>
+
+        <!-- Demo SECE -->
+        <record id="demo_sece_1" model="hse.sece">
+            <field name="tag">SECE-ESD-101</field>
+            <field name="name">Atmospheric Tower Emergency Depressuring Blowdown Valve (BDV-101)</field>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="sece_group">emergency_shutdown</field>
+            <field name="major_accident_hazard">Vapor cloud explosion and jet fire in Crude Distillation Unit</field>
+            <field name="functionality_std">Must open to full stroke within 2.0 seconds upon ESD signal and vent column inventory to flare</field>
+            <field name="availability_std">99.8</field>
+            <field name="reliability_std">SIL 2 / PFD &lt; 0.005</field>
+            <field name="survivability_std">Actuator and pneumatic supply lines rated for 60-minute hydrocarbon jet fire at 350 kW/m²</field>
+            <field name="barrier_health">healthy</field>
+            <field name="independent_verification_body">DNV GL Technical Assurance</field>
+            <field name="state">active</field>
+        </record>
+
+        <!-- Demo API RP 754 PSE -->
+        <record id="demo_pse_1" model="hse.pse">
+            <field name="title">Flange Leakage and Flash Fire on Reboiler Feed Line</field>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="tier">tier2</field>
+            <field name="chemical_name">Light Sour Naphtha</field>
+            <field name="mass_released_kg">480.0</field>
+            <field name="threshold_quantity_kg">250.0</field>
+            <field name="has_fire_explosion">True</field>
+            <field name="barrier_failure_summary">Gasket thermal cycling degradation caused primary containment loss; deluge system extinguished fire within 4 minutes.</field>
+            <field name="state">classified</field>
+        </record>
+
+        <!-- Demo Air Emission -->
+        <record id="demo_air_emission_1" model="hse.env.air.emission">
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="emission_point">Crude Process Heater Stack F-101</field>
+            <field name="scope">scope1</field>
+            <field name="source_type">stationary_combustion</field>
+            <field name="fuel_type">Natural Gas (Pipeline Quality)</field>
+            <field name="fuel_consumed">150000.0</field>
+            <field name="fuel_unit">scf</field>
+            <field name="state">verified</field>
+        </record>
+
+        <!-- Demo Water Monitoring -->
+        <record id="demo_water_1" model="hse.env.water.monitoring">
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="outfall_number">Outfall-001 Stormwater Retention Basin</field>
+            <field name="ph_level">7.4</field>
+            <field name="bod_mg_l">14.0</field>
+            <field name="cod_mg_l">38.0</field>
+            <field name="tss_mg_l">18.0</field>
+            <field name="oil_grease_mg_l">1.8</field>
+            <field name="state">compliant</field>
+        </record>
+
+        <!-- Demo Hazardous Waste Manifest -->
+        <record id="demo_waste_1" model="hse.env.waste.manifest">
+            <field name="name">MAN-2026-0881</field>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="generator_epa_id">TXD980011223</field>
+            <field name="waste_type">hazardous</field>
+            <field name="waste_description">RQ, Waste Flammable Liquids, n.o.s. (Spent Hydrocarbon Solvent), 3, UN1993, PG II</field>
+            <field name="epa_waste_codes">D001, F003</field>
+            <field name="container_type">dm</field>
+            <field name="container_count">10</field>
+            <field name="total_quantity">2050.0</field>
+            <field name="unit_of_measure">kg</field>
+            <field name="transporter_company">Clean Harbors Environmental Logistics</field>
+            <field name="transporter_epa_id">TXD000845321</field>
+            <field name="tsdf_facility_name">Deer Park Thermal Incineration Facility</field>
+            <field name="tsdf_epa_id">TXD000838896</field>
+            <field name="management_method">incineration</field>
+            <field name="state">storage</field>
+        </record>
+
+        <!-- Demo Chemical Spill -->
+        <record id="demo_spill_1" model="hse.env.spill">
+            <field name="title">Crude Oil Leak into Secondary Containment Bund</field>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="substance_name">Light Sour Crude Oil</field>
+            <field name="media_impacted">secondary_containment</field>
+            <field name="spill_source">equipment_seal</field>
+            <field name="volume_released">12.0</field>
+            <field name="volume_recovered">12.0</field>
+            <field name="unit_of_measure">barrels</field>
+            <field name="containment_measures">Concrete bund valves closed; vacuum truck recovered 100% of liquid within 45 minutes.</field>
+            <field name="state">remediated</field>
+        </record>
+
+        <!-- Demo IH SEG & Sample -->
+        <record id="demo_ih_seg_1" model="hse.ih.seg">
+            <field name="name">Process Unit Operations &amp; Sampling Technicians</field>
+            <field name="code">SEG-OPS-CDU</field>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="job_description">Routine outside rounds, manual sample drawing from high-pressure liquid loops, pump strainer cleaning</field>
+            <field name="stressor_chemical">True</field>
+            <field name="stressor_noise">True</field>
+            <field name="worker_count">8</field>
+        </record>
+
+        <record id="demo_ih_sample_1" model="hse.ih.sample">
+            <field name="seg_id" ref="demo_ih_seg_1"/>
+            <field name="sampling_type">air_chemical</field>
+            <field name="agent_name">Benzene Vapor</field>
+            <field name="measured_concentration">0.25</field>
+            <field name="unit_of_measure">ppm</field>
+            <field name="sampling_duration_minutes">480.0</field>
+            <field name="osha_pel">1.0</field>
+            <field name="acgih_tlv">0.5</field>
+        </record>
+
+        <!-- Demo Contractor -->
+        <record id="demo_contractor_1" model="hse.contractor">
+            <field name="name">Turnaround Specialized Industrial Rigging Ltd</field>
+            <field name="trade_category">mechanical</field>
+            <field name="emr_rate">0.78</field>
+            <field name="trir_3year_avg">0.62</field>
+            <field name="fatalities_last_5years">0</field>
+            <field name="insurance_policy_number">CGL-POL-2026-9921</field>
+            <field name="insurance_expiry_date">2027-12-31</field>
+            <field name="safety_manual_approved">True</field>
+        </record>
+
+        <!-- Demo SDS -->
+        <record id="demo_sds_1" model="hse.sds">
+            <field name="product_name">Light Sour Crude Oil (API Gravity 38°)</field>
+            <field name="cas_number">8002-05-9</field>
+            <field name="manufacturer_supplier">Apex Energy Resources Petrochemical Supply</field>
+            <field name="emergency_phone">+1-800-424-9300 (CHEMTREC)</field>
+            <field name="signal_word">danger</field>
+            <field name="reactivity_group">hydrocarbon_flammable</field>
+            <field name="flash_point_c">-15.0</field>
+            <field name="boiling_point_c">35.0</field>
+            <field name="hazard_statements">H224: Extremely flammable liquid and vapor. H304: May be fatal if swallowed and enters airways. H350: May cause cancer.</field>
+            <field name="precautionary_statements">P210: Keep away from heat, hot surfaces, sparks, open flames and other ignition sources. No smoking.</field>
+            <field name="storage_conditions">Store in grounded atmospheric floating-roof tanks with nitrogen inerting blanket.</field>
+            <field name="incompatible_materials">Strong oxidizers, chlorine, peroxides, open flames.</field>
+            <field name="next_review_date">2029-01-01</field>
+        </record>
+
+        <!-- Demo Critical Lift -->
+        <record id="demo_lift_1" model="hse.permit.critical.lift">
+            <field name="title">Replacement of Crude Tower Overhead Heat Exchanger E-102 Bundle</field>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="crane_model">Liebherr LTM 1300-6.2 (300 Tonne Mobile Crane)</field>
+            <field name="crane_capacity_tonnes">300.0</field>
+            <field name="boom_length_meters">42.0</field>
+            <field name="operating_radius_meters">18.0</field>
+            <field name="net_load_weight_tonnes">38.5</field>
+            <field name="rigging_tackle_weight_tonnes">2.2</field>
+            <field name="rated_capacity_at_radius">52.0</field>
+            <field name="rigging_engineer_id" ref="base.user_admin"/>
+            <field name="crane_operator_id" ref="base.user_admin"/>
+            <field name="state">approved</field>
+        </record>
+
+        <!-- Demo Emergency Plan & Drill -->
+        <record id="demo_erp_1" model="hse.emergency.plan">
+            <field name="title">CDU-100 Hydrocarbon Fire &amp; H2S Vapor Dispersion Plan</field>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="emergency_type">hydrocarbon_fire</field>
+            <field name="incident_commander_id" ref="base.user_admin"/>
+            <field name="deputy_commander_id" ref="base.user_admin"/>
+            <field name="response_actions">Activate ESD-1 push button, sound plant-wide siren (Continuous 3-minute tone), mobilize Fire Brigade</field>
+            <field name="internal_callout_list">Emergency Operations Center (EOC) Ext 9999 / Radio Channel 16 Emergency Command</field>
+            <field name="external_agencies">Municipal Fire &amp; Rescue: 911, Regional Trauma Center, Port Authority</field>
+            <field name="muster_stations">Primary: North Main Gate Assembly Area; Secondary: South Administrative Building Courtyard</field>
+            <field name="state">active</field>
+        </record>
+
+        <record id="demo_drill_1" model="hse.emergency.drill">
+            <field name="plan_id" ref="demo_erp_1"/>
+            <field name="title">Unannounced Full-Scale Site Evacuation &amp; Foam Deluge Drill</field>
+            <field name="drill_scope">full_scale</field>
+            <field name="ert_response_time_minutes">3.2</field>
+            <field name="total_personnel_on_site">140</field>
+            <field name="total_personnel_mustered">140</field>
+            <field name="headcount_completion_minutes">4.1</field>
+            <field name="drill_score_percent">96.0</field>
+            <field name="strengths_observed">Rapid ERT deployment, automated electronic badge headcount reconciled in under 5 minutes</field>
+            <field name="areas_for_improvement">Secondary muster station megaphone battery required replacement</field>
+            <field name="state">critiqued</field>
+        </record>
+
+        <!-- Demo Audit -->
+        <record id="demo_audit_1" model="hse.audit">
+            <field name="title">Annual OSHA 1910.119 Process Safety Management (PSM) 14-Element Audit</field>
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="protocol">osha_psm</field>
+            <field name="target_end_date">2026-10-31</field>
+            <field name="lead_auditor_id" ref="base.user_admin"/>
+            <field name="audit_team">Lead Process Safety Auditor, Mechanical Integrity Specialist, Operations Superintendent</field>
+            <field name="audit_summary">Overall exemplary compliance across Operating Procedures, Training, and MOC elements.</field>
+            <field name="state">approved</field>
+        </record>
+
+        <!-- Demo BBS Observation -->
+        <record id="demo_bbs_1" model="hse.bbs.observation">
+            <field name="location_id" ref="hse.loc_cdu1"/>
+            <field name="observer_id" ref="base.user_admin"/>
+            <field name="work_activity">Scaffolding erection and harness tie-off at CDU atmospheric column</field>
+            <field name="people_observed_count">4</field>
+            <field name="safe_behaviors_count">9</field>
+            <field name="at_risk_behaviors_count">1</field>
+            <field name="cat_body_position">True</field>
+            <field name="cat_ppe">True</field>
+            <field name="cat_procedures">True</field>
+            <field name="immediate_coaching_feedback">Commended rigger for 100% dual lanyard tie-off; discussed pinch point hazard when stacking scaffolding planks.</field>
+            <field name="state">coached</field>
+        </record>
+    </data>
+</odoo>

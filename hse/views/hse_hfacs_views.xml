@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- HFACS Form View -->
+        <record id="view_hse_investigation_hfacs_form" model="ir.ui.view">
+            <field name="name">hse.investigation.hfacs.form</field>
+            <field name="model">hse.investigation.hfacs</field>
+            <field name="arch" type="xml">
+                <form string="Human Factors Analysis &amp; Classification System (HFACS / TapRooT)">
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #1e1b4b 0%, #4f46e5 100%); border-left: 6px solid #a5b4fc; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🧠</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Human Factors Analysis (HFACS)</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">4-tier human factors classification</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                        <div class="oe_title">
+                            <h1><field name="name"/></h1>
+                            <h3>Investigation: <field name="investigation_id"/></h3>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="card p-3 bg-light border-0">
+                                    <h5 class="font-weight-bold text-primary mb-1">Human Factors Severity Index</h5>
+                                    <h2><field name="human_error_index" readonly="1"/> %</h2>
+                                    <span class="text-muted small">Contributing organizational, supervisory, and operator factors: <field name="active_factors_count" readonly="1"/></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <notebook>
+                            <page string="Level 1: Unsafe Acts of Operators" name="level1">
+                                <group>
+                                    <group string="Operator Errors">
+                                        <field name="act_decision_error"/>
+                                        <field name="act_skill_based_error"/>
+                                        <field name="act_perceptual_error"/>
+                                    </group>
+                                    <group string="Procedural Violations">
+                                        <field name="act_routine_violation"/>
+                                        <field name="act_exceptional_violation"/>
+                                    </group>
+                                </group>
+                                <field name="act_narrative" placeholder="Detailed chronological breakdown of operator actions..."/>
+                            </page>
+
+                            <page string="Level 2: Preconditions for Unsafe Acts" name="level2">
+                                <group>
+                                    <group string="Substandard Conditions of Operators">
+                                        <field name="pre_mental_state"/>
+                                        <field name="pre_physiological_state"/>
+                                        <field name="pre_physical_limitation"/>
+                                    </group>
+                                    <group string="Substandard Practices">
+                                        <field name="pre_crew_resource_mgt"/>
+                                        <field name="pre_personal_readiness"/>
+                                    </group>
+                                </group>
+                                <field name="preconditions_narrative" placeholder="Fatigue, stress, communications breakdown, ergonomics..."/>
+                            </page>
+
+                            <page string="Level 3: Unsafe Supervision" name="level3">
+                                <group>
+                                    <field name="sup_inadequate"/>
+                                    <field name="sup_planned_inappropriate"/>
+                                    <field name="sup_failed_to_correct"/>
+                                    <field name="sup_violations"/>
+                                </group>
+                                <field name="supervision_narrative" placeholder="Supervisory oversights, scheduling pressure, known hazard neglect..."/>
+                            </page>
+
+                            <page string="Level 4: Organizational Influences" name="level4">
+                                <group>
+                                    <field name="org_resource_management"/>
+                                    <field name="org_climate"/>
+                                    <field name="org_operational_process"/>
+                                </group>
+                                <field name="organization_narrative" placeholder="Corporate culture, safety vs production tradeoffs, MOC rigor..."/>
+                            </page>
+
+                            <page string="Human Factors Corrective Action Plan" name="remediation">
+                                <field name="corrective_actions_hf" placeholder="Ergonomic redesign, error-proofing poka-yoke, procedural revision..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- HFACS Tree View -->
+        <record id="view_hse_investigation_hfacs_tree" model="ir.ui.view">
+            <field name="name">hse.investigation.hfacs.tree</field>
+            <field name="model">hse.investigation.hfacs</field>
+            <field name="arch" type="xml">
+                <tree string="HFACS Human Factors Investigations">
+                    <field name="name"/>
+                    <field name="investigation_id"/>
+                    <field name="active_factors_count"/>
+                    <field name="human_error_index" widget="progressbar"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_hse_investigation_hfacs" model="ir.actions.act_window">
+            <field name="name">Human Factors / TapRooT RCA (HFACS)</field>
+            <field name="res_model">hse.investigation.hfacs</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

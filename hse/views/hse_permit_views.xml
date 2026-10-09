@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Permit Form View -->
+    <record id="view_hse_permit_form" model="ir.ui.view">
+        <field name="name">hse.permit.form</field>
+        <field name="model">hse.permit</field>
+        <field name="arch" type="xml">
+            <form string="Permit to Work">
+                <header>
+                    <button name="action_submit" string="Submit for Review" type="object" invisible="state != 'draft'" class="btn-primary"/>
+                    <button name="action_review" string="Area Issuer Review" type="object" invisible="state != 'requested'" class="btn-primary"/>
+                    <button name="action_approve" string="Safety Authorize &amp; Issue" type="object" invisible="state != 'reviewed'" class="btn-success"/>
+                    <button name="action_start_work" string="Start Work (Activate)" type="object" invisible="state != 'approved'" class="btn-primary"/>
+                    <button name="action_suspend" string="Suspend / Stop Work" type="object" invisible="state != 'active'" class="btn-danger"/>
+                    <button name="action_handback" string="Complete Work &amp; Handback" type="object" invisible="state not in ('active', 'suspended')" class="btn-warning"/>
+                    <button name="action_close" string="Close Permit" type="object" invisible="state != 'handback'" class="btn-success"/>
+                    <button name="action_cancel" string="Cancel" type="object" invisible="state in ('closed', 'cancelled')" class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,requested,reviewed,approved,active,handback,closed"/>
+                </header>
+                <sheet>
+                    <div class="hse-x-hero" style="background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%); border-left: 6px solid #7dd3fc; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">📝</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Permit to Work (Control of Work)</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Hot work, confined space, heights &amp; gas testing with SIMOPS interlocks</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><div class="hse-x-kpi" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; padding: 4px 12px; text-align: center; min-width: 86px;"><span class="hse-x-kpi-label" style="display: block; font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(203,213,225,0.9); font-weight: 700;">Validity (h)</span><field name="duration_hours" readonly="1" style="color:#fff;font-weight:800;" widget="hse_smart_counter" /></div><div class="hse-x-kpi" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; padding: 4px 12px; text-align: center; min-width: 86px;"><span class="hse-x-kpi-label" style="display: block; font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(203,213,225,0.9); font-weight: 700;">Crew</span><field name="workers_count" readonly="1" style="color:#fff;font-weight:800;" widget="hse_smart_counter" /></div><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                    <div class="alert alert-danger d-flex align-items-center justify-content-between p-3 mb-3 rounded" invisible="not has_simops_conflict or simops_risk_level != 'high'" role="alert">
+                        <div>
+                            <strong><i class="fa fa-exclamation-triangle me-2"/> CRITICAL SIMOPS COLLISION DETECTED:</strong>
+                            <span> Simultaneous hazardous operations active in this facility area. SIMOPS Coordinator authorization is required before commencing work!</span>
+                        </div>
+                        <span class="badge bg-danger text-uppercase px-2 py-1">Critical SIMOPS</span>
+                    </div>
+                    <div class="alert alert-warning d-flex align-items-center justify-content-between p-3 mb-3 rounded" invisible="not has_simops_conflict or simops_risk_level != 'medium'" role="alert">
+                        <div>
+                            <strong><i class="fa fa-info-circle me-2"/> SIMOPS Notice:</strong>
+                            <span> Other active permits exist at this location. Ensure simultaneous operations precautions are reviewed.</span>
+                        </div>
+                        <span class="badge bg-warning text-dark px-2 py-1">SIMOPS Managed</span>
+                    </div>
+
+                    <div class="oe_title">
+                        <span class="text-muted"><field name="name"/></span>
+                        <h1><field name="title" placeholder="Specific Work Task (e.g. Hot Tapping on Flare Header line 12-FL-04)"/></h1>
+                    </div>
+                    <group>
+                        <group string="Scope &amp; Location">
+                            <field name="permit_type"/>
+                            <field name="location_id"/>
+                            <field name="asset_id"/>
+                            <field name="work_order_ref"/>
+                        </group>
+                        <group string="Timeframe &amp; Validity Window">
+                            <field name="start_datetime"/>
+                            <field name="end_datetime"/>
+                            <field name="duration_hours" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Performing Party">
+                            <field name="performing_company"/>
+                            <field name="contractor_name" invisible="performing_company != 'contractor'"/>
+                            <field name="requester_id"/>
+                            <field name="receiver_name"/>
+                            <field name="receiver_phone"/>
+                            <field name="workers_count"/>
+                        </group>
+                        <group string="Associated Safety Documentation">
+                            <field name="risk_assessment_id"/>
+                            <field name="loto_plan_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Hazards Identification">
+                            <group>
+                                <group string="Atmospheric &amp; Chemical Hazards">
+                                    <field name="hazard_flammable"/>
+                                    <field name="hazard_toxic"/>
+                                    <field name="hazard_oxygen_deficiency"/>
+                                </group>
+                                <group string="Physical &amp; Energy Hazards">
+                                    <field name="hazard_high_pressure"/>
+                                    <field name="hazard_falling_objects"/>
+                                    <field name="hazard_electrical"/>
+                                    <field name="hazard_environmental"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Mandatory Controls &amp; Precautions">
+                            <group>
+                                <group string="Monitoring &amp; Safety Watches">
+                                    <field name="req_gas_test"/>
+                                    <field name="req_fire_watch"/>
+                                    <field name="req_hole_watch"/>
+                                </group>
+                                <group string="PPE &amp; Isolations">
+                                    <field name="req_breathing_apparatus"/>
+                                    <field name="req_fall_arrest"/>
+                                    <field name="req_lockout"/>
+                                    <field name="req_barricade"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Atmospheric Gas Testing Logs">
+                            <field name="req_gas_test" widget="hse_gas_gauge"/>
+                            <field name="gas_test_ids">
+                                <tree editable="bottom">
+                                    <field name="test_time"/>
+                                    <field name="tester_name"/>
+                                    <field name="oxygen_percent"/>
+                                    <field name="lel_percent"/>
+                                    <field name="h2s_ppm"/>
+                                    <field name="co_ppm"/>
+                                    <field name="is_safe_to_work" widget="boolean_toggle"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="SIMOPS Management" name="simops_tab">
+                            <group>
+                                <group string="Simultaneous Operations (SIMOPS) Assessment">
+                                    <field name="has_simops_conflict" widget="boolean_toggle" readonly="1"/>
+                                    <field name="simops_risk_level" readonly="1"/>
+                                    <field name="simops_authorized_by"/>
+                                </group>
+                                <group string="SIMOPS Safeguards &amp; Separation">
+                                    <field name="simops_mitigation" placeholder="Specify physical barriers, radio coordination, shift schedule staggering..."/>
+                                </group>
+                            </group>
+                            <separator string="Conflicting Concurrent Work Permits at This Location"/>
+                            <field name="conflicting_permit_ids" readonly="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="title"/>
+                                    <field name="permit_type"/>
+                                    <field name="start_datetime"/>
+                                    <field name="end_datetime"/>
+                                    <field name="requester_id"/>
+                                    <field name="state" widget="badge"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Authorizations &amp; Signatures">
+                            <group>
+                                <group string="Step 1: Performing Authority">
+                                    <field name="requester_id"/>
+                                    <field name="pa_signed_date"/>
+                                </group>
+                                <group string="Step 2: Area Authority (Issuer)">
+                                    <field name="issuer_id"/>
+                                    <field name="issuer_signed_date"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Step 3: HSE Approver">
+                                    <field name="safety_officer_id"/>
+                                    <field name="safety_signed_date"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Work Handback &amp; Closeout">
+                            <group>
+                                <group>
+                                    <field name="handback_inspected_by"/>
+                                    <field name="handback_datetime"/>
+                                </group>
+                                <group>
+                                    <field name="handback_housekeeping_ok"/>
+                                    <field name="handback_isolations_removed"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="handback_comments" placeholder="Confirm tools removed, area swept clean, permits closed..."/>
+                                <field name="suspension_reason" invisible="state != 'suspended'"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Permit Tree View -->
+    <record id="view_hse_permit_tree" model="ir.ui.view">
+        <field name="name">hse.permit.tree</field>
+        <field name="model">hse.permit</field>
+        <field name="arch" type="xml">
+            <tree string="Permits to Work" decoration-danger="state == 'suspended'" decoration-primary="state == 'active'" decoration-success="state == 'closed'" decoration-warning="state == 'handback'">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="permit_type"/>
+                <field name="location_id"/>
+                <field name="start_datetime"/>
+                <field name="end_datetime"/>
+                <field name="requester_id"/>
+                <field name="issuer_id"/>
+                <field name="state" widget="badge" decoration-info="state == 'requested'" decoration-warning="state in ('reviewed', 'approved')" decoration-primary="state == 'active'" decoration-danger="state == 'suspended'" decoration-success="state == 'closed'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Permit Kanban View -->
+    <record id="view_hse_permit_kanban" model="ir.ui.view">
+        <field name="name">hse.permit.kanban</field>
+        <field name="model">hse.permit</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="permit_type"/>
+                <field name="location_id"/>
+                <field name="end_datetime"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click p-2 shadow-sm rounded border border-light">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="badge bg-secondary"><field name="name"/></span>
+                                <span class="badge bg-primary"><field name="permit_type"/></span>
+                            </div>
+                            <strong class="d-block mb-1 text-truncate"><field name="title"/></strong>
+                            <div class="text-muted small mb-1">
+                                <i class="fa fa-map-marker me-1" title="Location" aria-label="Location" role="img"/> <field name="location_id"/>
+                            </div>
+                            <div class="small text-muted">
+                                <i class="fa fa-clock-o me-1" title="Validity" aria-label="Validity" role="img"/> Valid: <field name="end_datetime"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Permit Search View -->
+    <record id="view_hse_permit_search" model="ir.ui.view">
+        <field name="name">hse.permit.search</field>
+        <field name="model">hse.permit</field>
+        <field name="arch" type="xml">
+            <search string="Search Permits">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="location_id"/>
+                <field name="requester_id"/>
+                <filter name="active_permits" string="Active Permits" domain="[('state', '=', 'active')]"/>
+                <filter name="hot_work" string="Hot Work Permits" domain="[('permit_type', '=', 'hot_work')]"/>
+                <filter name="confined_space" string="Confined Space Entry" domain="[('permit_type', '=', 'confined_space')]"/>
+                <filter name="working_at_height" string="Working at Height" domain="[('permit_type', '=', 'working_at_height')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_type" string="Permit Type" context="{'group_by': 'permit_type'}"/>
+                    <filter name="group_location" string="Location" context="{'group_by': 'location_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hse_permit" model="ir.actions.act_window">
+        <field name="name">Permit to Work (PTW)</field>
+        <field name="res_model">hse.permit</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Manage electronic Permits to Work, Control of Work, and gas testing.</p>
+        </field>
+    </record>
+</odoo>

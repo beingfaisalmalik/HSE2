@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- BBS Observation Tree View -->
+        <record id="view_hse_bbs_observation_tree" model="ir.ui.view">
+            <field name="name">hse.bbs.observation.tree</field>
+            <field name="model">hse.bbs.observation</field>
+            <field name="arch" type="xml">
+                <tree string="Behavior-Based Safety Observations" decoration-danger="safe_behavior_index &lt; 80.0" decoration-warning="safe_behavior_index &lt; 90.0" decoration-success="safe_behavior_index &gt;= 90.0">
+                    <field name="name"/>
+                    <field name="obs_date"/>
+                    <field name="location_id"/>
+                    <field name="observer_id"/>
+                    <field name="work_activity"/>
+                    <field name="people_observed_count"/>
+                    <field name="safe_behaviors_count"/>
+                    <field name="at_risk_behaviors_count"/>
+                    <field name="safe_behavior_index"/>
+                    <field name="state" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- BBS Observation Form View -->
+        <record id="view_hse_bbs_observation_form" model="ir.ui.view">
+            <field name="name">hse.bbs.observation.form</field>
+            <field name="model">hse.bbs.observation</field>
+            <field name="arch" type="xml">
+                <form string="Behavior-Based Safety (BBS) Observation">
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #164e63 0%, #0891b2 100%); border-left: 6px solid #67e8f9; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">👀</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Behavior-Based Safety</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">BBS observations &amp; safe behavior index</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">BBS Observation Ref</span>
+                            <h1><field name="name" readonly="1"/></h1>
+                            <h3><field name="work_activity" placeholder="e.g. Scaffolding erection on Distillation Column C-101"/></h3>
+                        </div>
+                        <group>
+                            <group string="Observation Setting">
+                                <field name="location_id"/>
+                                <field name="obs_date"/>
+                                <field name="observer_id"/>
+                                <field name="people_observed_count"/>
+                            </group>
+                            <group string="Behavioral Metrics &amp; Safety Index">
+                                <field name="safe_behaviors_count"/>
+                                <field name="at_risk_behaviors_count"/>
+                                <field name="safe_behavior_index" readonly="1" widget="badge" decoration-danger="safe_behavior_index &lt; 80.0" decoration-warning="safe_behavior_index &lt; 90.0" decoration-success="safe_behavior_index &gt;= 90.0"/>
+                                <field name="state" widget="badge"/>
+                            </group>
+                        </group>
+                        <group string="Categories Evaluated">
+                            <group>
+                                <field name="cat_body_position"/>
+                                <field name="cat_ppe"/>
+                                <field name="cat_tools_equipment"/>
+                            </group>
+                            <group>
+                                <field name="cat_procedures"/>
+                                <field name="cat_housekeeping"/>
+                                <field name="cat_eyes_on_task"/>
+                            </group>
+                        </group>
+                        <group string="Positive Coaching &amp; Dialogue">
+                            <field name="immediate_coaching_feedback" placeholder="Describe the two-way conversation with the worker, positive reinforcement given, and commitment agreed upon..."/>
+                            <field name="at_risk_description" invisible="at_risk_behaviors_count == 0"/>
+                            <field name="root_reason_for_at_risk" invisible="at_risk_behaviors_count == 0"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hse_bbs_observation" model="ir.actions.act_window">
+            <field name="name">Behavior-Based Safety (BBS)</field>
+            <field name="res_model">hse.bbs.observation</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

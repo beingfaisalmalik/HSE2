@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Actions defined first -->
+        <record id="action_hse_sif_demand" model="ir.actions.act_window">
+            <field name="name">SIF Operational Demands &amp; Trips</field>
+            <field name="res_model">hse.sif.demand</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_hse_sif" model="ir.actions.act_window">
+            <field name="name">Safety Instrumented Functions (SIF / SIL)</field>
+            <field name="res_model">hse.sif</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Configure Safety Instrumented Functions (SIF) per IEC 61508 / 61511.
+                </p>
+            </field>
+        </record>
+
+        <!-- SIF Tree View -->
+        <record id="view_hse_sif_tree" model="ir.ui.view">
+            <field name="name">hse.sif.tree</field>
+            <field name="model">hse.sif</field>
+            <field name="arch" type="xml">
+                <tree string="Safety Instrumented Functions (SIF)"
+                      decoration-success="sil_compliant and state == 'active'"
+                      decoration-warning="state == 'testing'"
+                      decoration-danger="not sil_compliant or state == 'impaired'"
+                      decoration-muted="state == 'decommissioned'">
+                    <field name="name" bold="1"/>
+                    <field name="description"/>
+                    <field name="location_id"/>
+                    <field name="subsystem_sensor_type"/>
+                    <field name="sensor_voting"/>
+                    <field name="final_element_voting"/>
+                    <field name="required_sil" widget="badge" decoration-info="required_sil == 'sil1'"
+                           decoration-primary="required_sil == 'sil2'" decoration-warning="required_sil == 'sil3'"
+                           decoration-danger="required_sil == 'sil4'"/>
+                    <field name="calculated_sil" widget="badge" decoration-success="calculated_sil in ['sil2', 'sil3', 'sil4']"
+                           decoration-danger="calculated_sil == 'none'"/>
+                    <field name="total_pfd_avg"/>
+                    <field name="risk_reduction_factor"/>
+                    <field name="sil_compliant" widget="boolean_toggle"/>
+                    <field name="demand_count"/>
+                    <field name="state" widget="badge" decoration-success="state == 'active'"
+                           decoration-warning="state == 'testing'" decoration-danger="state == 'impaired'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- SIF Form View -->
+        <record id="view_hse_sif_form" model="ir.ui.view">
+            <field name="name">hse.sif.form</field>
+            <field name="model">hse.sif</field>
+            <field name="arch" type="xml">
+                <form string="Safety Instrumented Function (SIF) - IEC 61511">
+                    <header>
+                        <button name="action_activate" string="Arm &amp; Activate SIF" type="object"
+                                class="btn-primary" invisible="state in ['active', 'decommissioned']"/>
+                        <button name="action_proof_test" string="Initiate Proof Test" type="object"
+                                class="btn-warning" invisible="state != 'active'"/>
+                        <button name="action_complete_test" string="Complete Proof Test (Pass)" type="object"
+                                class="btn-success" invisible="state != 'testing'"/>
+                        <button name="action_impair" string="Declare SIF Impaired" type="object"
+                                class="btn-danger" invisible="state in ['impaired', 'decommissioned']"/>
+                        <button name="action_decommission" string="Decommission SIF" type="object"
+                                class="btn-secondary" invisible="state == 'decommissioned'"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,active,testing,impaired"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #2e1065 0%, #7c3aed 100%); border-left: 6px solid #c4b5fd; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🎛️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Safety Instrumented Functions</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">SIL verification, PFDavg &amp; demand logs (IEC 61508)</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" icon="fa-bolt" type="action" name="%(action_hse_sif_demand)d"
+                                    context="{'search_default_sif_id': active_id}">
+                                <field name="demand_count" widget="statinfo" string="Trips / Demands"/>
+                            </button>
+                        </div>
+
+                        <div class="oe_title">
+                            <label for="name" string="SIF Tag Number"/>
+                            <h1><field name="name" placeholder="e.g. SIF-01-ESD-101"/></h1>
+                            <h3><field name="description" placeholder="Safety Instrumented Function description"/></h3>
+                        </div>
+
+                        <group>
+                            <group string="Process Context &amp; Allocation">
+                                <field name="location_id"/>
+                                <field name="required_sil"/>
+                                <field name="calculated_sil"/>
+                                <field name="sil_compliant"/>
+                                <field name="safe_failure_fraction"/>
+                                <field name="hardware_fault_tolerance"/>
+                            </group>
+                            <group string="SIL Math &amp; Reliability Performance">
+                                <field name="total_pfd_avg"/>
+                                <field name="risk_reduction_factor"/>
+                                <field name="proof_test_interval_months"/>
+                                <field name="mean_time_to_restore_hours"/>
+                                <field name="common_cause_beta"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Subsystems Architecture &amp; Failure Rates" name="subsystems">
+                                <group>
+                                    <group string="1. Sensor Subsystem">
+                                        <field name="subsystem_sensor_type"/>
+                                        <field name="sensor_voting"/>
+                                        <field name="sensor_lambda_du"/>
+                                        <field name="pfd_sensor"/>
+                                    </group>
+                                    <group string="2. Logic Solver &amp; 3. Final Element">
+                                        <field name="logic_solver_voting"/>
+                                        <field name="logic_solver_pfd"/>
+                                        <field name="final_element_voting"/>
+                                        <field name="final_element_lambda_du"/>
+                                        <field name="pfd_final_element"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Target Safe State &amp; Hazard Scenario" name="scenario">
+                                <group>
+                                    <field name="target_safe_state"/>
+                                    <field name="hazard_scenario"/>
+                                </group>
+                            </page>
+
+                            <page string="Operational Demands &amp; Trips History" name="demands">
+                                <field name="demand_ids">
+                                    <tree editable="bottom">
+                                        <field name="demand_date"/>
+                                        <field name="demand_type" widget="badge"/>
+                                        <field name="trip_cause"/>
+                                        <field name="actuation_time_seconds"/>
+                                        <field name="success" widget="boolean_toggle"/>
+                                        <field name="notes"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- SIF Demand Tree View -->
+        <record id="view_hse_sif_demand_tree" model="ir.ui.view">
+            <field name="name">hse.sif.demand.tree</field>
+            <field name="model">hse.sif.demand</field>
+            <field name="arch" type="xml">
+                <tree string="SIF Demands &amp; Actuations" decoration-danger="not success" decoration-success="success">
+                    <field name="sif_id"/>
+                    <field name="demand_date"/>
+                    <field name="demand_type" widget="badge"/>
+                    <field name="trip_cause"/>
+                    <field name="actuation_time_seconds"/>
+                    <field name="success" widget="boolean_toggle"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>

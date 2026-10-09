@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Master & reference data: departments, jobs, employees, locations,
+         assets, contractors, regulations, competencies, exposure hours,
+         portal policies/procedures, knowledge base, meeting types. -->
+    <data noupdate="1">
+
+        <!-- ================= HR departments / jobs / employees ========= -->
+        <record id="dd_dept_operations" model="hr.department">
+            <field name="name">Operations</field>
+        </record>
+        <record id="dd_dept_maintenance" model="hr.department">
+            <field name="name">Maintenance</field>
+        </record>
+        <record id="dd_dept_warehouse" model="hr.department">
+            <field name="name">Warehouse &amp; Logistics</field>
+        </record>
+
+        <record id="dd_job_operator" model="hr.job">
+            <field name="name">Process Operator</field>
+        </record>
+        <record id="dd_job_tech" model="hr.job">
+            <field name="name">Mechanical Technician</field>
+        </record>
+
+        <record id="dd_emp_ahmed" model="hr.employee">
+            <field name="name">Ahmed Raza</field>
+            <field name="department_id" ref="dd_dept_operations"/>
+            <field name="job_id" ref="dd_job_operator"/>
+            <field name="work_email">ahmed.raza@example-plant.com</field>
+        </record>
+        <record id="dd_emp_sara" model="hr.employee">
+            <field name="name">Sara Khan</field>
+            <field name="department_id" ref="dd_dept_operations"/>
+            <field name="job_id" ref="dd_job_operator"/>
+            <field name="work_email">sara.khan@example-plant.com</field>
+        </record>
+        <record id="dd_emp_john" model="hr.employee">
+            <field name="name">John Dsouza</field>
+            <field name="department_id" ref="dd_dept_maintenance"/>
+            <field name="job_id" ref="dd_job_tech"/>
+            <field name="work_email">john.dsouza@example-plant.com</field>
+        </record>
+        <record id="dd_emp_bilal" model="hr.employee">
+            <field name="name">Bilal Ahmed</field>
+            <field name="department_id" ref="dd_dept_maintenance"/>
+            <field name="job_id" ref="dd_job_tech"/>
+            <field name="work_email">bilal.ahmed@example-plant.com</field>
+        </record>
+
+        <!-- ================= Locations & assets ======================== -->
+        <record id="dd_loc_unit100" model="hse.location.profile">
+            <field name="name">Cracker Unit-100</field>
+            <field name="code">CU-100</field>
+            <field name="location_type">unit</field>
+            <field name="hazardous_zone">zone1</field>
+        </record>
+        <record id="dd_loc_unit200" model="hse.location.profile">
+            <field name="name">Polyethylene Unit-200</field>
+            <field name="code">PE-200</field>
+            <field name="location_type">unit</field>
+            <field name="hazardous_zone">zone2</field>
+        </record>
+        <record id="dd_loc_wh" model="hse.location.profile">
+            <field name="name">Central Warehouse</field>
+            <field name="code">WH-01</field>
+            <field name="location_type">storage</field>
+            <field name="hazardous_zone">safe</field>
+        </record>
+
+        <record id="dd_asset_reactor" model="assets.form">
+            <field name="name">Reactor R-201</field>
+            <field name="description">High-pressure polymerization reactor with SIS interlocks</field>
+            <field name="assets_type">equipment</field>
+            <field name="location">Unit-200</field>
+            <field name="status">active</field>
+        </record>
+        <record id="dd_asset_compressor" model="assets.form">
+            <field name="name">K-301 Main Air Compressor</field>
+            <field name="description">Critical rotating machinery, service class A</field>
+            <field name="assets_type">equipment</field>
+            <field name="location">Unit-100</field>
+            <field name="status">active</field>
+        </record>
+        <record id="dd_asset_crane" model="assets.form">
+            <field name="name">Gantry Crane G-05</field>
+            <field name="description">20t gantry crane, lifting plan required</field>
+            <field name="assets_type">equipment</field>
+            <field name="location">Warehouse</field>
+            <field name="status">active</field>
+        </record>
+        <record id="dd_asset_vessel" model="assets.form">
+            <field name="name">Pressure Vessel V-101</field>
+            <field name="description">Slug catcher vessel, statutory pressure envelope</field>
+            <field name="assets_type">equipment</field>
+            <field name="location">Unit-100</field>
+            <field name="status">active</field>
+        </record>
+
+        <!-- ================= Contractors ================================ -->
+        <record id="dd_contract_alpha" model="hse.contractor">
+            <field name="name">Alpha Industrial Services Co.</field>
+            <field name="trir_3year_avg">1.1</field>
+            <field name="insurance_policy_number">AISC-99812233</field>
+            <field name="insurance_expiry_date" eval="(datetime.now() + timedelta(days=400)).strftime('%Y-%m-%d')"/>
+        </record>
+        <record id="dd_contract_beta" model="hse.contractor">
+            <field name="name">Beta Electrical &amp; Instrumentation Works</field>
+            <field name="trir_3year_avg">0.6</field>
+            <field name="insurance_policy_number">BEW-44102297</field>
+            <field name="insurance_expiry_date" eval="(datetime.now() + timedelta(days=210)).strftime('%Y-%m-%d')"/>
+        </record>
+
+        <!-- ================= Regulations ================================ -->
+        <record id="dd_reg_osha_psm" model="hse.regulation">
+            <field name="name">OSHA 29 CFR 1910.119 — Process Safety Management</field>
+            <field name="code">OSHA PSM</field>
+            <field name="regulatory_body">OSHA</field>
+            <field name="jurisdiction">Federal (US)</field>
+            <field name="category">process_safety</field>
+        </record>
+        <record id="dd_reg_iso45001" model="hse.regulation">
+            <field name="name">ISO 45001:2018 Occupational Health &amp; Safety Management</field>
+            <field name="code">ISO 45001</field>
+            <field name="regulatory_body">ISO</field>
+            <field name="jurisdiction">International</field>
+            <field name="category">occupational_safety</field>
+        </record>
+        <record id="dd_reg_titlev" model="hse.regulation">
+            <field name="name">EPA Title V Operating Permit Program</field>
+            <field name="code">TITLE-V</field>
+            <field name="regulatory_body">EPA</field>
+            <field name="jurisdiction">Federal (US)</field>
+            <field name="category">environmental</field>
+        </record>
+
+        <!-- ================= Competency library ========================= -->
+        <record id="dd_comp_agt" model="hse.competency">
+            <field name="name">Authorized Gas Tester</field>
+            <field name="code">CMP-AGT-01</field>
+            <field name="category">gas_testing</field>
+            <field name="description">Calibrated multi-gas detection, acceptance criteria and clearance certification for confined space and hot work.</field>
+            <field name="validity_months">12</field>
+            <field name="mandatory_for_permits">True</field>
+        </record>
+        <record id="dd_comp_ptw" model="hse.competency">
+            <field name="name">Permit to Work Authorizer</field>
+            <field name="code">CMP-PTW-02</field>
+            <field name="category">control_of_work</field>
+            <field name="description">Hazard identification, isolation verification and permit authorization within the operating facility.</field>
+            <field name="validity_months">24</field>
+            <field name="mandatory_for_permits">True</field>
+        </record>
+        <record id="dd_comp_loto" model="hse.competency">
+            <field name="name">LOTO Isolation Authority</field>
+            <field name="code">CMP-LOTO-03</field>
+            <field name="category">control_of_work</field>
+            <field name="description">Energy isolation scheme design, lock-box administration and zero-energy verification.</field>
+            <field name="validity_months">24</field>
+        </record>
+        <record id="dd_comp_cse" model="hse.competency">
+            <field name="name">Confined Space Entrant &amp; Attendant</field>
+            <field name="code">CMP-CSE-04</field>
+            <field name="category">hazard_control</field>
+            <field name="description">Entry permits, atmospheric monitoring, rescue arrangements and attendant duties.</field>
+            <field name="validity_months">12</field>
+        </record>
+
+        <!-- ================= API RP 754 exposure hours (drives TRIR) ==== -->
+        <record id="dd_pse_2026" model="hse.pse.metric">
+            <field name="name">Site Exposure Hours — Current Year (Running Total)</field>
+            <field name="location_id" ref="dd_loc_unit100"/>
+            <field name="total_employee_hours">186000</field>
+            <field name="total_contractor_hours">52000</field>
+            <field name="total_site_exposure_hours">238000</field>
+        </record>
+
+        <!-- ================= Policies & SOPs (external portal) ========== -->
+        <record id="dd_pol_001" model="hse.operating.policy">
+            <field name="name">Life-Saving Rules &amp; Core HSE Policy</field>
+            <field name="policy_code">POL-HSE-001</field>
+            <field name="policy_type">life_saving</field>
+            <field name="state">approved</field>
+            <field name="effective_date" eval="(datetime.now() - timedelta(days=60)).strftime('%Y-%m-%d')"/>
+            <field name="policy_statement">&lt;p&gt;Every person on site has the authority and obligation to stop unsafe work. The Life-Saving Rules apply to employees and contractors without exception.&lt;/p&gt;</field>
+            <field name="core_principles">1. Work with a valid permit. 2. Verify isolation before work. 3. Never enter a confined space without clearance. 4. Protect yourself against falls. 5. Stop work when conditions change.</field>
+            <field name="mandatory_rules">Violations trigger immediate stop-work, formal investigation and coaching. Repeated violations follow the disciplinary matrix.</field>
+        </record>
+        <record id="dd_pol_002" model="hse.operating.policy">
+            <field name="name">Management of Change (MOC) Governance</field>
+            <field name="policy_code">POL-HSE-002</field>
+            <field name="policy_type">asset_integrity</field>
+            <field name="state">approved</field>
+            <field name="effective_date" eval="(datetime.now() - timedelta(days=120)).strftime('%Y-%m-%d')"/>
+            <field name="policy_statement">&lt;p&gt;All permanent, temporary and organizational changes require risk assessment and PSSR before start-up.&lt;/p&gt;</field>
+            <field name="core_principles">1. No change without documented risk review. 2. PSSR before commissioning. 3. As-built documentation closure.</field>
+            <field name="mandatory_rules">Emergency changes require retrospective MOC within 24 hours.</field>
+        </record>
+
+        <record id="dd_sop_014" model="hse.operating.procedure">
+            <field name="name">Safe Opening of Process Lines</field>
+            <field name="procedure_code">SOP-OPS-014</field>
+            <field name="procedure_type">sop</field>
+            <field name="revision">Rev 4</field>
+            <field name="state">published</field>
+            <field name="is_safety_critical">True</field>
+            <field name="effective_date" eval="(datetime.now() - timedelta(days=45)).strftime('%Y-%m-%d')"/>
+            <field name="purpose_and_scope">Controls for first-break opening of hydrocarbon lines: depressurization, draining, gas-free verification and PPE minimums.</field>
+        </record>
+        <record id="dd_sop_021" model="hse.operating.procedure">
+            <field name="name">Benzene Transfer &amp; Unloading</field>
+            <field name="procedure_code">SOP-OPS-021</field>
+            <field name="procedure_type">sop</field>
+            <field name="revision">Rev 2</field>
+            <field name="state">published</field>
+            <field name="is_safety_critical">True</field>
+            <field name="effective_date" eval="(datetime.now() - timedelta(days=90)).strftime('%Y-%m-%d')"/>
+            <field name="purpose_and_scope">Carcinogen handling: bonding/earthing, vapor recovery, spill containment and health monitoring during transfer operations.</field>
+        </record>
+        <record id="dd_sop_007" model="hse.operating.procedure">
+            <field name="name">Centrifugal Pump Overhaul</field>
+            <field name="procedure_code">SOP-MAINT-007</field>
+            <field name="procedure_type">maintenance</field>
+            <field name="revision">Rev 6</field>
+            <field name="state">approved</field>
+            <field name="effective_date" eval="(datetime.now() - timedelta(days=20)).strftime('%Y-%m-%d')"/>
+            <field name="purpose_and_scope">Mechanical seal replacement, alignment tolerances and post-maintenance test run acceptance criteria.</field>
+        </record>
+
+        <!-- ================= Knowledge base (solutions) ================== -->
+        <record id="dd_sol_1" model="hse.solution">
+            <field name="name">Eliminating K-301 Summer Trips (Suction Temperature Control)</field>
+            <field name="solution_code">SOL-001</field>
+            <field name="category">mechanical</field>
+            <field name="applicable_equipment">compressors</field>
+            <field name="problem_symptoms">Recurrent high-temperature trips on the main air compressor during ambient peaks, causing unit upsets approximately twice per month.</field>
+            <field name="root_cause_addressed">Undersized suction air cooler combined with fouled inter-stage piping raising discharge temperature beyond the trip threshold.</field>
+            <field name="detailed_solution">&lt;p&gt;Install a trimmed intercooler and adopt a predictive cleaning routine based on vibration &amp; temperature trending; update the alarm rationalization document.&lt;/p&gt;</field>
+        </record>
+        <record id="dd_sol_2" model="hse.solution">
+            <field name="name">Chemical Drum Handling — Drum Trolley Intervention</field>
+            <field name="solution_code">SOL-002</field>
+            <field name="category">human_factors</field>
+            <field name="applicable_equipment">general</field>
+            <field name="problem_symptoms">Manual drum handling in the warehouse caused two near-miss hand injuries and consistent ergonomic complaints.</field>
+            <field name="root_cause_addressed">No mechanical handling aid available at the decanting station.</field>
+            <field name="detailed_solution">&lt;p&gt;Procure ATEX-rated drum trolleys, redefine the decanting station layout and add the task to the BBS observation checklist.&lt;/p&gt;</field>
+        </record>
+
+        <!-- ================= Meeting types =============================== -->
+        <record id="dd_meetdept_operations" model="hse.meeting.department">
+            <field name="name">Operations</field>
+            <field name="number_of_employees">45</field>
+        </record>
+        <record id="dd_meetdept_maintenance" model="hse.meeting.department">
+            <field name="name">Maintenance</field>
+            <field name="number_of_employees">30</field>
+        </record>
+
+        <record id="dd_mtype_toolbox" model="hse.meeting.type">
+            <field name="name">Pre-Shift Toolbox Safety Talk</field>
+        </record>
+        <record id="dd_mtype_mgmt" model="hse.meeting.type">
+            <field name="name">Monthly HSE Management Review</field>
+        </record>
+
+    </data>
+</odoo>

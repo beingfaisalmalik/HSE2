@@ -1,0 +1,76 @@
+<odoo>
+    <data>
+
+        <!-- Define the Report Template with Professional Styling -->
+        <template id="hse_preventive_model_report_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page" style="padding: 40px; font-family: 'Arial', sans-serif; line-height: 1.6;">
+                            <!-- Header Section -->
+                            <div style="text-align: center; margin-bottom: 30px;">
+                                <h2 style="color: #003366; font-size: 28px; font-weight: bold;">Preventive Action REPORT</h2>
+                                <p style="font-size: 14px; color: #777;">Date: <t t-esc="doc.create_date"/></p>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p><strong>Action Title:</strong> <t t-esc="doc.name"/></p>
+                                        <p><strong>RA Reference:</strong> <t t-esc="doc.ra_reference_number"/></p>
+                                        <p><strong>Action Description:</strong> <t t-esc="doc.action_description"/></p>
+                                        <p><strong>Due Date:</strong> <t t-esc="doc.due_date"/></p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p><strong>Due Date:</strong> <t t-esc="doc.due_date"/></p>
+                                        <p><strong>Responsible Person:</strong> <t t-esc="doc.responsible_user_id.name"/></p>
+                                        <p><strong>Comments:</strong> <t t-esc="doc.comments"/></p>
+                                        <p><strong>Completion Date:</strong> <t t-esc="doc.completion_date"/></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Hazards</th>
+                                        <th>Description</th>
+                                        <th>Risk Level</th>
+                                        <th>Controls</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="doc.hazard_preventive_ids" t-as="line">
+                                        <tr>
+                                            <td><t t-esc="line.hazards_selection.name"/></td>
+                                            <td><t t-esc="line.description"/></td>
+                                            <td><t t-esc="line.risk_level"/></td>
+                                            <td><t t-foreach="line.control_ids" t-as="control">
+                                                <t t-esc="control.name"/>
+                                                <t t-if="control != line.control_ids[-1]">, </t>
+                                            </t></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Define the Report Action -->
+        <record id="action_hse_preventive_model_report" model="ir.actions.report">
+            <field name="name">Preventive Action Report</field>
+            <field name="model">hse.preventive.model</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">hse_reports.hse_preventive_model_report_template</field>
+            <field name="report_file">hse_reports.hse_preventive_model_report_template</field>
+            <field name="binding_model_id" ref="hse.model_hse_preventive_model"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>

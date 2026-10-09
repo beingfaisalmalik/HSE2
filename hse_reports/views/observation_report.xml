@@ -1,0 +1,145 @@
+<odoo>
+    <data>
+
+        <!-- Define the Report Template with Professional Styling -->
+        <template id="observation_report_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+
+                        <div class="page" style="padding: 40px; font-family: 'Arial', sans-serif; line-height: 1.6;">
+                            <!-- Header Section -->
+
+                            <div style="text-align: center; margin-bottom: 30px;">
+                                <h2 style="color: #003366; font-size: 28px; font-weight: bold;">Observation REPORT</h2>
+                                <p style="font-size: 14px; color: #777;">Date:
+                                    <t t-esc="doc.create_date"/>
+                                </p>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p>
+                                            <strong>Observation Reference:</strong>
+                                            <t t-esc="doc.name"/>
+                                        </p>
+                                        <p>
+                                            <strong>Observation Date:</strong>
+                                            <t t-esc="doc.observation_date"/>
+                                        </p>
+                                        <p>
+                                            <strong>Observer:</strong>
+                                            <t t-esc="doc.observer_id.name"/>
+                                        </p>
+                                        <p>
+                                            <strong>Employee Observer Name:</strong>
+                                            <t t-esc="doc.employee_observer_name"/>
+                                        </p>
+                                        <p>
+                                            <strong>Employee Code:</strong>
+                                            <t t-esc="doc.employee_code"/>
+                                        </p>
+                                        <p>
+                                            <strong>Observation:</strong>
+                                            <t t-esc="doc.observation"/>
+                                        </p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p>
+                                            <strong>Observation:</strong>
+                                            <t t-esc="doc.observation_type"/>
+                                        </p>
+                                        <p>
+                                            <strong>Immediate Action Taken:</strong>
+                                            <t t-esc="doc.immediate_action"/>
+                                        </p>
+                                        <p>
+                                            <strong>Select Department:</strong>
+                                            <t t-esc="doc.select_department.name"/>
+                                        </p>
+                                        <p>
+                                            <strong>Responsible Person:</strong>
+                                            <t t-esc="doc.responsible_person.name"/>
+                                        </p>
+                                        <p>
+                                            <strong>Select Severity Level:</strong>
+                                            <t t-esc="doc.select_severity_level.name"/>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table table-bordered" style="width:100%; margin-top:20px;">
+                                <thead>
+                                    <tr style="background-color:#f2f2f2;">
+                                        <th>Select Hazard</th>
+                                        <th>Hazard Event</th>
+                                        <th>Consequences</th>
+                                        <th>Likelihood</th>
+                                        <th>Severity Level</th>
+                                        <th>Risk Level</th>
+                                        <th>Control Measures</th>
+                                        <th>Control Description</th>
+                                        <th>Post Risk Level</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="doc.hazard_observation_ids" t-as="line">
+                                        <tr>
+                                            <td>
+                                                <t t-esc="line.hazards_selection.name"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line.description"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line.consequences"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line.likelihood"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line.severity_level"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line.risk_level"/>
+                                            </td>
+                                            <td>
+                                                <t t-foreach="line.control_ids" t-as="control">
+                                                    <t t-esc="control.control_measure"/>
+                                                    <t t-if="control != line.control_ids[-1]">,</t>
+                                                </t>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line.control_description"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="line.risk_level_"/>
+                                            </td>
+
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Define the Report Action -->
+        <record id="action_observation_report" model="ir.actions.report">
+            <field name="name">Observation Report</field>
+            <field name="model">observation.observation</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">hse_reports.observation_report_template</field>
+            <field name="report_file">hse_reports.observation_report_template</field>
+            <field name="binding_model_id" ref="hse.model_observation_observation"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>

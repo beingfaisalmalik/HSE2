@@ -1,0 +1,23 @@
+<odoo>
+    <data>
+        <record model="ir.module.category" id="module_category_hse">
+            <field name="name">HSE</field>
+            <field name="description">Category For HSE</field>
+        </record>
+        <record id="group_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="module_category_hse"/>
+        </record>
+        <record id="group_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id" ref="module_category_hse"/>
+            <!--            <field name="implied_ids" eval="[(4, ref('group_manager'))]"/>-->
+        </record>
+        <record id="group_worker" model="res.groups">
+            <field name="name">Worker</field>
+            <field name="category_id" ref="module_category_hse"/>
+
+        </record>
+
+    </data>
+</odoo>

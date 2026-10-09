@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Location Profile Form -->
+    <record id="view_hse_location_profile_form" model="ir.ui.view">
+        <field name="name">hse.location.profile.form</field>
+        <field name="model">hse.location.profile</field>
+        <field name="arch" type="xml">
+            <form string="Location Safety Profile">
+                <sheet>
+                    <div class="hse-x-hero" style="background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%); border-left: 6px solid #7dd3fc; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🏭</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Location Safety Profile</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Hazardous zones, muster points and chemical inventory</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-file-text-o" type="object" name="action_view_permits">
+                            <field name="active_permit_count" widget="statinfo" string="Active Permits"/>
+                        </button>
+                        <button class="oe_stat_button" icon="fa-exclamation-triangle" type="object" name="action_view_bypasses">
+                            <field name="active_bypass_count" widget="statinfo" string="Active Bypasses"/>
+                        </button>
+                        <button class="oe_stat_button" icon="fa-lock" type="object" name="action_view_loto">
+                            <field name="active_loto_count" widget="statinfo" string="Active LOTO"/>
+                        </button>
+                        <button class="oe_stat_button" icon="fa-flask" type="object" name="action_view_incidents">
+                            <field name="chemical_count" widget="statinfo" string="Chemicals"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="Plant Area / Unit Name"/></h1>
+                        <h3><field name="code" placeholder="Code (e.g. LOC-CDU-100)"/></h3>
+                    </div>
+                    <group>
+                        <group string="Area Classification &amp; Criticality">
+                            <field name="parent_id"/>
+                            <field name="location_type"/>
+                            <field name="hazardous_zone"/>
+                            <field name="is_sece"/>
+                            <field name="sece_classification" invisible="not is_sece"/>
+                            <field name="operating_state"/>
+                        </group>
+                        <group string="Ownership &amp; Leadership">
+                            <field name="manager_id"/>
+                            <field name="safety_officer_id"/>
+                            <field name="environmental_sensitivity"/>
+                            <field name="containment_capacity_m3"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Active Barriers &amp; Safeguards">
+                            <group>
+                                <group string="Engineered Protective Barriers">
+                                    <field name="has_gas_detection"/>
+                                    <field name="has_fire_deluge"/>
+                                    <field name="has_blast_wall"/>
+                                </group>
+                                <group string="Emergency Safeguards">
+                                    <field name="has_emergency_shutdown"/>
+                                    <field name="has_eyewash_shower"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Emergency Evacuation &amp; Muster Points">
+                            <group>
+                                <group>
+                                    <field name="muster_station_primary"/>
+                                    <field name="muster_station_secondary"/>
+                                    <field name="wind_sock_location"/>
+                                </group>
+                                <group>
+                                    <field name="evacuation_route"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Operational Notes &amp; Hazards">
+                            <field name="notes" placeholder="Specific hazards, chemical inventory, and operational constraints..."/>
+                        </page>
+                        <page string="Hazardous Chemicals Inventory (NFPA 704 / SDS)" name="chemicals_tab">
+                            <field name="chemical_ids">
+                                <tree editable="bottom">
+                                    <field name="chemical_name"/>
+                                    <field name="cas_number"/>
+                                    <field name="physical_state"/>
+                                    <field name="nfpa_health"/>
+                                    <field name="nfpa_flammability"/>
+                                    <field name="nfpa_instability"/>
+                                    <field name="nfpa_special"/>
+                                    <field name="quantity_stored"/>
+                                    <field name="unit_of_measure"/>
+                                    <field name="max_threshold"/>
+                                    <field name="ghs_flammable" widget="boolean_toggle"/>
+                                    <field name="ghs_toxic" widget="boolean_toggle"/>
+                                    <field name="sds_url" widget="url"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Location Profile Tree -->
+    <record id="view_hse_location_profile_tree" model="ir.ui.view">
+        <field name="name">hse.location.profile.tree</field>
+        <field name="model">hse.location.profile</field>
+        <field name="arch" type="xml">
+            <tree string="Location Safety Profiles">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="location_type"/>
+                <field name="hazardous_zone"/>
+                <field name="is_sece"/>
+                <field name="operating_state" widget="badge" decoration-success="operating_state == 'normal'" decoration-warning="operating_state in ('turnaround', 'startup')" decoration-danger="operating_state == 'shutdown'"/>
+                <field name="active_permit_count"/>
+                <field name="active_bypass_count"/>
+                <field name="manager_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_hse_location_profile" model="ir.actions.act_window">
+        <field name="name">Location Safety Profiles</field>
+        <field name="res_model">hse.location.profile</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Manage plant locations, SECE classification, barriers, and hazardous zones.</p>
+        </field>
+    </record>
+</odoo>

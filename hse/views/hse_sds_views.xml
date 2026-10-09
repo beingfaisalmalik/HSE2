@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- SDS Tree View -->
+        <record id="view_hse_sds_tree" model="ir.ui.view">
+            <field name="name">hse.sds.tree</field>
+            <field name="model">hse.sds</field>
+            <field name="arch" type="xml">
+                <tree string="Chemical Safety Data Sheets (SDS)">
+                    <field name="product_name"/>
+                    <field name="cas_number"/>
+                    <field name="un_number"/>
+                    <field name="manufacturer_supplier"/>
+                    <field name="signal_word" widget="badge" decoration-danger="signal_word == 'danger'" decoration-warning="signal_word == 'warning'"/>
+                    <field name="reactivity_group"/>
+                    <field name="physical_state"/>
+                    <field name="flash_point_c"/>
+                    <field name="revision_date"/>
+                    <field name="next_review_date"/>
+                    <field name="state" widget="badge" decoration-success="state == 'current'" decoration-warning="state == 'review_due'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- SDS Form View -->
+        <record id="view_hse_sds_form" model="ir.ui.view">
+            <field name="name">hse.sds.form</field>
+            <field name="model">hse.sds</field>
+            <field name="arch" type="xml">
+                <form string="Safety Data Sheet (GHS HazCom)">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="current,review_due,archived"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #064e3b 0%, #059669 100%); border-left: 6px solid #6ee7b7; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🧪</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Safety Data Sheets (GHS)</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">16-section SDS catalog &amp; reactivity compatibility</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">Chemical Trade Name</span>
+                            <h1><field name="product_name" placeholder="e.g. Light Sour Naphtha Feedstock"/></h1>
+                            <h3><field name="chemical_formula" placeholder="Chemical Formula / IUPAC Name"/></h3>
+                        </div>
+                        <group>
+                            <group string="Identification (Section 1)">
+                                <field name="cas_number"/>
+                                <field name="un_number"/>
+                                <field name="manufacturer_supplier"/>
+                                <field name="emergency_phone"/>
+                                <field name="revision_date"/>
+                                <field name="next_review_date"/>
+                            </group>
+                            <group string="GHS Hazard Classification (Section 2)">
+                                <field name="signal_word" widget="radio"/>
+                                <field name="reactivity_group"/>
+                                <field name="sds_file" filename="sds_filename"/>
+                                <field name="sds_filename" invisible="1"/>
+                            </group>
+                        </group>
+                        <group string="GHS Hazard Pictograms">
+                            <group>
+                                <field name="ghs_flame"/>
+                                <field name="ghs_skull_crossbones"/>
+                                <field name="ghs_corrosion"/>
+                                <field name="ghs_gas_cylinder"/>
+                            </group>
+                            <group>
+                                <field name="ghs_health_hazard"/>
+                                <field name="ghs_environment"/>
+                                <field name="ghs_exclamation_mark"/>
+                                <field name="ghs_exploding_bomb"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Hazard &amp; Precautionary Statements" name="ghs_text">
+                                <group>
+                                    <field name="hazard_statements" placeholder="H225: Highly flammable liquid and vapor. H304: May be fatal if swallowed..."/>
+                                    <field name="precautionary_statements" placeholder="P210: Keep away from heat/sparks/open flames. P280: Wear protective gloves..."/>
+                                </group>
+                            </page>
+                            <page string="Physical &amp; Chemical Properties (Section 9)" name="properties">
+                                <group>
+                                    <group>
+                                        <field name="physical_state"/>
+                                        <field name="flash_point_c"/>
+                                        <field name="boiling_point_c"/>
+                                        <field name="auto_ignition_temp_c"/>
+                                    </group>
+                                    <group>
+                                        <field name="lower_explosive_limit"/>
+                                        <field name="upper_explosive_limit"/>
+                                        <field name="vapor_density"/>
+                                        <field name="specific_gravity"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="First Aid &amp; Firefighting (Sections 4 &amp; 5)" name="first_aid">
+                                <group>
+                                    <field name="first_aid_inhalation"/>
+                                    <field name="first_aid_skin"/>
+                                    <field name="first_aid_eye"/>
+                                    <field name="first_aid_ingestion"/>
+                                    <field name="extinguishing_media"/>
+                                </group>
+                            </page>
+                            <page string="Handling, Storage &amp; PPE (Sections 7 &amp; 8)" name="handling_ppe">
+                                <group>
+                                    <group string="Handling &amp; Incompatibilities">
+                                        <field name="storage_conditions"/>
+                                        <field name="incompatible_materials"/>
+                                    </group>
+                                    <group string="Personal Protective Equipment">
+                                        <field name="req_respirator"/>
+                                        <field name="req_gloves"/>
+                                        <field name="req_eye_face"/>
+                                        <field name="req_body"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hse_sds" model="ir.actions.act_window">
+            <field name="name">Safety Data Sheets (SDS / GHS)</field>
+            <field name="res_model">hse.sds</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Compatibility Matrix View -->
+        <record id="view_hse_sds_compatibility_tree" model="ir.ui.view">
+            <field name="name">hse.sds.compatibility.tree</field>
+            <field name="model">hse.sds.compatibility</field>
+            <field name="arch" type="xml">
+                <tree string="Chemical Compatibility Rules" editable="bottom" decoration-danger="compatibility_status == 'forbidden'" decoration-warning="compatibility_status == 'caution'" decoration-success="compatibility_status == 'compatible'">
+                    <field name="group_a"/>
+                    <field name="group_b"/>
+                    <field name="compatibility_status" widget="badge" decoration-danger="compatibility_status == 'forbidden'" decoration-warning="compatibility_status == 'caution'" decoration-success="compatibility_status == 'compatible'"/>
+                    <field name="reaction_hazard"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_hse_sds_compatibility" model="ir.actions.act_window">
+            <field name="name">Chemical Compatibility Rules</field>
+            <field name="res_model">hse.sds.compatibility</field>
+            <field name="view_mode">tree</field>
+        </record>
+    </data>
+</odoo>

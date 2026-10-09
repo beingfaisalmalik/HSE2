@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- ================================================================= -->
+        <!-- 1. Emergency Response Plans (ERP)                                -->
+        <!-- ================================================================= -->
+        <record id="view_hse_emergency_plan_tree" model="ir.ui.view">
+            <field name="name">hse.emergency.plan.tree</field>
+            <field name="model">hse.emergency.plan</field>
+            <field name="arch" type="xml">
+                <tree string="Emergency Response Plans">
+                    <field name="name"/>
+                    <field name="title"/>
+                    <field name="location_id"/>
+                    <field name="emergency_type"/>
+                    <field name="incident_commander_id"/>
+                    <field name="drill_count"/>
+                    <field name="state" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hse_emergency_plan_form" model="ir.ui.view">
+            <field name="name">hse.emergency.plan.form</field>
+            <field name="model">hse.emergency.plan</field>
+            <field name="arch" type="xml">
+                <form string="Facility Emergency Response Plan (ERP)">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,active,under_review,archived"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%); border-left: 6px solid #fca5a5; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🚑</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Emergency Response</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">ERP plans, drills &amp; ERT readiness</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">ERP Reference</span>
+                            <h1><field name="name" readonly="1"/></h1>
+                            <h3><field name="title" placeholder="e.g. Refinery Major Toxic Gas Release &amp; Hydrocarbon Fire Response Plan"/></h3>
+                        </div>
+                        <group>
+                            <group string="Scope &amp; Command Structure">
+                                <field name="location_id"/>
+                                <field name="emergency_type"/>
+                                <field name="incident_commander_id"/>
+                                <field name="deputy_commander_id"/>
+                            </group>
+                            <group string="Muster Points &amp; Drills">
+                                <field name="muster_stations" placeholder="Primary: Gate 1 Assembly Area; Secondary: South Helipad..."/>
+                                <field name="drill_count"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Emergency Action Sequence" name="actions">
+                                <group>
+                                    <field name="response_actions" placeholder="Immediate alarm sequence, ESD push buttons, deluge foam activation, radio frequencies..."/>
+                                    <field name="internal_callout_list" placeholder="ERT callout hierarchy and mobile numbers..."/>
+                                    <field name="external_agencies" placeholder="Municipal fire department, emergency medical services, mutual aid partners..."/>
+                                </group>
+                            </page>
+                            <page string="Response Drills Executed" name="drills">
+                                <field name="drill_ids">
+                                    <tree string="Drills">
+                                        <field name="name"/>
+                                        <field name="title"/>
+                                        <field name="drill_date"/>
+                                        <field name="drill_scope"/>
+                                        <field name="ert_response_time_minutes"/>
+                                        <field name="headcount_completion_minutes"/>
+                                        <field name="unaccounted_personnel"/>
+                                        <field name="drill_score_percent"/>
+                                        <field name="state" widget="badge"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hse_emergency_plan" model="ir.actions.act_window">
+            <field name="name">Emergency Response Plans (ERP)</field>
+            <field name="res_model">hse.emergency.plan</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- ================================================================= -->
+        <!-- 2. Emergency Drills & Muster Accountability                      -->
+        <!-- ================================================================= -->
+        <record id="view_hse_emergency_drill_tree" model="ir.ui.view">
+            <field name="name">hse.emergency.drill.tree</field>
+            <field name="model">hse.emergency.drill</field>
+            <field name="arch" type="xml">
+                <tree string="Emergency Drills" decoration-danger="unaccounted_personnel &gt; 0" decoration-success="drill_score_percent &gt;= 90.0">
+                    <field name="name"/>
+                    <field name="title"/>
+                    <field name="plan_id"/>
+                    <field name="drill_date"/>
+                    <field name="drill_scope"/>
+                    <field name="ert_response_time_minutes"/>
+                    <field name="headcount_completion_minutes"/>
+                    <field name="unaccounted_personnel" widget="badge" decoration-danger="unaccounted_personnel &gt; 0" decoration-success="unaccounted_personnel == 0"/>
+                    <field name="drill_score_percent"/>
+                    <field name="state" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hse_emergency_drill_form" model="ir.ui.view">
+            <field name="name">hse.emergency.drill.form</field>
+            <field name="model">hse.emergency.drill</field>
+            <field name="arch" type="xml">
+                <form string="Emergency Simulation Drill &amp; Headcount">
+                    <header>
+                        <button name="action_critique" string="Complete Debrief" type="object" invisible="state != 'executed'" class="btn-primary"/>
+                        <button name="action_close" string="Close Drill Actions" type="object" invisible="state != 'critiqued'" class="btn-success"/>
+                        <field name="state" widget="statusbar" statusbar_visible="scheduled,executed,critiqued,closed"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%); border-left: 6px solid #fca5a5; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🚑</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Emergency Response</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">ERP plans, drills &amp; ERT readiness</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">Emergency Drill Ref</span>
+                            <h1><field name="name" readonly="1"/></h1>
+                            <h3><field name="title" placeholder="e.g. Unannounced Site-Wide Hydrocarbon Fire &amp; Evacuation Drill"/></h3>
+                        </div>
+                        <group>
+                            <group string="Drill Protocol">
+                                <field name="plan_id"/>
+                                <field name="drill_date"/>
+                                <field name="drill_scope"/>
+                                <field name="lead_evaluator_id"/>
+                            </group>
+                            <group string="Timing &amp; Response Metrics">
+                                <field name="alarm_activation_time"/>
+                                <field name="all_clear_time"/>
+                                <field name="ert_response_time_minutes"/>
+                                <field name="headcount_completion_minutes"/>
+                            </group>
+                        </group>
+                        <group string="Muster Station Personnel Headcount Accountability">
+                            <group>
+                                <field name="total_personnel_on_site"/>
+                                <field name="total_personnel_mustered"/>
+                                <field name="unaccounted_personnel" readonly="1" widget="badge" decoration-danger="unaccounted_personnel &gt; 0" decoration-success="unaccounted_personnel == 0"/>
+                            </group>
+                            <group>
+                                <field name="drill_score_percent"/>
+                            </group>
+                        </group>
+                        <group string="Post-Drill Critique &amp; Debrief">
+                            <field name="strengths_observed"/>
+                            <field name="areas_for_improvement"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hse_emergency_drill" model="ir.actions.act_window">
+            <field name="name">Emergency Response Simulation Drills</field>
+            <field name="res_model">hse.emergency.drill</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- ================================================================= -->
+        <!-- 3. Emergency Response Team (ERT)                                 -->
+        <!-- ================================================================= -->
+        <record id="view_hse_emergency_team_tree" model="ir.ui.view">
+            <field name="name">hse.emergency.team.tree</field>
+            <field name="model">hse.emergency.team</field>
+            <field name="arch" type="xml">
+                <tree string="Emergency Response Team Roster" editable="bottom">
+                    <field name="name"/>
+                    <field name="role"/>
+                    <field name="phone"/>
+                    <field name="radio_call_sign"/>
+                    <field name="scba_certified" widget="boolean_toggle"/>
+                    <field name="last_certification_date"/>
+                    <field name="is_on_call" widget="boolean_toggle"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_hse_emergency_team" model="ir.actions.act_window">
+            <field name="name">Emergency Response Team (ERT) Roster</field>
+            <field name="res_model">hse.emergency.team</field>
+            <field name="view_mode">tree</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Top Level HSE Root Menu -->
+        <menuitem id="menu_hse_root"
+                  name="HSE Suite"
+                  web_icon="hse,static/description/icon.png"
+                  sequence="10"/>
+
+        <!-- 1. Overview & Real-Time Dashboard -->
+        <menuitem id="menu_hse_overview"
+                  name="Overview"
+                  parent="menu_hse_root"
+                  sequence="1"/>
+
+        <record id="action_hse_dashboard_client" model="ir.actions.client">
+            <field name="name">HSE Executive Dashboard</field>
+            <field name="tag">hse_dashboard</field>
+        </record>
+
+        <menuitem id="menu_hse_dashboard_exec"
+                  name="Operations Dashboard"
+                  parent="menu_hse_overview"
+                  action="action_hse_dashboard_client"
+                  sequence="1"/>
+
+        <!-- 2. Safety & Incidents -->
+        <menuitem id="menu_hse_incidents"
+                  name="Safety &amp; Incidents"
+                  parent="menu_hse_root"
+                  sequence="10"/>
+
+        <menuitem id="menu_hse_incident_records"
+                  name="Incident Management (OSHA)"
+                  parent="menu_hse_incidents"
+                  action="hse.incident_reporting_action"
+                  sequence="1"/>
+
+        <menuitem id="menu_hse_investigation_records"
+                  name="Incident Investigations (RCA)"
+                  parent="menu_hse_incidents"
+                  action="hse.action_incident_investigation"
+                  sequence="2"/>
+
+        <menuitem id="menu_hse_observation_records"
+                  name="Safety Observations"
+                  parent="menu_hse_incidents"
+                  action="hse.action_observation"
+                  sequence="3"/>
+
+        <menuitem id="menu_hse_bbs_obs_menu"
+                  name="Behavior-Based Safety (BBS)"
+                  parent="menu_hse_incidents"
+                  action="hse.action_hse_bbs_observation"
+                  sequence="4"/>
+
+        <menuitem id="menu_hse_investigation_hfacs_menu"
+                  name="Human Factors / TapRooT RCA"
+                  parent="menu_hse_incidents"
+                  action="hse.action_hse_investigation_hfacs"
+                  sequence="5"/>
+
+        <menuitem id="menu_hse_stop_work_menu"
+                  name="Stop Work Authority (SWA)"
+                  parent="menu_hse_incidents"
+                  action="hse.action_hse_stop_work"
+                  sequence="6"/>
+
+        <menuitem id="menu_hse_lifesaving_rules_menu"
+                  name="IOGP Life-Saving Rules"
+                  parent="menu_hse_incidents"
+                  action="hse.action_hse_lifesaving_rule"
+                  sequence="7"/>
+
+        <menuitem id="menu_hse_safety_culture_menu"
+                  name="Safety Culture (Bradley Curve)"
+                  parent="menu_hse_incidents"
+                  action="hse.action_hse_safety_culture_assessment"
+                  sequence="8"/>
+
+        <!-- 3. Process Safety Management (PSM) -->
+        <menuitem id="menu_hse_psm_root"
+                  name="Process Safety (PSM)"
+                  parent="menu_hse_root"
+                  sequence="15"/>
+
+        <menuitem id="menu_hse_hazop_study_menu"
+                  name="Process Hazard Analysis / HAZOP"
+                  parent="menu_hse_psm_root"
+                  action="hse.action_hse_hazop_study"
+                  sequence="1"/>
+
+        <menuitem id="menu_hse_lopa_study_menu"
+                  name="Layers of Protection Analysis (LOPA)"
+                  parent="menu_hse_psm_root"
+                  action="hse.action_hse_lopa_study"
+                  sequence="2"/>
+
+        <menuitem id="menu_hse_sif_menu"
+                  name="Safety Instrumented Functions (SIF/SIL)"
+                  parent="menu_hse_psm_root"
+                  action="hse.action_hse_sif"
+                  sequence="3"/>
+
+        <menuitem id="menu_hse_sif_demand_menu"
+                  name="SIF Demands &amp; Trips Log"
+                  parent="menu_hse_psm_root"
+                  action="hse.action_hse_sif_demand"
+                  sequence="4"/>
+
+        <menuitem id="menu_hse_dispersion_menu"
+                  name="Consequence &amp; Dispersion (QRA)"
+                  parent="menu_hse_psm_root"
+                  action="hse.action_hse_dispersion_scenario"
+                  sequence="5"/>
+
+        <menuitem id="menu_hse_sece_menu"
+                  name="Safety Critical Elements (SECE)"
+                  parent="menu_hse_psm_root"
+                  action="hse.action_hse_sece"
+                  sequence="6"/>
+
+        <menuitem id="menu_hse_pse_menu"
+                  name="Process Safety Events (API RP 754)"
+                  parent="menu_hse_psm_root"
+                  action="hse.action_hse_pse"
+                  sequence="7"/>
+
+        <menuitem id="menu_hse_pse_metric_menu"
+                  name="API RP 754 Metrics &amp; PSEE Rates"
+                  parent="menu_hse_psm_root"
+                  action="hse.action_hse_pse_metric"
+                  sequence="8"/>
+
+        <menuitem id="menu_hse_barrier_element_menu"
+                  name="Safety Barrier Integrity Register"
+                  parent="menu_hse_psm_root"
+                  action="hse.action_hse_barrier_element"
+                  sequence="9"/>
+
+        <!-- 4. Control of Work -->
+        <menuitem id="menu_hse_control_of_work"
+                  name="Control of Work"
+                  parent="menu_hse_root"
+                  sequence="20"/>
+
+        <menuitem id="menu_hse_permit_work"
+                  name="Permit to Work (PTW)"
+                  parent="menu_hse_control_of_work"
+                  action="hse.action_hse_permit"
+                  sequence="1"/>
+
+        <menuitem id="menu_hse_permit_confined_space"
+                  name="Confined Space Entry Certificates"
+                  parent="menu_hse_control_of_work"
+                  action="hse.action_hse_permit_confined_space"
+                  sequence="2"/>
+
+        <menuitem id="menu_hse_simops_radar"
+                  name="SIMOPS Spatial Collision Radar"
+                  parent="menu_hse_control_of_work"
+                  action="hse.action_hse_simops_radar_plot"
+                  sequence="3"/>
+
+        <menuitem id="menu_hse_simops_matrix_menu"
+                  name="SIMOPS Activity Rules Matrix"
+                  parent="menu_hse_control_of_work"
+                  action="hse.action_hse_simops_matrix"
+                  sequence="4"/>
+
+        <menuitem id="menu_hse_loto_plans"
+                  name="Lock &amp; Tag Out Plans (LOTO)"
+                  parent="menu_hse_control_of_work"
+                  action="hse.action_hse_loto_plan"
+                  sequence="5"/>
+
+        <menuitem id="menu_hse_bypass_management"
+                  name="Bypass Management (Inhibits)"
+                  parent="menu_hse_control_of_work"
+                  action="hse.action_hse_bypass"
+                  sequence="6"/>
+
+        <menuitem id="menu_hse_prep_activities"
+                  name="Preparation Activities (TBT)"
+                  parent="menu_hse_control_of_work"
+                  action="hse.action_hse_preparation_activity"
+                  sequence="7"/>
+
+        <menuitem id="menu_hse_critical_lift_menu"
+                  name="Critical Lift &amp; Rigging"
+                  parent="menu_hse_control_of_work"
+                  action="hse.action_hse_permit_critical_lift"
+                  sequence="8"/>
+
+        <menuitem id="menu_hse_excavation_menu"
+                  name="Excavation &amp; Trenching"
+                  parent="menu_hse_control_of_work"
+                  action="hse.action_hse_permit_excavation"
+                  sequence="9"/>
+
+        <menuitem id="menu_hse_radiography_menu"
+                  name="Industrial Radiography (NDT)"
+                  parent="menu_hse_control_of_work"
+                  action="hse.action_hse_permit_radiography"
+                  sequence="10"/>
+
+        <!-- 5. Environmental & Sustainability (EMS) -->
+        <menuitem id="menu_hse_env_root"
+                  name="Environmental (EMS)"
+                  parent="menu_hse_root"
+                  sequence="25"/>
+
+        <menuitem id="menu_hse_esg_accounting_menu"
+                  name="ESG Carbon Accounting &amp; Balance"
+                  parent="menu_hse_env_root"
+                  action="hse.action_hse_esg_accounting"
+                  sequence="1"/>
+
+        <menuitem id="menu_hse_env_air_menu"
+                  name="Air Emissions &amp; GHG Protocol"
+                  parent="menu_hse_env_root"
+                  action="hse.action_hse_env_air_emission"
+                  sequence="2"/>
+
+        <menuitem id="menu_hse_env_water_menu"
+                  name="Wastewater &amp; Outfall Monitoring"
+                  parent="menu_hse_env_root"
+                  action="hse.action_hse_env_water_monitoring"
+                  sequence="3"/>
+
+        <menuitem id="menu_hse_env_waste_menu"
+                  name="Hazardous Waste Manifests (RCRA)"
+                  parent="menu_hse_env_root"
+                  action="hse.action_hse_env_waste_manifest"
+                  sequence="4"/>
+
+        <menuitem id="menu_hse_env_spill_menu"
+                  name="Spill &amp; Release Remediation"
+                  parent="menu_hse_env_root"
+                  action="hse.action_hse_env_spill"
+                  sequence="5"/>
+
+        <menuitem id="menu_hse_ldar_component_menu"
+                  name="LDAR Fugitive Components (EPA 21)"
+                  parent="menu_hse_env_root"
+                  action="hse.action_hse_ldar_component"
+                  sequence="6"/>
+
+        <!-- 6. Occupational Health & Industrial Hygiene (IH) -->
+        <menuitem id="menu_hse_ih_root"
+                  name="Occupational Health &amp; IH"
+                  parent="menu_hse_root"
+                  sequence="28"/>
+
+        <menuitem id="menu_hse_ih_sample_menu"
+                  name="Exposure Monitoring &amp; Air Sampling"
+                  parent="menu_hse_ih_root"
+                  action="hse.action_hse_ih_sample"
+                  sequence="1"/>
+
+        <menuitem id="menu_hse_ih_seg_menu"
+                  name="Similar Exposure Groups (SEGs)"
+                  parent="menu_hse_ih_root"
+                  action="hse.action_hse_ih_seg"
+                  sequence="2"/>
+
+        <menuitem id="menu_hse_ih_biological_menu"
+                  name="Biological Monitoring (BEI)"
+                  parent="menu_hse_ih_root"
+                  action="hse.action_hse_ih_biological_monitoring"
+                  sequence="3"/>
+
+        <menuitem id="menu_hse_ih_radiation_menu"
+                  name="Radiation Dosimetry (TLD)"
+                  parent="menu_hse_ih_root"
+                  action="hse.action_hse_ih_radiation_dosimetry"
+                  sequence="4"/>
+
+        <menuitem id="menu_hse_ih_audiometry_menu"
+                  name="Audiometry &amp; Hearing Conservation"
+                  parent="menu_hse_ih_root"
+                  action="hse.action_hse_ih_audiometry"
+                  sequence="5"/>
+
+        <menuitem id="menu_hse_ih_respirator_menu"
+                  name="Respirator Fit Testing"
+                  parent="menu_hse_ih_root"
+                  action="hse.action_hse_ih_respirator"
+                  sequence="6"/>
+
+        <menuitem id="menu_hse_ih_ergonomics_menu"
+                  name="Ergonomics (REBA/NIOSH)"
+                  parent="menu_hse_ih_root"
+                  action="hse.action_hse_ih_ergonomics"
+                  sequence="7"/>
+
+        <!-- 7. Contractor Safety Management -->
+        <menuitem id="menu_hse_contractor_root"
+                  name="Contractor Safety"
+                  parent="menu_hse_root"
+                  sequence="32"/>
+
+        <menuitem id="menu_hse_contractor_profiles"
+                  name="Contractor Profiles &amp; Prequalification"
+                  parent="menu_hse_contractor_root"
+                  action="hse.action_hse_contractor"
+                  sequence="1"/>
+
+        <menuitem id="menu_hse_contractor_inductions"
+                  name="Worker Site Inductions &amp; Badges"
+                  parent="menu_hse_contractor_root"
+                  action="hse.action_hse_contractor_induction"
+                  sequence="2"/>
+
+        <!-- 8. Chemical Safety & SDS -->
+        <menuitem id="menu_hse_chemical_root"
+                  name="Chemical Safety (SDS)"
+                  parent="menu_hse_root"
+                  sequence="35"/>
+
+        <menuitem id="menu_hse_sds_catalog"
+                  name="Safety Data Sheets (SDS)"
+                  parent="menu_hse_chemical_root"
+                  action="hse.action_hse_sds"
+                  sequence="1"/>
+
+        <menuitem id="menu_hse_sds_compat_menu"
+                  name="Chemical Compatibility Matrix"
+                  parent="menu_hse_chemical_root"
+                  action="hse.action_hse_sds_compatibility"
+                  sequence="2"/>
+
+        <!-- 9. Emergency Response & Crisis -->
+        <menuitem id="menu_hse_emergency_root"
+                  name="Emergency Response"
+                  parent="menu_hse_root"
+                  sequence="38"/>
+
+        <menuitem id="menu_hse_emergency_plans_menu"
+                  name="Emergency Response Plans (ERP)"
+                  parent="menu_hse_emergency_root"
+                  action="hse.action_hse_emergency_plan"
+                  sequence="1"/>
+
+        <menuitem id="menu_hse_emergency_drills_menu"
+                  name="Simulation Drills &amp; Headcount"
+                  parent="menu_hse_emergency_root"
+                  action="hse.action_hse_emergency_drill"
+                  sequence="2"/>
+
+        <menuitem id="menu_hse_emergency_team_menu"
+                  name="Emergency Response Team (ERT)"
+                  parent="menu_hse_emergency_root"
+                  action="hse.action_hse_emergency_team"
+                  sequence="3"/>
+
+        <!-- 10. Risk Management -->
+        <menuitem id="menu_hse_risk_mgmt"
+                  name="Risk Management"
+                  parent="menu_hse_root"
+                  sequence="40"/>
+
+        <menuitem id="menu_hse_risk_assessments"
+                  name="Risk Assessments &amp; JSA"
+                  parent="menu_hse_risk_mgmt"
+                  action="hse.action_ra_jsa"
+                  sequence="1"/>
+
+        <menuitem id="menu_hse_risk_matrix_item"
+                  name="Risk Matrix"
+                  parent="menu_hse_risk_mgmt"
+                  action="hse.action_hse_risk_matrix"
+                  sequence="2"/>
+
+        <menuitem id="menu_hse_location_profiles"
+                  name="Location Safety Profiles"
+                  parent="menu_hse_risk_mgmt"
+                  action="hse.action_hse_location_profile"
+                  sequence="3"/>
+
+        <!-- 11. Operations & Compliance -->
+        <menuitem id="menu_hse_operations_compliance"
+                  name="Operations &amp; Compliance"
+                  parent="menu_hse_root"
+                  sequence="45"/>
+
+        <menuitem id="menu_hse_operators_log"
+                  name="Operator's Log (Shift Handover)"
+                  parent="menu_hse_operations_compliance"
+                  action="hse.action_hse_operator_log"
+                  sequence="1"/>
+
+        <menuitem id="menu_hse_operating_procedures"
+                  name="Operating Procedures (SOP)"
+                  parent="menu_hse_operations_compliance"
+                  action="hse.action_hse_operating_procedure"
+                  sequence="2"/>
+
+        <menuitem id="menu_hse_operating_policy_item"
+                  name="Operating Policy"
+                  parent="menu_hse_operations_compliance"
+                  action="hse.action_hse_operating_policy"
+                  sequence="3"/>
+
+        <menuitem id="menu_hse_regulatory_compliance"
+                  name="Regulatory Compliance Standards"
+                  parent="menu_hse_operations_compliance"
+                  action="hse.action_hse_regulation"
+                  sequence="4"/>
+
+        <menuitem id="menu_hse_compliance_tasks"
+                  name="Statutory Compliance Calendar &amp; Tasks"
+                  parent="menu_hse_operations_compliance"
+                  action="hse.action_hse_compliance_task"
+                  sequence="5"/>
+
+        <menuitem id="menu_hse_audits_menu"
+                  name="Management System Audits"
+                  parent="menu_hse_operations_compliance"
+                  action="hse.action_hse_audit"
+                  sequence="6"/>
+
+        <!-- 12. Continuous Improvement & Reliability -->
+        <menuitem id="menu_hse_reliability_ci"
+                  name="Reliability &amp; Improvement"
+                  parent="menu_hse_root"
+                  sequence="50"/>
+
+        <menuitem id="menu_hse_moc_records"
+                  name="Management of Change (MOC)"
+                  parent="menu_hse_reliability_ci"
+                  action="hse.action_hse_moc"
+                  sequence="1"/>
+
+        <menuitem id="menu_hse_ncr_records"
+                  name="Non-Conformance Management (NCR)"
+                  parent="menu_hse_reliability_ci"
+                  action="hse.action_hse_ncr"
+                  sequence="2"/>
+
+        <menuitem id="menu_hse_defect_elim"
+                  name="Defect Elimination"
+                  parent="menu_hse_reliability_ci"
+                  action="hse.action_hse_defect_elimination"
+                  sequence="3"/>
+
+        <menuitem id="menu_hse_failure_reporting"
+                  name="Failure Reporting (FRACAS)"
+                  parent="menu_hse_reliability_ci"
+                  action="hse.action_hse_failure_report"
+                  sequence="4"/>
+
+        <menuitem id="menu_hse_solutions"
+                  name="Solutions &amp; Lessons Learned"
+                  parent="menu_hse_reliability_ci"
+                  action="hse.action_hse_solution"
+                  sequence="5"/>
+
+        <menuitem id="menu_hse_benefits_losses"
+                  name="Benefits &amp; Losses"
+                  parent="menu_hse_reliability_ci"
+                  action="hse.action_hse_benefit_loss"
+                  sequence="6"/>
+
+        <menuitem id="menu_hse_improvements"
+                  name="Continuous Improvements (CI)"
+                  parent="menu_hse_reliability_ci"
+                  action="hse.action_hse_improvement"
+                  sequence="7"/>
+
+        <!-- 13. Workforce & Certifications -->
+        <menuitem id="menu_hse_workforce"
+                  name="Workforce &amp; Certifications"
+                  parent="menu_hse_root"
+                  sequence="60"/>
+
+        <menuitem id="menu_hse_competencies"
+                  name="Competency Management"
+                  parent="menu_hse_workforce"
+                  action="hse.action_hse_competency"
+                  sequence="1"/>
+
+        <menuitem id="menu_hse_personnel_certs"
+                  name="Personnel Certification Tracking"
+                  parent="menu_hse_workforce"
+                  action="hse.action_hse_personnel_certification"
+                  sequence="2"/>
+
+        <menuitem id="menu_hse_equipment_certs"
+                  name="Equipment Certifications"
+                  parent="menu_hse_workforce"
+                  action="hse.action_hse_equipment_certification"
+                  sequence="3"/>
+
+        <menuitem id="menu_hse_training_matrix"
+                  name="Training Matrix &amp; Competency Gaps"
+                  parent="menu_hse_workforce"
+                  action="hse.action_hse_training_matrix"
+                  sequence="4"/>
+
+        <!-- 14. Action Tracking (CAPA) -->
+        <menuitem id="menu_hse_action_tracking_root"
+                  name="Action Tracking"
+                  parent="menu_hse_root"
+                  sequence="70"/>
+
+        <menuitem id="menu_hse_all_actions"
+                  name="All Actions (CAPA Engine)"
+                  parent="menu_hse_action_tracking_root"
+                  action="hse.action_hse_action"
+                  sequence="1"/>
+
+        <!-- 15. Configuration -->
+        <menuitem id="menu_hse_config"
+                  name="Configuration"
+                  parent="menu_hse_root"
+                  sequence="90"/>
+
+        <menuitem id="menu_hse_cfg_hazard"
+                  name="Hazard Settings"
+                  parent="menu_hse_config"
+                  action="hse.action_hazard_settings"
+                  sequence="1"/>
+
+        <menuitem id="menu_hse_cfg_control"
+                  name="Hazard Controls"
+                  parent="menu_hse_config"
+                  action="hse.hazard_control_action"
+                  sequence="2"/>
+
+        <menuitem id="menu_hse_cfg_severity"
+                  name="Severity Levels"
+                  parent="menu_hse_config"
+                  action="hse.action_severity_level"
+                  sequence="3"/>
+
+        <menuitem id="menu_hse_cfg_category"
+                  name="Incident Categories"
+                  parent="menu_hse_config"
+                  action="hse.action_incident_category"
+                  sequence="4"/>
+
+        <!-- Backward compatibility aliases for submodules -->
+        <menuitem id="menu_risk_assessment_main" name="Risk Assessment Reports" parent="menu_hse_risk_mgmt" sequence="80"/>
+        <menuitem id="menu_observation_main" name="Observation Reports" parent="menu_hse_incidents" sequence="80"/>
+        <menuitem id="menu_incident_reporting_main" name="Incident Reports" parent="menu_hse_incidents" sequence="81"/>
+        <menuitem id="menu_incident_investigation_main" name="Investigation Reports" parent="menu_hse_incidents" sequence="82"/>
+    </data>
+</odoo>

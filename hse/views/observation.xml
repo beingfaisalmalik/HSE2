@@ -1,0 +1,236 @@
+<odoo>
+    <data>
+        <record id="view_observation_kanban" model="ir.ui.view">
+            <field name="name">observation.observation.kanban</field>
+            <field name="model">observation.observation</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_example" default_group_by="state">
+                    <field name="name"/>
+                    <field name="state"/>
+                    <progressbar field="priority"
+                                 colors="{&quot;1&quot;: &quot;info&quot;, &quot;2&quot;: &quot;purple&quot;, &quot;3&quot;: &quot;success&quot;}"/>
+
+                    <templates>
+                        <t t-name="kanban-box">
+                            <t t-set="today" t-value="record.get_today"/>
+                            <div class="oe_kanban_global_click" style="margin-bottom:10px; background-color:#a4bcc4">
+                                <div class="o_kanban_card_header"
+                                     style="display: flex; justify-content: space-between; align-items: center;">
+                                    <field name="name" class="o_kanban_card_title" style="font-weight: bold;"/>
+                                    <field name="priority"
+                                           readonly="state in ['approved' , 'cancelled']"/>
+                                </div>
+                                <div>
+                                    <span style="font-weight: bold;">Observer Name:</span>
+                                    <field name="observer_id" style="margin-left: 5px; font-weight: bold;"/>
+                                </div>
+                                <div>
+                                    <span style="font-weight: bold;">Employee Name:</span>
+                                    <field name="employee_observer_name" style="margin-left: 5px; font-weight: bold;"/>
+                                </div>
+                                <div>
+                                    <span style="font-weight: bold;">Observation Date:</span>
+                                    <field name="observation_date" style="margin-left: 5px; font-weight: bold;"/>
+                                </div>
+                        <div class="hse-x-meta" style="display: flex; gap: 16px; align-items: center; margin: -6px 0 10px 6px; font-size: 11px; color: #64748b; flex-wrap: wrap;"><span>🕒 Created <field name="create_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span><span>✏️ Updated <field name="write_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+
+        <record id="view_observation_tree" model="ir.ui.view">
+            <field name="name">observation.observation.tree</field>
+            <field name="model">observation.observation</field>
+            <field name="arch" type="xml">
+                <tree string="Observation">
+                    <field name="name"/>
+                    <field name="observer_id"/>
+                    <field name="observation_date"/>
+                    <field name="priority"/>
+                    <field name="location_id"/>
+                    <field name="select_department"/>
+                    <field name="responsible_user_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_observation_form" model="ir.ui.view">
+            <field name="name">observation.observation.form</field>
+            <field name="model">observation.observation</field>
+            <field name="arch" type="xml">
+                <form string="Observation">
+                    <header>
+                        <!-- In Process button: Hidden when state is 'in_process' -->
+                        <button name="action_in_process" string="In Process" type="object" class="oe_highlight"
+                                invisible="state in ['in_review','in_process', 'approved', 'rejected']"/>
+                        <button name="action_in_locked" string="Locked" type="object" class="btn-success"
+                                invisible="state in ['in_review','draft', 'approved', 'rejected']"/>
+                        <button name="action_reopen" string="Re-Open" type="object" class="btn-info"
+                                invisible="state in ['in_review','draft', 'in_process', 'rejected']"/>
+                        <!-- Reject Button (visible when state is 'in_process') -->
+                        <button name="action_in_reject" string="Rejected" type="object" class="btn-danger"
+                                invisible="state not in ['in_process']"/>
+
+                        <!-- Corrective Action button: Visible only when state is 'in_process' -->
+                        <button name="open_corrective_form" type="object" string="Create CAPA" class="oe_highlight"
+                                invisible="state not in ['in_review', 'locked']"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_review,approved,rejected"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #164e63 0%, #0891b2 100%); border-left: 6px solid #67e8f9; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">👁️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Safety Observation</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Frontline proactive safety observations &amp; GHS pictograms</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="hse-x-meta" style="display: flex; gap: 16px; align-items: center; margin: -6px 0 10px 6px; font-size: 11px; color: #64748b; flex-wrap: wrap;"><span>🕒 Created <field name="create_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span><span>✏️ Updated <field name="write_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span></div>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="action_view_corrective_actions"
+                                    icon="fa-folder">
+                                <field string="View CAPA's Action" name="view_corrective_actions" widget="statinfo"/>
+                            </button>
+                        </div>
+<!--                        <widget name="web_ribbon" title="Locked" bg_color="text-bg-success"-->
+<!--                                invisible="state != 'locked'"/>-->
+                        <widget name="web_ribbon" title="Locked" bg_color="text-bg-success"
+                                invisible="state != 'locked'"/>
+                        <widget name="web_ribbon" title="Rejected" bg_color="text-bg-danger"
+                                invisible="state != 'rejected'"/>
+                        <widget name="web_ribbon" title="Re-open" bg_color="text-bg-info"
+                                invisible="state != 'reopen'"/>
+                        <group>
+                            <group>
+                                <field name="priority"
+                                       readonly="state in ['approved' , 'cancelled']"/>
+                                <field name="name" readonly="state == 'approved'"/>
+                                <field name="observation_date" readonly="state == 'approved'"/>
+                                <field name="observer_id" readonly="state == 'approved'"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                                <field name="employee_observer_name" readonly="state == 'approved'"/>
+                                <field name="employee_code" readonly="state == 'approved'"/>
+                                <field name="user_id" invisible="1"/>
+                                <field name="observation" readonly="state == 'approved'"/>
+                            </group>
+                            <group>
+                                <field name="observation_type" readonly="state == 'approved'"/>
+                                <field name="immediate_action" readonly="state == 'approved'"/>
+                                <field name="hazard_type" invisible="1"/>
+                                <field name="severity_level" invisible="1"/>
+                                <field name="location_id" readonly="state == 'approved'"/>
+                                <field name="select_department" readonly="state == 'approved'"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                                <field name="dept_head" readonly="state == 'approved'"/>
+                                <field name="sec_head_ids" readonly="state == 'approved'"/>
+<!--                                <field name="sec_head" readonly="state == 'approved'"/>-->
+                                <field name="responsible_user_id" invisible="1"/>
+                                <field name="responsible_person" readonly="state == 'approved'"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                                <field name="select_severity_level" readonly="state == 'approved'"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                            </group>
+                        </group>
+                        <label for="show_pictogram" string="Show Pictograms"/>
+                        <field name="show_pictogram"/>
+                        <group string="Pictograms of Hazards" invisible="show_pictogram == False">
+                            <group>
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <div class="hazard-container" invisible="'show_pictograms' != False">
+                                        <img src="/hse/static/src/img/GHS-pictogram-acid.svg.png" alt="Acid Pictogram" width="100" height="100"/>
+                                        <field name="img_acid" widget="checkbox" class="hazard-checkbox"/>
+                                    </div>
+                                    <div class="hazard-container">
+                                        <img src="/hse/static/src/img/GHS-pictogram-bottle.svg.png" alt="Bottle Pictogram" width="100" height="100"/>
+                                        <field name="img_bottle" widget="checkbox" class="hazard-checkbox"/>
+                                    </div>
+                                    <div class="hazard-container">
+                                        <img src="/hse/static/src/img/GHS-pictogram-exclam.svg.png" alt="Exclamation Pictogram" width="100" height="100"/>
+                                        <field name="img_exclam" widget="checkbox" class="hazard-checkbox"/>
+                                    </div>
+                                    <div class="hazard-container">
+                                        <img src="/hse/static/src/img/GHS-pictogram-explos.svg.png" alt="Explosion Pictogram" width="100" height="100"/>
+                                        <field name="img_explos" widget="checkbox" class="hazard-checkbox"/>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 10px; align-items: center; margin-top: 10px;">
+                                    <div class="hazard-container">
+                                        <img src="/hse/static/src/img/GHS-pictogram-flamme.svg.png" alt="Flame Pictogram" width="100" height="100"/>
+                                        <field name="img_flamme" widget="checkbox" class="hazard-checkbox"/>
+                                    </div>
+                                    <div class="hazard-container">
+                                        <img src="/hse/static/src/img/GHS-pictogram-pollu.svg.png" alt="Pollution Pictogram" width="100" height="100"/>
+                                        <field name="img_pollu" widget="checkbox" class="hazard-checkbox"/>
+                                    </div>
+                                    <div class="hazard-container">
+                                        <img src="/hse/static/src/img/GHS-pictogram-rondflam.svg.png" alt="Flammable Circle Pictogram" width="100" height="100"/>
+                                        <field name="img_rondflam" widget="checkbox" class="hazard-checkbox"/>
+                                    </div>
+                                    <div class="hazard-container">
+                                        <img src="/hse/static/src/img/GHS-pictogram-silhouette.svg.png" alt="Silhouette Pictogram" width="100" height="100"/>
+                                        <field name="img_silhouette" widget="checkbox" class="hazard-checkbox"/>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 15px;">
+                                    <button name="action_toggle_hazards" string="Add Hazards" type="object" class="btn-primary"/>
+                                </div>
+                            </group>
+
+                        </group>
+                        <notebook>
+                            <page string="Hazard Evidence &amp; Photo">
+                                <group>
+                                    <group>
+                                        <field name="hazard_photo" widget="image" class="oe_avatar" options="{'size': [300, 300]}"/>
+                                        <field name="hazard_photo_filename" invisible="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="description" placeholder="Additional field observations or background context..."/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Selected Hazards">
+                                <tree editable="bottom">
+                                    <field name="image_path"/>
+                                </tree>
+                                <field name="selected_hazard_images" widget="html"/>
+
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <!-- Chatter Section -->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_observation_graph" model="ir.ui.view">
+            <field name="name">observation.observation.graph</field>
+            <field name="model">observation.observation</field>
+            <field name="arch" type="xml">
+                <graph string="RA/JSA Graph" type="bar">
+                    <field name="state" type="row"/>
+                    <field name="observer_id" type="row"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_observation_pivot" model="ir.ui.view">
+            <field name="name">observation.observation.pivot</field>
+            <field name="model">observation.observation</field>
+            <field name="arch" type="xml">
+                <pivot string="Observation Analysis">
+                    <field name="state" type="col"/>
+                    <field name="observer_id" type="row"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="action_observation" model="ir.actions.act_window">
+            <field name="name">Observations</field>
+            <field name="res_model">observation.observation</field>
+            <field name="view_mode">tree,kanban,form,graph,pivot</field>
+        </record>
+    </data>
+</odoo>

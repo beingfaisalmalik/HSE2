@@ -1,0 +1,267 @@
+<odoo>
+    <data>
+
+        <!-- FORM VIEW -->
+        <record id="view_incident_investigation_form" model="ir.ui.view">
+            <field name="name">incident.investigation.form</field>
+            <field name="model">incident.investigation</field>
+            <field name="arch" type="xml">
+                <form string="Incident Investigation">
+                    <header>
+                        <!-- In Process button: Hidden when state is 'in_process' -->
+                        <button name="action_in_process" string="In Process" type="object" class="oe_highlight"
+                                invisible="state in ['in_review','in_process', 'locked', 'rejected']"/>
+                        <button name="action_in_lock" string="Locked" type="object" class="btn-success"
+                                invisible="state in ['in_review','draft', 'locked', 'rejected']"/>
+                        <button name="action_reset_to_draft" string="Reset to Draft" type="object" class="btn-primary"
+                                invisible="state in ['in_review','draft', 'in_process', 'rejected', 'locked']"/>
+                        <!-- Reject Button (visible when state is 'in_process') -->
+                        <button name="action_in_reject" string="Rejected" type="object" class="btn-danger"
+                                invisible="state not in ['in_process']"/>
+
+
+                        <!-- Corrective Action button: Visible only when state is 'in_process' -->
+
+                        <button name="open_corrective_form" type="object" string="Create CAPA" class="oe_highlight"
+                                invisible="state not in ['in_review', 'in_process','locked','rejected']"/>
+
+                        <!-- Status Bar for the state field -->
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,in_review,locked,rejected,locked"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #1e1b4b 0%, #4f46e5 100%); border-left: 6px solid #a5b4fc; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🔍</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Incident Investigation (RCA)</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Root cause analysis, evidence gathering &amp; formal sign-off</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="action_view_corrective_actions"
+                                    icon="fa-folder">
+                                <field string="View CAPA's Action" name="view_corrective_actions" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="locked" bg_color="text-bg-success"
+                                invisible="state != 'locked'"/>
+                        <widget name="web_ribbon" title="Rejected" bg_color="text-bg-danger"
+                                invisible="state != 'rejected'"/>
+                        <group>
+                            <group>
+                                <field name="ref_name" readonly="state == 'locked'"/>
+                                <field name="incident_id" readonly="state == 'locked'"/>
+                                <field name="investigation_leader" readonly="state == 'locked'"/>
+                                <field name="target_date" readonly="state == 'locked'"/>
+                                <field name="actual_completion_date" readonly="state == 'locked'"/>
+                            </group>
+                            <group>
+                                <field name="select_department"  readonly="state == 'locked'"/>
+                                <field name="dept_head"  readonly="state == 'locked'"/>
+                                <field name="sec_head_ids"  readonly="state == 'locked'"/>
+                                <field name="responsible_person"  readonly="state == 'locked'"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Member List">
+                                <group>
+                                    <field name="member_list_ids"/>
+                                </group>
+                            </page>
+                            <page string="Incident Details">
+                                <group string="main heading" invisible="injury_type == 'non_injury'">
+                                    <group>
+                                        <field name="priority"/>
+                                        <field name="name"/>
+                                        <field name="injury_type" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="location"/>
+                                        <field name="exact_location"/>
+                                    </group>
+                                    <group>
+                                        <field name="reported_by_id"/>
+                                        <field name="assigned_to"/>
+                                        <field name="incident_report_date"/>
+                                        <field name="incident_processing_date"/>
+
+                                    </group>
+                                </group>
+                                <group string="impacted person detail" invisible="injury_type == 'non_injury'">
+                                    <group>
+                                        <field name="select_emp_type" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="external_company_name" invisible="select_emp_type != 'external'" readonly="state == 'locked'"/>
+                                        <field name="external_employee_name" invisible="select_emp_type != 'external'" readonly="state == 'locked'"/>
+                                        <field name="person_impacted" invisible="select_emp_type != 'internal'"  readonly="state == 'locked'"/>
+                                        <field name="rel_phone" invisible="select_emp_type != 'internal'" readonly="state == 'locked'"/>
+                                        <field name="rel_email" invisible="select_emp_type != 'internal'" readonly="state == 'locked'"/>
+                                        <field name="rel_gender" invisible="select_emp_type != 'internal'" readonly="state == 'locked'"/>
+                                        <field name="rel_dob" invisible="select_emp_type != 'internal'" readonly="state == 'locked'"/>
+                                    </group>
+                                    <group>
+                                        <field name="ext_contact_no" invisible="select_emp_type != 'external'" readonly="state == 'locked'"/>
+                                        <field name="rel_job_position" readonly="state == 'locked'"/>
+                                        <field name="role_in_incident" readonly="state == 'locked'"/>
+                                    </group>
+                                </group>
+                                <group string="Injury/Illness Details" invisible="injury_type == 'non_injury'">
+                                    <group>
+                                        <field name="select_body_part"/>
+                                        <field name="injury_create_level"  readonly="state == 'locked'"/>
+                                        <field name="employee_activity_before_incident"  readonly="state == 'locked'"/>
+                                        <field name="directly_harmed_the_employee" widget="html"/>
+                                    </group>
+                                    <group>
+                                        <field name="summary_of_incident"  readonly="state == 'locked'"/>
+                                        <field name="incident_detail"  readonly="state == 'locked'"/>
+                                        <field name="no_of_person_exposed_to_hazards"  readonly="state == 'locked'"/>
+                                        <field name="if_fatality"/>
+                                        <field name="date_of_death" invisible="if_fatality != True"/>
+                                    </group>
+                                </group>
+                                <group string="Treatment Provider Details" invisible="injury_type == 'non_injury'">
+                                    <group>
+                                        <field name="treatement_provider" widget="radio" options="{'horizontal': true}" readonly="state == 'locked'"/>
+                                        <field name="physician_name" invisible="treatement_provider != 'outside'"/>
+                                        <field name="facility_name" invisible="treatement_provider != 'outside'"/>
+                                        <field name="email" invisible="treatement_provider != 'outside'"/>
+                                        <field name="phone" invisible="treatement_provider != 'outside'"/>
+                                        <field name="city" invisible="treatement_provider != 'outside'"/>
+                                        <field name="street_address" invisible="treatement_provider != 'outside'"/>
+                                    </group>
+                                    <group string="Post Treatement">
+                                        <field name="post_treatment"/>
+                                        <field name="restricted_area" invisible="post_treatment != '3'"/>
+                                        <field name="no_of_days" invisible="post_treatment != '2'"/>
+                                        <field name="precautions_description" invisible="post_treatment != '1'"/>
+                                    </group>
+                                </group>
+                                <group string="Incident Details" invisible="injury_type != 'non_injury'">
+                                    <group>
+                                        <field name="summary_of_incident"  readonly="state == 'locked'"/>
+                                        <field name="incident_detail"  readonly="state == 'locked'"/>
+                                        <field name="no_of_person_exposed_to_hazards"  readonly="state == 'locked'"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Investigation Detail">
+                                <group string="Investigation Executive Summary">
+                                    <group>
+                                        <field string="Assign Date and Time" name="create_date" readonly="1"
+                                               widget="date"/>
+                                        <field name="executive_summary"/>
+                                        <field name="inv_conclusion"/>
+                                        <field name="last_modified_date" invisible="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="department_head_remarks"/>
+                                        <field name="section_head_remarks"/>
+                                        <field name="check_last_date"/>
+                                        <field name="write_date" invisible="check_last_date == False"/>
+                                        <field name="changed_by"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="List of Cause">
+                                <field name="select_event_type_ids">
+                                    <tree editable="Buttom">
+                                        <field name="event_type_id"/>
+                                        <field name="immediate_cause_id"/>
+                                        <field name="root_cause_id"/>
+                                    </tree>
+                                </field>
+
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <!-- Chatter Section -->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="view_incident_investigation_kanban" model="ir.ui.view">
+            <field name="name">incident.investigation.kanban</field>
+            <field name="model">incident.investigation</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_example" default_group_by="state">
+                    <field name="name"/>
+                    <field name="state"/>
+                    <progressbar field="priority"
+                                 colors="{&quot;1&quot;: &quot;info&quot;, &quot;2&quot;: &quot;purple&quot;, &quot;3&quot;: &quot;success&quot;}"/>
+
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click" style="margin-bottom:10px; background-color:#a4bcc4">
+                                <div class="o_kanban_card_header"
+                                     style="display: flex; justify-content: space-between; align-items: center;">
+                                    <field name="ref_name" class="o_kanban_card_title" style="font-weight: bold;"/>
+                                    <field name="priority" widget="priority"
+                                           readonly="state in ['locked' , 'cancelled']"/>
+                                </div>
+                                <div>
+                                    <span style="font-weight: bold;">Leader:</span>
+                                    <field name="investigation_leader" style="margin-left: 5px; font-weight: bold;"/>
+                                </div>
+                                <div>
+                                    <span style="font-weight: bold;">Target Date:</span>
+                                    <field name="actual_completion_date" style="margin-left: 5px; font-weight: bold;"/>
+                                </div>
+                                <div>
+                                    <span style="font-weight: bold;">Team Members:</span>
+                                    <field name="team_members" style="margin-left: 5px; font-weight: bold;"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+
+        <!-- TREE VIEW -->
+        <record id="view_incident_investigation_tree" model="ir.ui.view">
+            <field name="name">incident.investigation.tree</field>
+            <field name="model">incident.investigation</field>
+            <field name="arch" type="xml">
+                <tree string="Incident Investigations">
+                    <field name="name"/>
+                    <field name="ref_name"/>
+                    <field name="investigation_leader"/>
+                    <field name="target_date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_incident_investigation_pivot" model="ir.ui.view">
+    <field name="name">incident.investigation.pivot</field>
+    <field name="model">incident.investigation</field>
+    <field name="arch" type="xml">
+        <pivot string="Incident Investigation Pivot">
+            <field name="state" type="row"/>
+            <field name="injury_type" type="col"/>
+
+        </pivot>
+    </field>
+</record>
+
+        <record id="view_incident_investigation_graph" model="ir.ui.view">
+    <field name="name">incident.investigation.graph</field>
+    <field name="model">incident.investigation</field>
+    <field name="arch" type="xml">
+        <graph string="Incident Investigation Graph" type="bar">
+            <field name="state" type="row"/>
+            <field name="id" type="measure" operator="count"/>
+        </graph>
+    </field>
+</record>
+
+        <!-- ACTION WINDOW -->
+        <record id="action_incident_investigation" model="ir.actions.act_window">
+            <field name="name">Incident Investigations</field>
+            <field name="res_model">incident.investigation</field>
+            <field name="view_mode">tree,kanban,form,graph,pivot</field>
+        </record>
+
+
+    </data>
+</odoo>
+

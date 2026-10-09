@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Safety operations: incidents & injuries, observations, permits &
+         gas tests, LOTO plans & points, bypasses, stop-work, BBS, RA/JSA,
+         MOC, NCR, incident investigation. -->
+    <data noupdate="1">
+
+        <!-- ================= Incidents ================================= -->
+        <record id="dd_inc_lti1" model="incident.reporting">
+            <field name="incident_type">injury</field>
+            <field name="priority">3</field>
+            <field name="select_emp_type">internal</field>
+            <field name="reported_by_id" ref="dd_emp_ahmed"/>
+            <field name="incident_date" eval="(datetime.now() - timedelta(days=24)).strftime('%Y-%m-%d')"/>
+            <field name="exact_location">Unit-100 compressor shelter, K-301 mezzanine</field>
+            <field name="incident_detail">Technician hand caught between coupling guard and wrench during unplanned re-torque while equipment was being restarted.</field>
+            <field name="ir_description">Line-break in progress; guard re-fitting step was skipped after an interruption. Stop-work called by area operator.</field>
+            <field name="summary_of_incident">Crush injury to right hand resulting in 12 days away from work; area barricaded and restart procedure revised.</field>
+            <field name="is_injury">True</field>
+            <field name="days_out_transferred_restricted">12</field>
+            <field name="body_part">arm</field>
+            <field name="injury_category">fracture</field>
+            <field name="state">in_process</field>
+        </record>
+        <record id="dd_inj_lti1" model="hse.incident.injury">
+            <field name="incident_id" ref="dd_inc_lti1"/>
+            <field name="person_type">employee</field>
+            <field name="employee_id" ref="dd_emp_sara"/>
+            <field name="person_name">Sara Khan</field>
+            <field name="injury_severity">lost_time</field>
+            <field name="body_part_affected">Right hand / fingers</field>
+            <field name="nature_of_injury">Crush injury — index &amp; middle finger fracture</field>
+            <field name="days_away_from_work">12</field>
+            <field name="days_restricted_duty">5</field>
+            <field name="medical_facility">City Occupational Health Clinic</field>
+            <field name="treating_physician">Dr. H. Qureshi</field>
+        </record>
+
+        <record id="dd_inc_lti0" model="incident.reporting">
+            <field name="incident_type">injury</field>
+            <field name="priority">3</field>
+            <field name="select_emp_type">internal</field>
+            <field name="reported_by_id" ref="dd_emp_john"/>
+            <field name="incident_date" eval="(datetime.now() - timedelta(days=380)).strftime('%Y-%m-%d')"/>
+            <field name="exact_location">Warehouse loading dock ramp</field>
+            <field name="incident_detail">Slip on wet ramp while moving pallet trolley; LTI with 3 days away.</field>
+            <field name="summary_of_incident">Lost time injury — slip / trip / fall. Ramp anti-slip coating completed as CAPA.</field>
+            <field name="is_injury">True</field>
+            <field name="days_out_transferred_restricted">3</field>
+            <field name="state">locked</field>
+        </record>
+        <record id="dd_inj_lti0" model="hse.incident.injury">
+            <field name="incident_id" ref="dd_inc_lti0"/>
+            <field name="person_type">employee</field>
+            <field name="employee_id" ref="dd_emp_bilal"/>
+            <field name="person_name">Bilal Ahmed</field>
+            <field name="injury_severity">lost_time</field>
+            <field name="body_part_affected">Lower back</field>
+            <field name="nature_of_injury">Soft-tissue injury from slip</field>
+            <field name="days_away_from_work">3</field>
+            <field name="days_restricted_duty">7</field>
+        </record>
+
+        <record id="dd_inc_nm" model="incident.reporting">
+            <field name="incident_type">near_miss</field>
+            <field name="priority">3</field>
+            <field name="select_emp_type">internal</field>
+            <field name="reported_by_id" ref="dd_emp_sara"/>
+            <field name="near_miss_harm_level">high</field>
+            <field name="incident_date" eval="(datetime.now() - timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="exact_location">Unit-200 pipe rack, elevation +6m</field>
+            <field name="incident_detail">Scaffold clamp fell from height and landed inside barricaded zone — no personnel present.</field>
+            <field name="ir_description">Dropped-object potential; tool tethering not enforced at scaffold erection.</field>
+            <field name="summary_of_incident">High-potential dropped object. Toolbox held on dropped-object prevention.</field>
+            <field name="state">draft</field>
+        </record>
+
+        <record id="dd_inc_fire" model="incident.reporting">
+            <field name="incident_type">fire</field>
+            <field name="priority">2</field>
+            <field name="select_emp_type">internal</field>
+            <field name="reported_by_id" ref="dd_emp_ahmed"/>
+            <field name="incident_date" eval="(datetime.now() - timedelta(days=9)).strftime('%Y-%m-%d')"/>
+            <field name="exact_location">Unit-100 generator room</field>
+            <field name="incident_detail">Small electrical fire at generator terminal box; extinguished with DC P extinguisher in under a minute.</field>
+            <field name="summary_of_incident">Loose termination arcing; thermographic scan of all LV boards scheduled.</field>
+            <field name="state">in_process</field>
+        </record>
+
+        <record id="dd_inc_transport" model="incident.reporting">
+            <field name="incident_type">transport</field>
+            <field name="priority">1</field>
+            <field name="select_emp_type">external</field>
+            <field name="external_company_name">Alpha Industrial Services Co.</field>
+            <field name="external_employee_name">Truck Driver (Alpha Logistics)</field>
+            <field name="incident_date" eval="(datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')"/>
+            <field name="exact_location">Main gate — truck inspection bay</field>
+            <field name="incident_detail">Loaded benzene truck reversed into bollard causing minor tank shell dent; no loss of containment.</field>
+            <field name="summary_of_incident">Site transport damage event. Banksman refresher assigned.</field>
+            <field name="state">draft</field>
+        </record>
+
+        <!-- ================= Safety observations ======================== -->
+        <record id="dd_obs_1" model="observation.observation">
+            <field name="employee_observer_name">Ahmed Raza</field>
+            <field name="employee_code">EMP-1001</field>
+            <field name="hazard_type">physical</field>
+            <field name="priority">3</field>
+            <field name="observation_type">random</field>
+            <field name="location_id" ref="dd_loc_unit100"/>
+            <field name="observation_date" eval="(datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')"/>
+            <field name="observation">Unguarded coupling on temporary pump skid observed during round; pedestrian route passes within one meter.</field>
+            <field name="immediate_action">Skid barricaded and temporary guard fabricated the same shift.</field>
+            <field name="state">in_process</field>
+        </record>
+        <record id="dd_obs_2" model="observation.observation">
+            <field name="employee_observer_name">Sara Khan</field>
+            <field name="employee_code">EMP-1002</field>
+            <field name="hazard_type">chemical</field>
+            <field name="priority">2</field>
+            <field name="observation_type">inspection</field>
+            <field name="location_id" ref="dd_loc_wh"/>
+            <field name="observation_date" eval="(datetime.now() - timedelta(days=6)).strftime('%Y-%m-%d')"/>
+            <field name="observation">Unlabeled chemical drums staged near storm-water drain without secondary containment.</field>
+            <field name="immediate_action">Drums relocated to bunded chemical store; GHS labels reprinted.</field>
+            <field name="state">locked</field>
+        </record>
+        <record id="dd_obs_3" model="observation.observation">
+            <field name="employee_observer_name">John Dsouza</field>
+            <field name="employee_code">EMP-1003</field>
+            <field name="hazard_type">biological</field>
+            <field name="priority">1</field>
+            <field name="observation_type">random</field>
+            <field name="location_id" ref="dd_loc_wh"/>
+            <field name="observation_date" eval="(datetime.now() - timedelta(days=12)).strftime('%Y-%m-%d')"/>
+            <field name="observation">Bird nesting evidence inside warehouse racking; hygiene risk for packaged chemicals.</field>
+            <field name="immediate_action">Area cleaned; pest-control visit requested.</field>
+            <field name="state">draft</field>
+        </record>
+        <record id="dd_obs_4" model="observation.observation">
+            <field name="employee_observer_name">Bilal Ahmed</field>
+            <field name="employee_code">EMP-1004</field>
+            <field name="hazard_type">other</field>
+            <field name="priority">2</field>
+            <field name="observation_type">inspection</field>
+            <field name="location_id" ref="dd_loc_unit200"/>
+            <field name="observation_date" eval="(datetime.now() - timedelta(days=18)).strftime('%Y-%m-%d')"/>
+            <field name="observation">Housekeeping — offcuts and packaging waste blocking the escape route at PE-200 mezzanine.</field>
+            <field name="immediate_action">Route cleared within the hour; weekly housekeeping audit introduced.</field>
+            <field name="state">reopen</field>
+        </record>
+        <record id="dd_obs_5" model="observation.observation">
+            <field name="employee_observer_name">Ahmed Raza</field>
+            <field name="employee_code">EMP-1001</field>
+            <field name="hazard_type">physical</field>
+            <field name="priority">1</field>
+            <field name="observation_type">random</field>
+            <field name="location_id" ref="dd_loc_unit200"/>
+            <field name="observation_date" eval="(datetime.now() - timedelta(days=25)).strftime('%Y-%m-%d')"/>
+            <field name="observation">Noise levels noticeably high near pelletizer; operators not wearing double hearing protection.</field>
+            <field name="immediate_action">Area posted as HPZ; dosimetry survey requested from industrial hygiene.</field>
+            <field name="state">rejected</field>
+        </record>
+
+        <!-- ================= Permits to work & gas tests ================ -->
+        <record id="dd_ptw_hot" model="hse.permit">
+            <field name="title">Replacement of corroded drain line near flare knockout — hot work</field>
+            <field name="performing_company">internal</field>
+            <field name="permit_type">hot_work</field>
+            <field name="location_id" ref="dd_loc_unit100"/>
+            <field name="state">approved</field>
+            <field name="start_datetime" eval="(datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d 08:00:00')"/>
+            <field name="end_datetime" eval="(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d 17:00:00')"/>
+        </record>
+        <record id="dd_ptw_cse" model="hse.permit">
+            <field name="title">Internal inspection of slug catcher V-101 — confined space entry</field>
+            <field name="performing_company">internal</field>
+            <field name="permit_type">confined_space</field>
+            <field name="location_id" ref="dd_loc_unit100"/>
+            <field name="state">active</field>
+            <field name="start_datetime" eval="datetime.now().strftime('%Y-%m-%d 07:30:00')"/>
+            <field name="end_datetime" eval="(datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d 17:00:00')"/>
+        </record>
+        <record id="dd_gas_v101" model="hse.permit.gas.test">
+            <field name="permit_id" ref="dd_ptw_cse"/>
+            <field name="test_time" eval="datetime.now().strftime('%Y-%m-%d 07:00:00')"/>
+            <field name="tester_name">Certified AGT — Ahmed Raza</field>
+            <field name="tester_certification_no">AGT-CERT-2291</field>
+            <field name="instrument_serial_no">GA-94-2211</field>
+            <field name="oxygen_percent">20.9</field>
+            <field name="lel_percent">0.0</field>
+            <field name="h2s_ppm">0.0</field>
+            <field name="co_ppm">0.0</field>
+            <field name="is_safe_to_work">True</field>
+        </record>
+        <record id="dd_ptw_elec" model="hse.permit">
+            <field name="title">LV board thermographic survey — generator room</field>
+            <field name="performing_company">internal</field>
+            <field name="permit_type">electrical</field>
+            <field name="location_id" ref="dd_loc_unit100"/>
+            <field name="state">draft</field>
+        </record>
+
+        <!-- ================= LOTO plans & isolation points ============== -->
+        <record id="dd_loto_k301" model="hse.loto.plan">
+            <field name="title">K-301 motor breaker &amp; lube-oil pumps isolation</field>
+            <field name="location_id" ref="dd_loc_unit100"/>
+            <field name="zero_energy_method">try_start</field>
+            <field name="system_description">Electrical isolation at MCC-3 cubicle 12; mechanical isolation at lube-oil suction/discharge; zero-energy verified via start attempt test.</field>
+            <field name="state">isolated</field>
+        </record>
+        <record id="dd_lp_k301_1" model="hse.loto.point">
+            <field name="plan_id" ref="dd_loto_k301"/>
+            <field name="point_identifier">K-301 MCC-3 breaker cu. 12</field>
+            <field name="isolation_type">breaker_open</field>
+            <field name="lock_number">LK-2231</field>
+            <field name="tag_number">TAG-LOTO-101</field>
+        </record>
+        <record id="dd_lp_k301_2" model="hse.loto.point">
+            <field name="plan_id" ref="dd_loto_k301"/>
+            <field name="point_identifier">Lube-oil suction valve</field>
+            <field name="isolation_type">valve_closed</field>
+            <field name="lock_number">LK-2232</field>
+            <field name="tag_number">TAG-LOTO-102</field>
+        </record>
+
+        <record id="dd_loto_v101" model="hse.loto.plan">
+            <field name="title">V-101 manway opening preparation isolation</field>
+            <field name="location_id" ref="dd_loc_unit100"/>
+            <field name="zero_energy_method">combination</field>
+            <field name="system_description">Double block &amp; bleed on inlet/outlet; vessel drained, purged and gas-freed prior to entry.</field>
+            <field name="state">draft</field>
+        </record>
+
+        <!-- ================= Safety bypasses =========================== -->
+        <record id="dd_byp_sis" model="hse.bypass">
+            <field name="title">T-201 level switch LSL-2291 inhibit during transmitter replacement</field>
+            <field name="bypass_type">sis</field>
+            <field name="location_id" ref="dd_loc_unit200"/>
+            <field name="tag_number">LSL-2291</field>
+            <field name="safety_criticality">sil2</field>
+            <field name="reason">maintenance</field>
+            <field name="compensating_controls">Continuous operator watch on independent indicator LT-2292; fire watch</field>
+            <field name="expected_duration_hours">8</field>
+            <field name="details">SIS inhibit with continuous operator watch and independent level indication from transmitter LT-2292; max 8h duration.</field>
+            <field name="state">active</field>
+        </record>
+        <record id="dd_byp_fg" model="hse.bypass">
+            <field name="title">F&amp;G detector GD-114 isolate for annual calibration</field>
+            <field name="bypass_type">fire_gas</field>
+            <field name="location_id" ref="dd_loc_unit100"/>
+            <field name="tag_number">GD-114</field>
+            <field name="safety_criticality">sil1</field>
+            <field name="reason">calibration</field>
+            <field name="compensating_controls">Fire watch posted in detector coverage zone</field>
+            <field name="expected_duration_hours">3</field>
+            <field name="details">Detector isolated for certified calibration; fire watch posted in the detector coverage zone.</field>
+            <field name="state">reinstated</field>
+        </record>
+
+        <!-- ================= Stop-work authority ======================== -->
+        <record id="dd_swa_1" model="hse.stop.work">
+            <field name="location_id" ref="dd_loc_wh"/>
+            <field name="rule_id" ref="hse.lsr_bypass"/>
+            <field name="perceived_risk_level">medium</field>
+            <field name="hazard_description">Forklift operator working with raised mast near pedestrian walkway during racking repair.</field>
+            <field name="immediate_action_taken">Work paused; walkway re-routed and mast lowered before resuming.</field>
+            <field name="supervisor_id" ref="base.user_admin"/>
+            <field name="resolution_details">Traffic management plan briefed at toolbox; observer recognized in monthly meeting.</field>
+            <field name="state">commended</field>
+        </record>
+
+        <!-- ================= BBS observations =========================== -->
+        <record id="dd_bbs_1" model="hse.bbs.observation">
+            <field name="location_id" ref="dd_loc_unit200"/>
+            <field name="obs_date" eval="(datetime.now() - timedelta(days=2)).strftime('%Y-%m-%d')"/>
+            <field name="work_activity">Line breaking on pump P-205</field>
+            <field name="people_observed_count">6</field>
+            <field name="safe_behaviors_count">21</field>
+            <field name="at_risk_behaviors_count">3</field>
+            <field name="immediate_coaching_feedback">Glove compliance excellent; two operators reminded on proper barricade tagging before line breaking.</field>
+        </record>
+        <record id="dd_bbs_2" model="hse.bbs.observation">
+            <field name="location_id" ref="dd_loc_wh"/>
+            <field name="obs_date" eval="(datetime.now() - timedelta(days=8)).strftime('%Y-%m-%d')"/>
+            <field name="work_activity">Forklift pallet movements at dock</field>
+            <field name="people_observed_count">4</field>
+            <field name="safe_behaviors_count">12</field>
+            <field name="at_risk_behaviors_count">5</field>
+            <field name="immediate_coaching_feedback">Pedestrian/forklift segregation coaching delivered; hi-visibility compliance to be monitored.</field>
+        </record>
+
+        <!-- ================= Risk assessments / JSA ===================== -->
+        <record id="dd_ra_1" model="ra_jsa.model">
+            <field name="type">risk_assessment</field>
+            <field name="set_priority">3</field>
+            <field name="due_date" eval="(datetime.now() + timedelta(days=14)).strftime('%Y-%m-%d')"/>
+            <field name="state">draft</field>
+        </record>
+        <record id="dd_jsa_1" model="ra_jsa.model">
+            <field name="type">job_safety_analysis</field>
+            <field name="set_priority">2</field>
+            <field name="due_date" eval="(datetime.now() + timedelta(days=7)).strftime('%Y-%m-%d')"/>
+            <field name="state">in_process</field>
+        </record>
+
+        <!-- ================= Management of change ======================= -->
+        <record id="dd_moc_1" model="hse.moc">
+            <field name="title">Replace T-201 level transmitter technology (DP → guided-wave radar)</field>
+            <field name="location_id" ref="dd_loc_unit200"/>
+            <field name="change_type">permanent</field>
+            <field name="category">instrumentation</field>
+            <field name="description_of_change">Swap existing DP level transmitter on T-201 with guided-wave radar including nozzle modification and SIS logic update.</field>
+            <field name="justification">Recurring fouling gives false level indications; SIS reliability improvement reduces spurious trips.</field>
+            <field name="state">technical_review</field>
+        </record>
+        <record id="dd_moc_2" model="hse.moc">
+            <field name="title">Temporary construction power for Unit-100 turnaround</field>
+            <field name="location_id" ref="dd_loc_unit100"/>
+            <field name="change_type">temporary</field>
+            <field name="category">electrical</field>
+            <field name="description_of_change">Install temporary 400A distribution board feeding turnaround drop lights and tools for 6 weeks.</field>
+            <field name="justification">Permanent feed unavailable during switchgear replacement window.</field>
+            <field name="state">commissioned</field>
+        </record>
+
+        <!-- ================= Non-conformances =========================== -->
+        <record id="dd_ncr_1" model="hse.ncr">
+            <field name="title">Incoming gasket material without mill test certificates</field>
+            <field name="ncr_source">supplier</field>
+            <field name="severity">major</field>
+            <field name="problem_description">Spiral-wound gaskets delivered for V-101 overhaul lack MTCs and traceability markings.</field>
+            <field name="specification_requirement">ASME B16.20 with EN 10204 3.1 certification required per pressure-envelope spec.</field>
+            <field name="state">quarantined</field>
+        </record>
+        <record id="dd_ncr_2" model="hse.ncr">
+            <field name="title">Calibrated torque wrench out of calibration window</field>
+            <field name="ncr_source">maintenance</field>
+            <field name="severity">minor</field>
+            <field name="problem_description">Torque wrench TW-07 used on flange joint found 6 weeks past calibration due date.</field>
+            <field name="specification_requirement">All torque tools within calibration per QC procedure QC-MT-112.</field>
+            <field name="state">closed</field>
+        </record>
+
+        <!-- ================= Incident investigation ===================== -->
+        <record id="dd_inv_lti1" model="incident.investigation">
+            <field name="incident_id" ref="dd_inc_lti1"/>
+            <field name="investigation_leader" ref="dd_emp_sara"/>
+            <field name="immediate_cause">Hand placed between coupling guard and flange during restart.</field>
+            <field name="underlying_cause">Restart checklist not used after interruption; supervision of line-break activity informal.</field>
+            <field name="root_cause">Procedure does not define an interruption point requiring re-verification before restart.</field>
+            <field name="investigation_notes">Five-Why and fishbone sessions completed with crew; CAPAs raised under linked action plan.</field>
+            <field name="state">in_process</field>
+        </record>
+
+    </data>
+</odoo>

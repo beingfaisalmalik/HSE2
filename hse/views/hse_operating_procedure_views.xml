@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Operating Procedure Form -->
+    <record id="view_hse_operating_procedure_form" model="ir.ui.view">
+        <field name="name">hse.operating.procedure.form</field>
+        <field name="model">hse.operating.procedure</field>
+        <field name="arch" type="xml">
+            <form string="Standard Operating Procedure">
+                <header>
+                    <button name="action_submit_review" string="Submit for Review" type="object" invisible="state != 'draft'" class="btn-primary"/>
+                    <button name="action_approve" string="Approve Procedure" type="object" invisible="state != 'review'" class="btn-success"/>
+                    <button name="action_publish" string="Publish in Field" type="object" invisible="state != 'approved'" class="btn-primary"/>
+                    <button name="action_archive" string="Archive / Supersede" type="object" invisible="state != 'published'" class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,review,approved,published"/>
+                </header>
+                <sheet>
+                    <div class="hse-x-hero" style="background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%); border-left: 6px solid #7dd3fc; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">📖</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Standard Operating Procedures</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">SOP lifecycle with critical hold points</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                    <div class="oe_title">
+                        <span class="text-muted"><field name="procedure_code"/></span>
+                        <h1><field name="name" placeholder="Operating Procedure Title (e.g. Startup of Centrifugal Compressor K-101)"/></h1>
+                    </div>
+                    <group>
+                        <group string="Procedure Classification">
+                            <field name="procedure_type"/>
+                            <field name="location_id"/>
+                            <field name="asset_id"/>
+                            <field name="is_safety_critical" widget="boolean_toggle"/>
+                        </group>
+                        <group string="Revision &amp; Review Schedule">
+                            <field name="revision"/>
+                            <field name="effective_date"/>
+                            <field name="review_interval_months"/>
+                            <field name="next_review_date"/>
+                            <field name="author_id"/>
+                            <field name="approver_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Operational Safety Requirements">
+                            <field name="mandatory_ppe"/>
+                            <field name="required_crew_size"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Step-by-Step Instructions">
+                            <field name="step_ids">
+                                <tree editable="bottom">
+                                    <field name="step_number"/>
+                                    <field name="name"/>
+                                    <field name="detailed_instructions"/>
+                                    <field name="hazard_warning"/>
+                                    <field name="is_hold_point" widget="boolean_toggle"/>
+                                    <field name="verification_check"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Purpose, Scope &amp; Prerequisites">
+                            <group>
+                                <field name="purpose_and_scope"/>
+                                <field name="prerequisites"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Operating Procedure Tree -->
+    <record id="view_hse_operating_procedure_tree" model="ir.ui.view">
+        <field name="name">hse.operating.procedure.tree</field>
+        <field name="model">hse.operating.procedure</field>
+        <field name="arch" type="xml">
+            <tree string="Standard Operating Procedures">
+                <field name="procedure_code"/>
+                <field name="name"/>
+                <field name="procedure_type"/>
+                <field name="location_id"/>
+                <field name="revision"/>
+                <field name="is_safety_critical" widget="boolean_toggle"/>
+                <field name="author_id"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'review'" decoration-success="state == 'published'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_hse_operating_procedure" model="ir.actions.act_window">
+        <field name="name">Operating Procedures (SOP)</field>
+        <field name="res_model">hse.operating.procedure</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Manage structured, step-by-step Standard Operating Procedures and safety hold points.</p>
+        </field>
+    </record>
+</odoo>

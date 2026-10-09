@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Monthly HSE KPI & Statistics Report (fully dynamic via AbstractModel) -->
+        <template id="report_monthly_hse_kpi_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page" style="font-family: Arial, sans-serif; font-size: 11px; line-height: 1.4; color: #1e293b;">
+                            <div style="background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%); color: #ffffff; padding: 16px 20px; border-radius: 8px; margin-bottom: 16px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                                    <div>
+                                        <h3 style="margin: 0; font-size: 19px; font-weight: bold; color: #ffffff;">MONTHLY HSE PERFORMANCE REPORT</h3>
+                                        <div style="font-size: 10.5px; color: #bfdbfe;">
+                                            <t t-esc="company.name"/> · Period <t t-esc="period_start"/> → <t t-esc="period_end"/>
+                                        </div>
+                                    </div>
+                                    <div style="text-align: right; font-size: 9.5px; color: #93c5fd;">
+                                        Generated <t t-esc="generated_at"/><br/>
+                                        Days Without LTI: <span style="background:#ffffff; color:#1d4ed8; font-weight:bold; padding:1px 8px; border-radius:999px;"><t t-if="days_without_lti is not False"><t t-esc="days_without_lti"/></t><t t-else="">N/A</t></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table table-sm" style="width: 100%; margin-bottom: 14px; border-collapse: collapse;">
+                                <tr>
+                                    <td style="text-align:center; background:#eff6ff; border:1px solid #bfdbfe; border-radius:6px; padding:9px;"><div style="font-size:19px; font-weight:800; color:#1d4ed8;"><t t-esc="incidents_total"/></div><div style="font-size:8.5px; text-transform:uppercase; color:#1e40af;">Incidents</div></td>
+                                    <td style="text-align:center; background:#fef2f2; border:1px solid #fecaca; border-radius:6px; padding:9px;"><div style="font-size:19px; font-weight:800; color:#b91c1c;"><t t-esc="lti_count"/></div><div style="font-size:8.5px; text-transform:uppercase; color:#991b1b;">LTI / Fatality</div></td>
+                                    <td style="text-align:center; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:9px;"><div style="font-size:19px; font-weight:800; color:#15803d;"><t t-esc="obs_total"/></div><div style="font-size:8.5px; text-transform:uppercase; color:#166534;">Observations</div></td>
+                                    <td style="text-align:center; background:#fffbeb; border:1px solid #fde68a; border-radius:6px; padding:9px;"><div style="font-size:19px; font-weight:800; color:#b45309;"><t t-esc="capas_overdue"/></div><div style="font-size:8.5px; text-transform:uppercase; color:#92400e;">CAPAs Overdue</div></td>
+                                    <td style="text-align:center; background:#eef2ff; border:1px solid #c7d2fe; border-radius:6px; padding:9px;"><div style="font-size:19px; font-weight:800; color:#4338ca;"><t t-esc="trir"/></div><div style="font-size:8.5px; text-transform:uppercase; color:#3730a3;">TRIR</div></td>
+                                </tr>
+                            </table>
+
+                            <table class="table table-bordered table-sm" style="width: 100%; margin-bottom: 12px;">
+                                <tr style="background: #eff6ff;">
+                                    <th colspan="3" style="font-size: 12px;">Incident Breakdown (by type, this period)</th>
+                                </tr>
+                                <tr t-foreach="incident_by_type" t-as="row">
+                                    <td style="width: 55%;"><t t-esc="row[0]"/></td>
+                                    <td style="width: 20%; text-align: center;"><strong><t t-esc="row[1]"/></strong></td>
+                                    <td style="width: 25%;">
+                                        <div style="background:#e2e8f0; border-radius:999px; height:8px; width:100%;">
+                                            <div style="background:#1d4ed8; border-radius:999px; height:8px;" t-att-width="(incidents_total and int(round(row[1] * 100.0 / incidents_total)) or 0)"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr t-if="not incident_by_type">
+                                    <td colspan="3" style="text-align:center; color:#94a3b8;">No incidents recorded in this period.</td>
+                                </tr>
+                                <tr t-if="osha_recordable">
+                                    <td colspan="3" style="font-size: 9.5px; color: #64748b;">
+                                        OSHA recordable: <strong><t t-esc="osha_recordable"/></strong> · TRIR = recordables × 200,000 / <t t-esc="int(exposure_hours)"/> exposure h (<t t-esc="hours_source"/>)
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table class="table table-bordered table-sm" style="width: 100%; margin-bottom: 12px;">
+                                <tr style="background: #eff6ff;">
+                                    <th colspan="2" style="font-size: 12px;">Live Operations Status (all records, by state)</th>
+                                </tr>
+                                <tr>
+                                    <td style="width: 33%; vertical-align: top;">
+                                        <div style="font-weight: bold; margin-bottom: 4px;">Permits to Work</div>
+                                        <t t-foreach="permits_dist" t-as="s"><div>· <t t-esc="s[0]"/>: <strong><t t-esc="s[1]"/></strong></div></t>
+                                        <div t-if="not permits_dist" style="color:#94a3b8;">No records</div>
+                                    </td>
+                                    <td style="width: 33%; vertical-align: top;">
+                                        <div style="font-weight: bold; margin-bottom: 4px;">LOTO Plans</div>
+                                        <t t-foreach="loto_dist" t-as="s"><div>· <t t-esc="s[0]"/>: <strong><t t-esc="s[1]"/></strong></div></t>
+                                        <div t-if="not loto_dist" style="color:#94a3b8;">No records</div>
+                                    </td>
+                                    <td style="vertical-align: top;">
+                                        <div style="font-weight: bold; margin-bottom: 4px;">Safety Bypasses</div>
+                                        <t t-foreach="bypass_dist" t-as="s"><div>· <t t-esc="s[0]"/>: <strong><t t-esc="s[1]"/></strong></div></t>
+                                        <div t-if="not bypass_dist" style="color:#94a3b8;">No records</div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table class="table table-bordered table-sm" style="width: 100%;">
+                                <tr style="background: #eff6ff;">
+                                    <th colspan="2" style="font-size: 12px;">Compliance, Assets &amp; People Indicators</th>
+                                </tr>
+                                <tr><td>Open CAPA actions</td><td style="width: 18%; text-align:center;"><strong><t t-esc="capas_open"/></strong></td></tr>
+                                <tr><td>CAPA actions overdue</td><td style="text-align:center; color:#b91c1c;"><strong><t t-esc="capas_overdue"/></strong></td></tr>
+                                <tr><td>Compliance obligations — non-compliant</td><td style="text-align:center;"><strong><t t-esc="oblig_nc"/></strong></td></tr>
+                                <tr><td>Compliance obligations — partial</td><td style="text-align:center;"><strong><t t-esc="oblig_partial"/></strong></td></tr>
+                                <tr><td>Audits conducted in period</td><td style="text-align:center;"><strong><t t-esc="audits_period"/></strong></td></tr>
+                                <tr><td>Equipment certifications expired</td><td style="text-align:center; color:#b91c1c;"><strong><t t-esc="certs_expired"/></strong></td></tr>
+                                <tr><td>Equipment certifications expiring (60d)</td><td style="text-align:center; color:#b45309;"><strong><t t-esc="certs_expiring"/></strong></td></tr>
+                                <tr><td>Personnel certifications expired</td><td style="text-align:center;"><strong><t t-esc="personnel_expired"/></strong></td></tr>
+                                <tr><td>Training / competency gaps</td><td style="text-align:center;"><strong><t t-esc="training_gaps"/></strong></td></tr>
+                                <tr><td>Safety meetings held in period</td><td style="text-align:center;"><strong><t t-esc="meetings_period"/></strong></td></tr>
+                                <tr><td>High-priority observations raised</td><td style="text-align:center;"><strong><t t-esc="obs_high"/></strong></td></tr>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <record id="action_report_monthly_hse_kpi" model="ir.actions.report">
+            <field name="name">Monthly HSE Performance Report</field>
+            <field name="model">res.company</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">hse_reports.report_monthly_hse_kpi_template</field>
+            <field name="report_file">hse_reports.report_monthly_hse_kpi_template</field>
+        </record>
+
+        <!-- Reporting menu under HSE Overview -->
+        <menuitem id="menu_hse_monthly_kpi_report"
+                  name="Monthly HSE Performance Report"
+                  parent="hse.menu_hse_overview"
+                  action="action_report_monthly_hse_kpi"
+                  sequence="15"/>
+    </data>
+</odoo>

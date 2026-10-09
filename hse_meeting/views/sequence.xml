@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <data>
+        <record id="seq_hse_meeting" model="ir.sequence">
+            <field name="name">HSE Meeting</field>
+            <field name="code">hse.meeting</field>
+            <field name="prefix">MTG-HSE/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+    </data>
+</odoo>

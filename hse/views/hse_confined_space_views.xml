@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Confined Space Tree View -->
+        <record id="view_hse_permit_confined_space_tree" model="ir.ui.view">
+            <field name="name">hse.permit.confined.space.tree</field>
+            <field name="model">hse.permit.confined.space</field>
+            <field name="arch" type="xml">
+                <tree string="Confined Space Entry Certificates"
+                      decoration-success="state == 'active_entry'"
+                      decoration-warning="state == 'pre_entry_check'"
+                      decoration-danger="state == 'suspended'"
+                      decoration-muted="state == 'closed'">
+                    <field name="name" bold="1"/>
+                    <field name="space_identifier"/>
+                    <field name="location_id"/>
+                    <field name="space_classification" widget="badge"/>
+                    <field name="attendant_name"/>
+                    <field name="active_entrants_count" string="Entrants Inside"
+                           decoration-danger="active_entrants_count &gt; 0" bold="1"/>
+                    <field name="isolation_verified" widget="boolean_toggle"/>
+                    <field name="rescue_team_notified" widget="boolean_toggle"/>
+                    <field name="latest_atmosphere_safe" widget="boolean_toggle"/>
+                    <field name="state" widget="badge" decoration-success="state == 'active_entry'"
+                           decoration-warning="state == 'pre_entry_check'" decoration-danger="state == 'suspended'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Confined Space Form View -->
+        <record id="view_hse_permit_confined_space_form" model="ir.ui.view">
+            <field name="name">hse.permit.confined.space.form</field>
+            <field name="model">hse.permit.confined.space</field>
+            <field name="arch" type="xml">
+                <form string="Confined Space Entry Permit &amp; Atmosphere Monitoring">
+                    <header>
+                        <button name="action_authorize_entry" string="Authorize Confined Space Entry" type="object"
+                                class="btn-success" invisible="state != 'pre_entry_check'"/>
+                        <button name="action_suspend_entry" string="SUSPEND ENTRY (Atmosphere / Emergency)" type="object"
+                                class="btn-danger" invisible="state != 'active_entry'"/>
+                        <button name="action_resume_entry" string="Resume Entry" type="object"
+                                class="btn-warning" invisible="state != 'suspended'"/>
+                        <button name="action_close_entry" string="Close Entry &amp; Secure Manway" type="object"
+                                class="btn-primary" invisible="state not in ['active_entry', 'suspended']"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,pre_entry_check,active_entry,closed"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #7c2d12 0%, #ea580c 100%); border-left: 6px solid #fdba74; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">⚠️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Confined Space Entry</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Continuous atmosphere telemetry &amp; entrant accountability</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <field name="active_entrants_count" invisible="1"/>
+                        <div class="oe_title">
+                            <label for="name" string="Entry Certificate #"/>
+                            <h1><field name="name"/></h1>
+                            <h3><field name="space_identifier" placeholder="e.g. Tank T-104 Internal Shell"/></h3>
+                        </div>
+
+                        <div class="row mb-3" invisible="active_entrants_count &lt;= 0">
+                            <div class="col-12">
+                                <div class="alert alert-warning d-flex align-items-center mb-0">
+                                    <i class="fa fa-users fa-2x me-3"/>
+                                    <div>
+                                        <h5 class="mb-0 font-weight-bold">
+                                            ACTIVE ENTRY: <field name="active_entrants_count" readonly="1"/> Personnel Currently Inside Confined Space
+                                        </h5>
+                                        <span>Standby Hole Watch (<field name="attendant_name" readonly="1"/>) stationed continuously at manway.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <group>
+                            <group string="Location &amp; Classification">
+                                <field name="permit_id"/>
+                                <field name="location_id"/>
+                                <field name="space_classification"/>
+                                <field name="loto_plan_id"/>
+                            </group>
+                            <group string="Mandatory Controls &amp; Ventilation">
+                                <field name="isolation_verified"/>
+                                <field name="electrical_lockout_verified"/>
+                                <field name="ventilation_method"/>
+                                <field name="ventilation_cfm_rate"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <group string="Rescue &amp; Standby Attendant">
+                                <field name="attendant_name"/>
+                                <field name="rescue_team_notified"/>
+                                <field name="tripod_winch_inspected"/>
+                                <field name="scba_available"/>
+                            </group>
+                            <group string="Atmospheric Telemetry Status">
+                                <field name="continuous_detector_serial"/>
+                                <field name="gas_readings_count"/>
+                                <field name="latest_atmosphere_safe" widget="boolean_toggle"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Authorized Entrants Time-In / Time-Out Log" name="entrants">
+                                <field name="entrant_ids">
+                                    <tree editable="bottom" decoration-warning="status == 'inside'" decoration-success="status == 'exited'">
+                                        <field name="worker_name"/>
+                                        <field name="badge_number"/>
+                                        <field name="entry_time"/>
+                                        <field name="exit_time"/>
+                                        <field name="status" widget="badge"/>
+                                        <field name="harness_attached" widget="boolean_toggle"/>
+                                        <button name="action_log_exit" string="Log Exit" type="object"
+                                                class="btn-sm btn-outline-primary" invisible="status == 'exited'"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+                            <page string="Continuous Multi-Gas Monitoring Telemetry" name="gas_telemetry">
+                                <field name="gas_log_ids">
+                                    <tree editable="bottom" decoration-danger="alarm_triggered" decoration-success="is_safe">
+                                        <field name="sample_timestamp"/>
+                                        <field name="oxygen_pct"/>
+                                        <field name="combustible_lel_pct"/>
+                                        <field name="h2s_ppm"/>
+                                        <field name="co_ppm"/>
+                                        <field name="is_safe" widget="boolean_toggle"/>
+                                        <field name="alarm_triggered" widget="boolean_toggle"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_hse_permit_confined_space" model="ir.actions.act_window">
+            <field name="name">Confined Space Entry Certificates (OSHA 1910.146)</field>
+            <field name="res_model">hse.permit.confined.space</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create Confined Space Entry Certificates with Continuous Gas Logs and Entrant Accountability.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

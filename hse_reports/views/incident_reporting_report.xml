@@ -1,0 +1,368 @@
+<odoo>
+    <data>
+
+        <!-- Define the Report Template with Professional Styling -->
+        <template id="incident_reporting_report_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+
+                        <div class="page" style="padding: 40px; font-family: 'Arial', sans-serif; line-height: 1.6;">
+                            <!-- Header Section -->
+
+                            <div style="text-align: center; margin-bottom: 30px;">
+                                <h2 style="color: #003366; font-size: 28px; font-weight: bold;">Incident Reporting
+                                    Report
+                                </h2>
+                                <p style="font-size: 14px; color: #777;">Date:
+                                    <t t-esc="doc.create_date"/>
+                                </p>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p>
+                                            <strong>Incident Reference Number:</strong>
+                                            <t t-esc="doc.name"/>
+                                        </p>
+                                        <p>
+                                            <strong>Injury Type:</strong>
+                                            <t t-esc="doc.injury_type"/>
+                                        </p>
+                                        <p>
+                                            <strong>Main Location:</strong>
+                                            <t t-esc="doc.location.name"/>
+                                        </p>
+                                        <p>
+                                            <strong>Exact Location:</strong>
+                                            <t t-esc="doc.exact_location"/>
+                                        </p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p>
+                                            <strong>Reported By:</strong>
+                                            <t t-esc="doc.reported_by_id.name"/>
+                                        </p>
+                                        <p>
+                                            <strong>Assigned To:</strong>
+                                            <t t-esc="doc.assigned_to.name"/>
+                                        </p>
+                                        <p>
+                                            <strong>Incident Report Date:</strong>
+                                            <t t-esc="doc.incident_report_date"/>
+                                        </p>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <t t-if="doc.injury_type == 'injury'">
+                                <t t-if="doc.select_emp_type == 'internal'">
+                                    <table class="table table-bordered" style="width: 100%; margin-top: 20px;">
+                                        <thead>
+                                            <tr style="background-color: #f2f2f2;">
+                                                <th colspan="2"
+                                                    style="text-align: center; padding: 10px; font-size: 18px;">
+                                                    Impacted Person Detail
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td style="width: 50%; padding: 8px;">
+                                                    <strong>Select Employee:</strong>
+                                                    <t t-esc="doc.select_emp_type"/>
+                                                </td>
+                                                <td style="width: 50%; padding: 8px;">
+                                                    <strong>Job Position:</strong>
+                                                    <t t-esc="doc.rel_job_position.name"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px;">
+                                                    <strong>Person Impacted:</strong>
+                                                    <t t-esc="doc.person_impacted.name"/>
+                                                </td>
+                                                <td style="padding: 8px;">
+                                                    <strong>Des Role in Incident:</strong>
+                                                    <t t-esc="doc.role_in_incident"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px;">
+                                                    <strong>Phone:</strong>
+                                                    <t t-esc="doc.rel_phone"/>
+                                                </td>
+                                                <td style="padding: 8px;">
+                                                    <strong>Email:</strong>
+                                                    <t t-esc="doc.rel_email"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px;">
+                                                    <strong>Gender:</strong>
+                                                    <t t-esc="doc.rel_gender"/>
+                                                </td>
+                                                <td style="padding: 8px;">
+                                                    <strong>Date of Birth:</strong>
+                                                    <t t-esc="doc.rel_dob"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </t>
+
+                                <t t-if="doc.select_emp_type == 'external'">
+                                    <table class="table table-bordered" style="width: 100%; margin-top: 30px;">
+                                        <thead>
+                                            <tr style="background-color: #f2f2f2;">
+                                                <th colspan="2"
+                                                    style="text-align: center; padding: 10px; font-size: 18px;">
+                                                    Impacted Person Detail
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td style="width: 50%; padding: 8px;">
+                                                    <strong>Select Employee:</strong>
+                                                    <t t-esc="doc.select_emp_type"/>
+                                                </td>
+                                                <td style="width: 50%; padding: 8px;">
+                                                    <strong>Contact No#:</strong>
+                                                    <t t-esc="doc.ext_contact_no"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px;">
+                                                    <strong>External Company Name:</strong>
+                                                    <t t-esc="doc.external_company_name"/>
+                                                </td>
+                                                <td style="padding: 8px;">
+                                                    <strong>Job Position:</strong>
+                                                    <t t-esc="doc.rel_job_position.name"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px;">
+                                                    <strong>External Employee Name:</strong>
+                                                    <t t-esc="doc.external_employee_name"/>
+                                                </td>
+                                                <td style="padding: 8px;">
+                                                    <strong>Des Role in Incident:</strong>
+                                                    <t t-esc="doc.role_in_incident"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </t>
+
+                                <table class="table table-bordered" style="width: 100%; margin-top: 30px;">
+                                    <thead>
+                                        <tr style="background-color: #f2f2f2;">
+                                            <th colspan="2"
+                                                style="text-align: center; padding: 10px; font-size: 18px;">
+                                                Injury lllness Detail
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="width: 50%; padding: 8px;">
+                                                <strong>Body Part:</strong>
+                                                <t t-esc="doc.select_body_part.ir_body_part"/>
+                                            </td>
+                                            <td style="width: 50%; padding: 8px;">
+                                                <strong>Summary of Incident:</strong>
+                                                <t t-esc="doc.summary_of_incident"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px;">
+                                                <strong>Injury Grade/Level:</strong>
+                                                <t t-esc="doc.injury_create_level.name"/>
+                                            </td>
+                                            <td style="padding: 8px;">
+                                                <strong>Incident Detail:</strong>
+                                                <t t-esc="doc.incident_detail"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px;">
+                                                <strong>Employee Activity Before Incident:</strong>
+                                                <t t-esc="doc.employee_activity_before_incident"/>
+                                            </td>
+                                            <td style="padding: 8px;">
+                                                <strong>No of Person Exposed to Hazards:</strong>
+                                                <t t-esc="doc.no_of_person_exposed_to_hazards"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px;">
+                                                <strong>Directly Harmed the Employee:</strong>
+                                                <t t-esc="doc.directly_harmed_the_employee"/>
+                                            </td>
+                                            <t t-if="doc.if_fatality == True">
+                                                <td style="padding: 8px;">
+                                                    <strong>Date of Death:</strong>
+                                                    <t t-esc="doc.date_of_death"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+
+                                <t t-if="doc.treatement_provider == 'in_house'">
+                                    <table class="table table-bordered" style="width: 100%; margin-top: 30px;">
+                                        <thead>
+                                            <tr style="background-color: #f2f2f2;">
+                                                <th colspan="2"
+                                                    style="text-align: center; padding: 10px; font-size: 18px;">
+                                                    Treatment Provider Details
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td style="width: 50%; padding: 8px;">
+                                                    <strong>Treatement From:</strong>
+                                                    <t t-esc="doc.treatement_provider"/>
+                                                </td>
+                                                <td style="width: 50%; padding: 8px;">
+                                                    <strong>Post Treatment Action:</strong>
+                                                    <t t-esc="doc.post_treatment"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px;">
+                                                    <strong>Precautions Description:</strong>
+                                                    <t t-esc="doc.precautions_description"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </t>
+
+                                <t t-if="doc.treatement_provider == 'outside'">
+                                    <table class="table table-bordered" style="width: 100%; margin-top: 30px;">
+                                        <thead>
+                                            <tr style="background-color: #f2f2f2;">
+                                                <th colspan="2"
+                                                    style="text-align: center; padding: 10px; font-size: 18px;">
+                                                    Treatment Provider Details
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td style="width: 50%; padding: 8px;">
+                                                    <strong>Treatement From:</strong>
+                                                    <t t-esc="doc.treatement_provider"/>
+                                                </td>
+                                                <td style="width: 50%; padding: 8px;">
+                                                    <strong>Post Treatment Action:</strong>
+                                                    <t t-esc="doc.post_treatment"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px;">
+                                                    <strong>Physician or Healthcare Provider:</strong>
+                                                    <t t-esc="doc.physician_name"/>
+                                                </td>
+                                                <td style="padding: 8px;">
+                                                    <strong>Precautions Description:</strong>
+                                                    <t t-esc="doc.precautions_description"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px;">
+                                                    <strong>Name of Facility:</strong>
+                                                    <t t-esc="doc.facility_name"/>
+                                                </td>
+                                                <td style="padding: 8px;">
+                                                    <strong>Email:</strong>
+                                                    <t t-esc="doc.email"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px;">
+                                                    <strong>Phone:</strong>
+                                                    <t t-esc="doc.phone"/>
+                                                </td>
+                                                <td style="padding: 8px;">
+                                                    <strong>City:</strong>
+                                                    <t t-esc="doc.city"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px;">
+                                                    <strong>Street Address:</strong>
+                                                    <t t-esc="doc.street_address"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </t>
+                            </t>
+
+                            <t t-if="doc.injury_type == 'non_injury'">
+
+                                <table class="table table-bordered" style="width: 100%; margin-top: 30px;">
+                                    <thead>
+                                        <tr style="background-color: #f2f2f2;">
+                                            <th colspan="2"
+                                                style="text-align: center; padding: 10px; font-size: 18px;">
+                                                Incident Details
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="width: 50%; padding: 8px;">
+                                                <strong>Summary of Incident:</strong>
+                                                <t t-esc="doc.summary_of_incident"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px;">
+                                                <strong>Incident Detail:</strong>
+                                                <t t-esc="doc.incident_detail"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px;">
+                                                <strong>No of Person Exposed to Hazards:</strong>
+                                                <t t-esc="doc.no_of_person_exposed_to_hazards"/>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+                            </t>
+
+
+                        </div>
+
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Define the Report Action -->
+        <record id="action_incident_reporting_report" model="ir.actions.report">
+            <field name="name">Incident Reporting Report</field>
+            <field name="model">incident.reporting</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">hse_reports.incident_reporting_report_template</field>
+            <field name="report_file">hse_reports.incident_reporting_report_template</field>
+            <field name="binding_model_id" ref="hse.model_incident_reporting"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>

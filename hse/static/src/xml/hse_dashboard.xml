@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hse.HSEDashboard">
+        <div class="o_hse_dashboard">
+
+            <!-- ================================================= -->
+            <!-- 1. EXECUTIVE HERO HEADER (fully dynamic)          -->
+            <!-- ================================================= -->
+            <div class="hse-hero-banner">
+                <div class="hero-title-area">
+                    <h1><i class="fa fa-shield"/> HSE Enterprise Management Suite</h1>
+                    <p>Real-Time Health, Safety, Process Integrity &amp; Control of Work Intelligence</p>
+                    <div class="hero-meta-row">
+                        <span class="hero-meta-chip"><i class="fa fa-server"/> Server date: <t t-esc="state.kpis.server_date or '—'"/></span>
+                        <span class="hero-meta-chip" t-if="state.lastSync"><i class="fa fa-clock-o"/> Last sync: <t t-esc="state.lastSync"/></span>
+                        <span class="hero-meta-chip live"><span class="pulse-dot"/> Live Facility Operations</span>
+                    </div>
+                </div>
+                <div class="hero-actions-area">
+                    <div class="hero-lti-counter" t-att-style="'border-color:' + ((state.kpis.days_without_lti === 0 || state.kpis.days_without_lti) ? 'rgba(52,211,153,.55)' : 'rgba(148,163,184,.4)')">
+                        <div class="lti-number"><t t-esc="ltiCounter"/></div>
+                        <div class="lti-caption"><i class="fa fa-calendar-check-o"/> Days Without LTI</div>
+                        <div class="lti-subcaption"><t t-esc="state.kpis.days_without_lti_label or 'Awaiting incident baseline'"/></div>
+                    </div>
+                    <div class="hero-buttons">
+                        <button t-att-class="'btn btn-sm ' + (state.autoRefresh ? 'btn-success' : 'btn-outline-light')" t-on-click="toggleAutoRefresh" title="Toggle 60s auto-refresh">
+                            <i t-att-class="state.autoRefresh ? 'fa fa-pause' : 'fa fa-play'"/> Auto 60s
+                        </button>
+                        <button class="btn btn-outline-light btn-sm" t-on-click="() => this.loadData(false)" t-att-disabled="state.loading">
+                            <i t-att-class="'fa ' + (state.loading ? 'fa-refresh fa-spin' : 'fa-refresh')"/> Refresh
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================================================= -->
+            <!-- 2. CRITICAL ATTENTION BANNERS                     -->
+            <!-- ================================================= -->
+            <t t-if="state.kpis.simops_conflicts_count > 0">
+                <div class="hse-alert-banner alert-simops">
+                    <div class="alert-content">
+                        <i class="fa fa-bullseye"/>
+                        <div>
+                            <strong>SIMOPS COLLISION ALERT:</strong> <strong><t t-esc="state.kpis.simops_conflicts_count"/></strong> concurrent high-risk permit conflicts detected in shared plant zones. SIMOPS Coordinator authorization is mandatory before commencing work.
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-warning" t-on-click="viewSimops">Review Conflicts</button>
+                </div>
+            </t>
+            <t t-if="state.kpis.active_bypasses > 0">
+                <div class="hse-alert-banner alert-bypass">
+                    <div class="alert-content">
+                        <i class="fa fa-bell"/>
+                        <div>
+                            <strong>PROCESS SAFETY CRITICAL ALERT:</strong> There are currently <strong><t t-esc="state.kpis.active_bypasses"/></strong> active Safety Overrides / Inhibit Bypasses in progress. Ensure compensating safeguards and dedicated field watches are actively manned!
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-danger" t-on-click="viewBypasses">Inspect Active Overrides</button>
+                </div>
+            </t>
+            <t t-if="state.loadError">
+                <div class="hse-alert-banner alert-bypass">
+                    <div class="alert-content">
+                        <i class="fa fa-plug"/>
+                        <div><strong>CONNECTION ERROR:</strong> Could not load live KPI data from <code>/hse/dashboard/data</code>. Press Refresh to retry.</div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- ================================================= -->
+            <!-- 3. RESPONSIVE KPI CARD GRID (all values dynamic)  -->
+            <!-- ================================================= -->
+            <div class="hse-kpi-grid">
+                <div class="hse-kpi-card kpi-red" t-on-click="viewIncidents">
+                    <div class="kpi-icon"><i class="fa fa-ambulance"/></div>
+                    <div class="kpi-body">
+                        <div class="kpi-value"><t t-esc="state.kpis.total_incidents ?? '—'"/></div>
+                        <div class="kpi-label">Total Incidents</div>
+                    </div>
+                </div>
+                <div class="hse-kpi-card kpi-orange" t-on-click="viewIncidents">
+                    <div class="kpi-icon"><i class="fa fa-file-text-o"/></div>
+                    <div class="kpi-body">
+                        <div class="kpi-value"><t t-esc="state.kpis.osha_recordable ?? '—'"/></div>
+                        <div class="kpi-label">OSHA Recordables</div>
+                    </div>
+                </div>
+                <div class="hse-kpi-card kpi-purple" title="TRIR = Recordables x 200,000 / Exposure Hours">
+                    <div class="kpi-icon"><i class="fa fa-line-chart"/></div>
+                    <div class="kpi-body">
+                        <div class="kpi-value"><t t-esc="state.kpis.trir ?? '—'"/></div>
+                        <div class="kpi-label">TRIR</div>
+                        <div class="kpi-sublabel" t-esc="trirSourceLabel"/>
+                    </div>
+                </div>
+                <div class="hse-kpi-card kpi-blue" t-on-click="viewPermits">
+                    <div class="kpi-icon"><i class="fa fa-file-text-o"/></div>
+                    <div class="kpi-body">
+                        <div class="kpi-value"><t t-esc="state.kpis.active_permits ?? '—'"/></div>
+                        <div class="kpi-label">Active PTWs</div>
+                    </div>
+                </div>
+                <div class="hse-kpi-card" t-att-class="state.kpis.active_bypasses > 0 ? 'kpi-red' : 'kpi-green'" t-on-click="viewBypasses">
+                    <div class="kpi-icon"><i class="fa fa-exclamation-triangle"/></div>
+                    <div class="kpi-body">
+                        <div class="kpi-value"><t t-esc="state.kpis.active_bypasses ?? '—'"/></div>
+                        <div class="kpi-label">Active Bypasses</div>
+                    </div>
+                </div>
+                <div class="hse-kpi-card kpi-blue" t-on-click="viewLoto">
+                    <div class="kpi-icon"><i class="fa fa-lock"/></div>
+                    <div class="kpi-body">
+                        <div class="kpi-value"><t t-esc="state.kpis.active_loto ?? '—'"/></div>
+                        <div class="kpi-label">Active LOTO Isolations</div>
+                    </div>
+                </div>
+                <div class="hse-kpi-card kpi-teal" t-on-click="viewInvestigations">
+                    <div class="kpi-icon"><i class="fa fa-search"/></div>
+                    <div class="kpi-body">
+                        <div class="kpi-value"><t t-esc="state.kpis.open_investigations ?? '—'"/></div>
+                        <div class="kpi-label">Open Investigations</div>
+                    </div>
+                </div>
+                <div class="hse-kpi-card" t-att-class="state.kpis.overdue_actions > 0 ? 'kpi-red' : 'kpi-green'" t-on-click="viewActions">
+                    <div class="kpi-icon"><i class="fa fa-tasks"/></div>
+                    <div class="kpi-body">
+                        <div class="kpi-value"><t t-esc="state.kpis.overdue_actions ?? '—'"/></div>
+                        <div class="kpi-label">Overdue CAPAs</div>
+                        <div class="kpi-sublabel"><t t-esc="state.kpis.total_open_actions ?? 0"/> open in total</div>
+                    </div>
+                </div>
+                <div class="hse-kpi-card" t-att-class="state.kpis.expiring_certs > 0 ? 'kpi-orange' : 'kpi-green'" t-on-click="viewCertifications">
+                    <div class="kpi-icon"><i class="fa fa-id-card-o"/></div>
+                    <div class="kpi-body">
+                        <div class="kpi-value"><t t-esc="state.kpis.expiring_certs ?? '—'"/></div>
+                        <div class="kpi-label">Expiring Certifications</div>
+                        <div class="kpi-sublabel"><t t-esc="state.kpis.expired_certs ?? 0"/> expired</div>
+                    </div>
+                </div>
+                <div class="hse-kpi-card" t-att-class="state.kpis.standing_alarms_count > 0 ? 'kpi-orange' : 'kpi-green'">
+                    <div class="kpi-icon"><i class="fa fa-bell-o"/></div>
+                    <div class="kpi-body">
+                        <div class="kpi-value"><t t-esc="state.kpis.standing_alarms_count ?? '—'"/></div>
+                        <div class="kpi-label">Standing / Defeated Alarms</div>
+                        <div class="kpi-sublabel">ISA-18.2 register</div>
+                    </div>
+                </div>
+                <div class="hse-kpi-card kpi-blue" t-on-click="viewMoc">
+                    <div class="kpi-icon"><i class="fa fa-random"/></div>
+                    <div class="kpi-body">
+                        <div class="kpi-value"><t t-esc="state.kpis.total_mocs ?? '—'"/></div>
+                        <div class="kpi-label">MOCs In Flight</div>
+                    </div>
+                </div>
+                <div class="hse-kpi-card" t-att-class="state.kpis.training_gap_count > 0 ? 'kpi-orange' : 'kpi-green'">
+                    <div class="kpi-icon"><i class="fa fa-graduation-cap"/></div>
+                    <div class="kpi-body">
+                        <div class="kpi-value"><t t-esc="state.kpis.training_gap_count ?? '—'"/></div>
+                        <div class="kpi-label">Training Gaps</div>
+                    </div>
+                </div>
+                <div class="hse-kpi-card" t-att-class="state.kpis.compliance_tasks_overdue > 0 ? 'kpi-red' : 'kpi-green'">
+                    <div class="kpi-icon"><i class="fa fa-gavel"/></div>
+                    <div class="kpi-body">
+                        <div class="kpi-value"><t t-esc="state.kpis.compliance_tasks_overdue ?? '—'"/></div>
+                        <div class="kpi-label">Overdue Statutory Filings</div>
+                        <div class="kpi-sublabel"><t t-esc="state.kpis.compliance_tasks_active ?? 0"/> active schedules</div>
+                    </div>
+                </div>
+                <div class="hse-kpi-card kpi-teal">
+                    <div class="kpi-icon"><i class="fa fa-users"/></div>
+                    <div class="kpi-body">
+                        <div class="kpi-value"><t t-esc="state.kpis.safety_meetings_count ?? '—'"/></div>
+                        <div class="kpi-label">Safety Meetings Held</div>
+                    </div>
+                </div>
+                <div class="hse-kpi-card kpi-green kpi-barrier">
+                    <div class="kpi-icon"><i class="fa fa-life-ring"/></div>
+                    <div class="kpi-body">
+                        <div class="kpi-value"><t t-esc="state.kpis.barrier_health_pct ?? '—'"/>%</div>
+                        <div class="kpi-label">Bow-Tie Barrier Health</div>
+                        <div class="kpi-progress-track">
+                            <div class="kpi-progress-fill" t-att-style="'width:' + (state.kpis.barrier_health_pct or 0) + '%; background:' + barrierHealthColor"/>
+                        </div>
+                        <div class="kpi-sublabel"><t t-esc="state.kpis.total_barriers or 0"/> barriers · <span class="text-danger"><t t-esc="state.kpis.failed_barriers or 0"/> failed</span> · <span class="text-warning"><t t-esc="state.kpis.degraded_barriers or 0"/> degraded</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================================================= -->
+            <!-- 4. QUICK ACTION LAUNCHER                          -->
+            <!-- ================================================= -->
+            <div class="hse-quick-launcher">
+                <button class="btn-hse-action btn-danger-soft" t-on-click="() => this.openAction('incident.reporting', 'New Incident Report')">
+                    <i class="fa fa-ambulance"/> Report Incident
+                </button>
+                <button class="btn-hse-action btn-primary-soft" t-on-click="() => this.openAction('hse.permit', 'Issue Permit to Work')">
+                    <i class="fa fa-file-text-o"/> Issue Permit to Work
+                </button>
+                <button class="btn-hse-action btn-warning-soft" t-on-click="() => this.openAction('hse.bypass', 'Request Safety Inhibit / Bypass')">
+                    <i class="fa fa-exclamation-triangle"/> Request Safety Bypass
+                </button>
+                <button class="btn-hse-action" t-on-click="() => this.openAction('hse.operator.log', 'Log Shift Entry')">
+                    <i class="fa fa-book"/> Shift Handover Log
+                </button>
+                <button class="btn-hse-action" t-on-click="() => this.openAction('ra_jsa.model', 'New Risk Assessment / JSA')">
+                    <i class="fa fa-check-square-o"/> Start JSA / Risk Assessment
+                </button>
+                <button class="btn-hse-action" t-on-click="() => this.openAction('hse.moc', 'Propose Management of Change')">
+                    <i class="fa fa-random"/> Propose MOC
+                </button>
+                <button class="btn-hse-action" t-on-click="() => this.openAction('hse.improvement', 'Submit Kaizen / Improvement')">
+                    <i class="fa fa-lightbulb-o"/> Continuous Improvement
+                </button>
+            </div>
+
+            <!-- ================================================= -->
+            <!-- 5. OPERATIONAL COMMAND TABS                       -->
+            <!-- ================================================= -->
+            <div class="hse-tab-bar">
+                <button t-att-class="'hse-tab-pill' + (state.activeTab == 'overview' ? ' active' : '')" t-on-click="() => this.setTab('overview')">
+                    <i class="fa fa-th-large"/> Overview &amp; Risk Matrix
+                </button>
+                <button t-att-class="'hse-tab-pill' + (state.activeTab == 'permits' ? ' active' : '')" t-on-click="() => this.setTab('permits')">
+                    <i class="fa fa-file-text-o"/> Permits &amp; SIMOPS
+                    <span class="tab-count" t-esc="state.kpis.active_permits or 0"/>
+                </button>
+                <button t-att-class="'hse-tab-pill' + (state.activeTab == 'safety' ? ' active' : '')" t-on-click="() => this.setTab('safety')">
+                    <i class="fa fa-lock"/> Bypasses &amp; LOTO
+                    <span class="tab-count" t-esc="(state.kpis.active_bypasses or 0) + (state.kpis.active_loto or 0)"/>
+                </button>
+                <button t-att-class="'hse-tab-pill' + (state.activeTab == 'capa' ? ' active' : '')" t-on-click="() => this.setTab('capa')">
+                    <i class="fa fa-tasks"/> CAPA &amp; Observations
+                    <span class="tab-count" t-esc="state.kpis.overdue_actions or 0"/>
+                </button>
+            </div>
+
+            <!-- ============ TAB: OVERVIEW ============ -->
+            <t t-if="state.activeTab == 'overview'">
+                <div class="hse-two-col">
+                    <div class="hse-panel">
+                        <div class="hse-panel-head">
+                            <h2><i class="fa fa-th-large"/> Dynamic 5x5 ALARP Risk Matrix</h2>
+                            <span class="panel-subtitle">Cell value = live count of JSA hazards · click to drill down</span>
+                        </div>
+                        <table class="hse-risk-matrix">
+                            <thead>
+                                <tr>
+                                    <th class="matrix-axis">Likelihood ↓ / Severity →</th>
+                                    <th>1 Negligible</th><th>2 Minor</th><th>3 Moderate</th><th>4 Major</th><th>5 Catastrophic</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="state.matrixGrid" t-as="row" t-key="row_index">
+                                    <tr>
+                                        <th class="matrix-axis">
+                                            <t t-if="row[0].likelihood == 5">5 Almost Certain</t>
+                                            <t t-elif="row[0].likelihood == 4">4 Likely</t>
+                                            <t t-elif="row[0].likelihood == 3">3 Possible</t>
+                                            <t t-elif="row[0].likelihood == 2">2 Unlikely</t>
+                                            <t t-else="">1 Rare</t>
+                                        </th>
+                                        <t t-foreach="row" t-as="cell" t-key="cell_index">
+                                            <td t-att-class="'matrix-cell ' + cell.color_class"
+                                                t-att-title="'Score ' + cell.score + ' (' + cell.level + ')'"
+                                                t-on-click="() => this.filterRiskCell(cell.consequence, cell.likelihood)">
+                                                <div class="cell-score" t-esc="cell.score"/>
+                                                <div class="cell-count" t-esc="cell.count"/>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="hse-panel">
+                        <div class="hse-panel-head">
+                            <h2><i class="fa fa-pie-chart"/> Live Hazard Risk Mix</h2>
+                            <span class="panel-subtitle">Derived in real time from the matrix above</span>
+                        </div>
+                        <div class="hse-risk-mix">
+                            <t t-foreach="state.riskMix" t-as="mix" t-key="mix.key">
+                                <div class="risk-mix-row">
+                                    <span t-att-class="'mix-badge mix-' + mix.key" t-esc="mix.label"/>
+                                    <div class="mix-track">
+                                        <div t-att-class="'mix-fill fill-' + mix.key" t-att-style="'width:' + mix.pct + '%'"/>
+                                    </div>
+                                    <span class="mix-count"><t t-esc="mix.count"/> <small>(<t t-esc="mix.pct"/>%)</small></span>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="hse-panel-head" style="margin-top:18px;">
+                            <h2><i class="fa fa-eye"/> Recent Frontline Observations</h2>
+                        </div>
+                        <div class="hse-obs-feed">
+                            <t t-if="!state.recentObservations.length">
+                                <div class="empty-hint">No observations recorded yet.</div>
+                            </t>
+                            <t t-foreach="state.recentObservations" t-as="obs" t-key="obs.id">
+                                <div class="obs-feed-item" t-on-click="() => this.openRecord('observation.observation', obs.id)">
+                                    <span t-att-class="'obs-priority p' + (obs.priority or '2')">
+                                        <t t-esc="obs.priority == '3' ? 'HIGH' : obs.priority == '2' ? 'NORMAL' : 'LOW'"/>
+                                    </span>
+                                    <div class="obs-body">
+                                        <div class="obs-title"><strong t-esc="obs.name"/></div>
+                                        <div class="obs-text" t-esc="obs.text"/>
+                                        <div class="obs-meta">
+                                            <span t-esc="obs.observer"/> · <t t-esc="obs.hazard or 'General'"/> · <t t-esc="obs.state or 'draft'"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- ============ TAB: PERMITS & SIMOPS ============ -->
+            <t t-if="state.activeTab == 'permits'">
+                <div class="hse-panel">
+                    <div class="hse-panel-head">
+                        <h2><i class="fa fa-file-text-o"/> Active Permits to Work</h2>
+                        <button class="btn btn-sm btn-outline-primary" t-on-click="viewPermits">Open Register</button>
+                    </div>
+                    <t t-if="!state.activePermits.length">
+                        <div class="empty-hint">No active permits right now — the plant is in a safe steady state.</div>
+                    </t>
+                    <div class="hse-card-grid">
+                        <t t-foreach="state.activePermits" t-as="p" t-key="p.id">
+                            <div class="hse-mini-card" t-on-click="() => this.openRecord('hse.permit', p.id)">
+                                <div class="mini-card-head">
+                                    <span class="mini-ref" t-esc="p.ref"/>
+                                    <span class="mini-badge badge-blue" t-esc="p.type"/>
+                                </div>
+                                <div class="mini-title" t-esc="p.title"/>
+                                <div class="mini-meta"><i class="fa fa-map-marker"/> <t t-esc="p.location or '—'"/></div>
+                                <div class="mini-meta"><i class="fa fa-hourglass-end"/> Valid until <t t-esc="p.valid_until or '—'"/></div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+                <div class="hse-panel">
+                    <div class="hse-panel-head">
+                        <h2><i class="fa fa-bullseye"/> SIMOPS Conflict Radar</h2>
+                        <span t-att-class="'simops-pill' + (state.kpis.simops_conflicts_count > 0 ? ' hot' : '')">
+                            <t t-esc="state.kpis.simops_conflicts_count"/> flagged conflict(s)
+                        </span>
+                    </div>
+                    <t t-if="!state.simopsList.length">
+                        <div class="empty-hint">No simultaneous-operations conflicts detected.</div>
+                    </t>
+                    <t t-foreach="state.simopsList" t-as="s" t-key="s.id">
+                        <div class="hse-list-row row-danger" t-on-click="() => this.openRecord('hse.permit', s.id)">
+                            <span class="row-ref" t-esc="s.ref"/>
+                            <span class="row-main" t-esc="s.title"/>
+                            <span class="row-meta" t-esc="s.location"/>
+                            <span t-att-class="'mini-badge ' + (s.risk_level == 'high' ? 'badge-red' : 'badge-orange')" t-esc="s.risk_level"/>
+                        </div>
+                    </t>
+                </div>
+            </t>
+
+            <!-- ============ TAB: BYPASSES & LOTO ============ -->
+            <t t-if="state.activeTab == 'safety'">
+                <div class="hse-panel">
+                    <div class="hse-panel-head">
+                        <h2><i class="fa fa-exclamation-triangle"/> Active Safety Bypasses (SIS / ESD Overrides)</h2>
+                        <button class="btn btn-sm btn-outline-danger" t-on-click="viewBypasses">Open Register</button>
+                    </div>
+                    <t t-if="!state.activeBypasses.length">
+                        <div class="empty-hint">All safety instrumented systems are in normal service. ✅</div>
+                    </t>
+                    <t t-foreach="state.activeBypasses" t-as="b" t-key="b.id">
+                        <div class="hse-list-row row-danger" t-on-click="() => this.openRecord('hse.bypass', b.id)">
+                            <span class="row-ref" t-esc="b.tag"/>
+                            <span class="row-main" t-esc="b.title"/>
+                            <span class="row-meta" t-esc="b.location"/>
+                            <span class="mini-badge badge-purple">SIL <t t-esc="b.sil or '—'"/></span>
+                            <span class="mini-badge badge-blue" t-esc="b.applied_at"/>
+                            <span t-att-class="'mini-badge ' + (b.is_overdue ? 'badge-red' : 'badge-green')" t-esc="b.is_overdue ? 'OVERDUE' : 'IN WINDOW'"/>
+                        </div>
+                    </t>
+                </div>
+                <div class="hse-panel">
+                    <div class="hse-panel-head">
+                        <h2><i class="fa fa-lock"/> Energy Isolation (LOTO) Status</h2>
+                        <span class="panel-subtitle"><t t-esc="state.kpis.active_loto or 0"/> scheme(s) currently isolated</span>
+                    </div>
+                    <div class="hse-stat-strip">
+                        <div class="stat-tile"><div class="stat-num" t-esc="state.kpis.active_loto or 0"/><div class="stat-cap">Isolated</div></div>
+                        <div class="stat-tile"><div class="stat-num" t-esc="state.kpis.open_shifts or 0"/><div class="stat-cap">Open Shift Logs</div></div>
+                        <div class="stat-tile"><div class="stat-num" t-esc="state.kpis.total_mocs or 0"/><div class="stat-cap">MOCs In Flight</div></div>
+                        <div class="stat-tile"><div class="stat-num" t-esc="state.kpis.standing_alarms_count or 0"/><div class="stat-cap">Standing Alarms</div></div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-primary" style="margin-top:10px;" t-on-click="viewLoto">Open LOTO Register</button>
+                </div>
+            </t>
+
+            <!-- ============ TAB: CAPA & OBSERVATIONS ============ -->
+            <t t-if="state.activeTab == 'capa'">
+                <div class="hse-panel">
+                    <div class="hse-panel-head">
+                        <h2><i class="fa fa-tasks"/> Overdue CAPA Actions</h2>
+                        <button class="btn btn-sm btn-outline-primary" t-on-click="viewActions">Open Action Tracker</button>
+                    </div>
+                    <t t-if="!state.overdueActions.length">
+                        <div class="empty-hint">Zero overdue actions — CAPA engine is green. ✅</div>
+                    </t>
+                    <t t-foreach="state.overdueActions" t-as="a" t-key="a.id">
+                        <div class="hse-list-row row-warn" t-on-click="() => this.openRecord('hse.action', a.id)">
+                            <span class="row-ref" t-esc="a.ref"/>
+                            <span class="row-main" t-esc="a.title"/>
+                            <span class="row-meta"><t t-esc="a.assigned_to or 'Unassigned'"/> · due <t t-esc="a.target_date"/></span>
+                            <div class="row-progress">
+                                <div class="row-progress-track"><div class="row-progress-fill" t-att-style="'width:' + (a.progress or 0) + '%'"/></div>
+                                <small t-esc="(a.progress or 0) + '%'"/>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+
+            <div class="hse-footer-note">
+                <i class="fa fa-shield"/> HSE Enterprise Suite · Executive Command Center · data regenerated
+                <t t-esc="state.lastSync or '…'"/>
+            </div>
+        </div>
+    </t>
+</templates>

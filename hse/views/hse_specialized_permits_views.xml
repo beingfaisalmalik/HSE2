@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- ================================================================= -->
+        <!-- 1. Critical Lift & Heavy Rigging Views                           -->
+        <!-- ================================================================= -->
+        <record id="view_hse_permit_critical_lift_tree" model="ir.ui.view">
+            <field name="name">hse.permit.critical.lift.tree</field>
+            <field name="model">hse.permit.critical.lift</field>
+            <field name="arch" type="xml">
+                <tree string="Critical Lift Plans" decoration-danger="lift_capacity_percentage &gt;= 85.0" decoration-warning="lift_capacity_percentage &gt;= 75.0" decoration-success="lift_capacity_percentage &lt; 75.0">
+                    <field name="name"/>
+                    <field name="title"/>
+                    <field name="location_id"/>
+                    <field name="lift_date"/>
+                    <field name="crane_model"/>
+                    <field name="total_gross_load_tonnes"/>
+                    <field name="rated_capacity_at_radius"/>
+                    <field name="lift_capacity_percentage"/>
+                    <field name="is_critical_lift" widget="boolean_toggle"/>
+                    <field name="rigging_engineer_id"/>
+                    <field name="state" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hse_permit_critical_lift_form" model="ir.ui.view">
+            <field name="name">hse.permit.critical.lift.form</field>
+            <field name="model">hse.permit.critical.lift</field>
+            <field name="arch" type="xml">
+                <form string="Critical Lift Plan &amp; Rigging Authorization">
+                    <header>
+                        <button name="action_approve" string="Approve Lift Plan" type="object" invisible="state != 'draft'" class="btn-primary"/>
+                        <button name="action_start" string="Commence Lift" type="object" invisible="state != 'approved'" class="btn-success"/>
+                        <button name="action_complete" string="Complete Lift Safely" type="object" invisible="state != 'active'" class="btn-secondary"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,approved,active,completed"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%); border-left: 6px solid #7dd3fc; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🏗️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Specialized Permits</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Critical lifts, excavation &amp; radiography plans</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">Critical Lift Ref</span>
+                            <h1><field name="name" readonly="1"/></h1>
+                            <h3><field name="title" placeholder="e.g. Setting of Heavy Column Tray Assembly (48 Tonnes)"/></h3>
+                        </div>
+                        <group>
+                            <group string="Location &amp; Lift Schedule">
+                                <field name="permit_id"/>
+                                <field name="location_id"/>
+                                <field name="lift_date"/>
+                                <field name="lift_type"/>
+                            </group>
+                            <group string="Engineering Personnel">
+                                <field name="rigging_engineer_id"/>
+                                <field name="crane_operator_id"/>
+                            </group>
+                        </group>
+                        <group string="Crane Chart &amp; Load Capacity Calculations">
+                            <group string="Load Details (Tonnes)">
+                                <field name="net_load_weight_tonnes"/>
+                                <field name="rigging_tackle_weight_tonnes"/>
+                                <field name="total_gross_load_tonnes" readonly="1" style="font-weight: bold;"/>
+                            </group>
+                            <group string="Crane Chart Capacity &amp; Utilization">
+                                <field name="crane_model"/>
+                                <field name="crane_capacity_tonnes"/>
+                                <field name="boom_length_meters"/>
+                                <field name="operating_radius_meters"/>
+                                <field name="rated_capacity_at_radius"/>
+                                <field name="lift_capacity_percentage" readonly="1" widget="badge" decoration-danger="lift_capacity_percentage &gt;= 85.0" decoration-warning="lift_capacity_percentage &gt;= 75.0" decoration-success="lift_capacity_percentage &lt; 75.0"/>
+                                <field name="is_critical_lift" readonly="1"/>
+                            </group>
+                        </group>
+                        <group string="Mandatory Pre-Lift Safety Controls">
+                            <group>
+                                <field name="max_allowable_wind_speed_knots"/>
+                                <field name="measured_wind_speed_knots"/>
+                                <field name="outrigger_mats_verified"/>
+                            </group>
+                            <group>
+                                <field name="ground_bearing_capacity_verified"/>
+                                <field name="exclusion_zone_barricaded"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hse_permit_critical_lift" model="ir.actions.act_window">
+            <field name="name">Critical Lift &amp; Rigging Permits</field>
+            <field name="res_model">hse.permit.critical.lift</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- ================================================================= -->
+        <!-- 2. Excavation & Trenching Views                                  -->
+        <!-- ================================================================= -->
+        <record id="view_hse_permit_excavation_tree" model="ir.ui.view">
+            <field name="name">hse.permit.excavation.tree</field>
+            <field name="model">hse.permit.excavation</field>
+            <field name="arch" type="xml">
+                <tree string="Excavation Permits">
+                    <field name="name"/>
+                    <field name="title"/>
+                    <field name="location_id"/>
+                    <field name="start_date"/>
+                    <field name="excavation_depth_m"/>
+                    <field name="soil_type"/>
+                    <field name="protective_system"/>
+                    <field name="call_811_ticket_number"/>
+                    <field name="competent_person_id"/>
+                    <field name="state" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hse_permit_excavation_form" model="ir.ui.view">
+            <field name="name">hse.permit.excavation.form</field>
+            <field name="model">hse.permit.excavation</field>
+            <field name="arch" type="xml">
+                <form string="Excavation &amp; Trenching Safety Permit">
+                    <header>
+                        <button name="action_inspect" string="Inspect Shoring / Benching" type="object" invisible="state != 'draft'" class="btn-primary"/>
+                        <button name="action_authorize" string="Authorize Excavation" type="object" invisible="state != 'inspected'" class="btn-success"/>
+                        <button name="action_backfill" string="Confirm Backfilled &amp; Restored" type="object" invisible="state != 'authorized'" class="btn-secondary"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,inspected,authorized,backfilled"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%); border-left: 6px solid #7dd3fc; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🏗️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Specialized Permits</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Critical lifts, excavation &amp; radiography plans</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">Excavation Permit Ref</span>
+                            <h1><field name="name" readonly="1"/></h1>
+                            <h3><field name="title" placeholder="e.g. Trenching for Underground Firewater Header Replacement"/></h3>
+                        </div>
+                        <group>
+                            <group string="Scope &amp; Geometry">
+                                <field name="permit_id"/>
+                                <field name="location_id"/>
+                                <field name="start_date"/>
+                                <field name="expected_completion"/>
+                                <field name="excavation_length_m"/>
+                                <field name="excavation_width_m"/>
+                                <field name="excavation_depth_m"/>
+                            </group>
+                            <group string="Soil Mechanics &amp; Cave-in Protection">
+                                <field name="soil_type"/>
+                                <field name="protective_system"/>
+                                <field name="competent_person_id"/>
+                            </group>
+                        </group>
+                        <group string="Underground Utility Verification (811 Call Before You Dig)">
+                            <group>
+                                <field name="call_811_ticket_number"/>
+                                <field name="utility_scan_conducted"/>
+                                <field name="hand_digging_only"/>
+                            </group>
+                            <group>
+                                <field name="ladder_access_verified"/>
+                                <field name="spoil_pile_setback_verified"/>
+                                <field name="atmospheric_testing_required"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hse_permit_excavation" model="ir.actions.act_window">
+            <field name="name">Excavation &amp; Trenching Permits</field>
+            <field name="res_model">hse.permit.excavation</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- ================================================================= -->
+        <!-- 3. Industrial Radiography & NDT Views                            -->
+        <!-- ================================================================= -->
+        <record id="view_hse_permit_radiography_tree" model="ir.ui.view">
+            <field name="name">hse.permit.radiography.tree</field>
+            <field name="model">hse.permit.radiography</field>
+            <field name="arch" type="xml">
+                <tree string="Radiography Permits">
+                    <field name="name"/>
+                    <field name="title"/>
+                    <field name="location_id"/>
+                    <field name="shoot_datetime"/>
+                    <field name="source_type"/>
+                    <field name="source_serial_no"/>
+                    <field name="activity_curies"/>
+                    <field name="controlled_boundary_radius_m"/>
+                    <field name="radiation_protection_officer_id"/>
+                    <field name="state" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hse_permit_radiography_form" model="ir.ui.view">
+            <field name="name">hse.permit.radiography.form</field>
+            <field name="model">hse.permit.radiography</field>
+            <field name="arch" type="xml">
+                <form string="Industrial Radiography &amp; NDT Permit">
+                    <header>
+                        <button name="action_approve" string="Approve by RPO" type="object" invisible="state != 'draft'" class="btn-primary"/>
+                        <button name="action_start_shoot" string="Begin Exposure Shoot" type="object" invisible="state != 'approved'" class="btn-warning"/>
+                        <button name="action_secure_source" string="Secure Source &amp; Close" type="object" invisible="state != 'shooting'" class="btn-success"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,approved,shooting,source_secured"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%); border-left: 6px solid #7dd3fc; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🏗️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Specialized Permits</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Critical lifts, excavation &amp; radiography plans</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">Radiography Permit Ref</span>
+                            <h1><field name="name" readonly="1"/></h1>
+                            <h3><field name="title" placeholder="e.g. Gamma Radiography on Header Weld Joints (Line 14-FL-08)"/></h3>
+                        </div>
+                        <group>
+                            <group string="Inspection Context &amp; Radiation Personnel">
+                                <field name="permit_id"/>
+                                <field name="location_id"/>
+                                <field name="shoot_datetime"/>
+                                <field name="radiation_protection_officer_id"/>
+                                <field name="radiographer_name"/>
+                            </group>
+                            <group string="Radiation Source &amp; Safe Exclusion Boundary">
+                                <field name="source_type"/>
+                                <field name="source_serial_no"/>
+                                <field name="activity_curies"/>
+                                <field name="controlled_boundary_radius_m" readonly="1" style="font-weight: bold; color: #b91c1c;"/>
+                            </group>
+                        </group>
+                        <group string="Radiation Safeguards &amp; Sentry Controls">
+                            <group>
+                                <field name="flashing_beacons_erected"/>
+                                <field name="sentry_personnel_posted"/>
+                            </group>
+                            <group>
+                                <field name="survey_meter_calibrated"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hse_permit_radiography" model="ir.actions.act_window">
+            <field name="name">Industrial Radiography (NDT) Permits</field>
+            <field name="res_model">hse.permit.radiography</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

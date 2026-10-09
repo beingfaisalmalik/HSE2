@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- SECE Tree View -->
+        <record id="view_hse_sece_tree" model="ir.ui.view">
+            <field name="name">hse.sece.tree</field>
+            <field name="model">hse.sece</field>
+            <field name="arch" type="xml">
+                <tree string="Safety Critical Elements (SECE)" decoration-danger="barrier_health == 'failed'" decoration-warning="barrier_health == 'degraded'" decoration-success="barrier_health == 'healthy'">
+                    <field name="tag"/>
+                    <field name="name"/>
+                    <field name="location_id"/>
+                    <field name="sece_group"/>
+                    <field name="availability_std"/>
+                    <field name="reliability_std"/>
+                    <field name="barrier_health" widget="badge" decoration-danger="barrier_health == 'failed'" decoration-warning="barrier_health == 'degraded'" decoration-success="barrier_health == 'healthy'" decoration-info="barrier_health == 'isolated'"/>
+                    <field name="independent_verification_body"/>
+                    <field name="assurance_count"/>
+                    <field name="state" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- SECE Form View -->
+        <record id="view_hse_sece_form" model="ir.ui.view">
+            <field name="name">hse.sece.form</field>
+            <field name="model">hse.sece</field>
+            <field name="arch" type="xml">
+                <form string="Safety Critical Element (SECE) Performance Standard">
+                    <header>
+                        <button name="action_set_healthy" string="Declare Healthy" type="object" class="btn-success"/>
+                        <button name="action_set_degraded" string="Mark Degraded" type="object" class="btn-warning"/>
+                        <button name="action_set_impaired" string="Declare Impairment" type="object" class="btn-danger"/>
+                        <field name="state" widget="statusbar" statusbar_visible="active,impaired,decommissioned"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%); border-left: 6px solid #7dd3fc; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🛡️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Safety Critical Elements</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">FARSI performance standards &amp; proof-test assurance</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">SECE Barrier Tag</span>
+                            <h1><field name="tag" placeholder="e.g. SECE-ESD-01"/></h1>
+                            <h3><field name="name" placeholder="e.g. Crude Column Emergency Depressuring / Blowdown Valve (BDV-102)"/></h3>
+                        </div>
+                        <group>
+                            <group string="Barrier Classification &amp; Plant Location">
+                                <field name="sece_group"/>
+                                <field name="location_id"/>
+                                <field name="asset_id"/>
+                                <field name="barrier_health" widget="badge" decoration-danger="barrier_health == 'failed'" decoration-warning="barrier_health == 'degraded'" decoration-success="barrier_health == 'healthy'"/>
+                            </group>
+                            <group string="Major Hazard &amp; Independent Verification">
+                                <field name="major_accident_hazard"/>
+                                <field name="independent_verification_body"/>
+                                <field name="last_ivb_audit_date"/>
+                                <field name="next_ivb_audit_date"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="FARSI Performance Standards" name="farsi">
+                                <group>
+                                    <group string="Functionality &amp; Availability">
+                                        <field name="functionality_std" placeholder="Must close within 2 seconds upon trip signal and isolate line to ANSI Class VI leakage..."/>
+                                        <field name="availability_std"/>
+                                    </group>
+                                    <group string="Reliability &amp; Survivability">
+                                        <field name="reliability_std"/>
+                                        <field name="survivability_std" placeholder="Must withstand 60 minutes of 350 kW/m2 jet fire exposure without structural collapse..."/>
+                                        <field name="interaction_std" placeholder="Pneumatic instrument air accumulator provides 3 strokes upon loss of header pressure..."/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Assurance Tasks &amp; Proof Tests" name="assurance">
+                                <field name="assurance_task_ids">
+                                    <tree string="Proof Tests" editable="bottom" decoration-danger="result == 'fail'" decoration-success="result == 'pass'">
+                                        <field name="test_date"/>
+                                        <field name="test_type"/>
+                                        <field name="test_procedure_ref"/>
+                                        <field name="measured_parameters"/>
+                                        <field name="inspector_id"/>
+                                        <field name="result" widget="badge" decoration-danger="result == 'fail'" decoration-success="result == 'pass'" decoration-warning="result == 'conditional_pass'"/>
+                                        <field name="defects_noted"/>
+                                        <field name="capa_action_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- SECE Action Window -->
+        <record id="action_hse_sece" model="ir.actions.act_window">
+            <field name="name">Safety Critical Elements (SECE)</field>
+            <field name="res_model">hse.sece</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

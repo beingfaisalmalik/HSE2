@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Solution Form -->
+    <record id="view_hse_solution_form" model="ir.ui.view">
+        <field name="name">hse.solution.form</field>
+        <field name="model">hse.solution</field>
+        <field name="arch" type="xml">
+            <form string="HSE Solution &amp; Lessons Learned">
+                <header>
+                    <button name="action_publish" string="Approve &amp; Publish" type="object" invisible="state != 'draft'" class="btn-success"/>
+                    <button name="action_archive" string="Archive" type="object" invisible="state != 'published'" class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,review,published"/>
+                </header>
+                <sheet>
+                    <div class="hse-x-hero" style="background: linear-gradient(135deg, #134e4a 0%, #0d9488 100%); border-left: 6px solid #5eead4; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">📚</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Solutions Knowledge Base</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Validated solutions &amp; lessons learned syndication</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                    <div class="hse-x-meta" style="display: flex; gap: 16px; align-items: center; margin: -6px 0 10px 6px; font-size: 11px; color: #64748b; flex-wrap: wrap;"><span>🕒 Created <field name="create_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span><span>✏️ Updated <field name="write_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span></div>
+                    <div class="oe_title">
+                        <span class="text-muted"><field name="solution_code"/></span>
+                        <h1><field name="name" placeholder="Solution Title (e.g. Upgrade to Dual Unpressurized Mechanical Seal API Plan 52)"/></h1>
+                    </div>
+                    <group>
+                        <group string="Classification &amp; Equipment">
+                            <field name="category"/>
+                            <field name="applicable_equipment"/>
+                            <field name="engineering_standards"/>
+                            <field name="rating" widget="priority"/>
+                        </group>
+                        <group string="Financial Impact &amp; Governance">
+                            <field name="estimated_implementation_cost" widget="monetary"/>
+                            <field name="estimated_annual_cost_avoidance" widget="monetary"/>
+                            <field name="times_applied"/>
+                            <field name="author_id"/>
+                            <field name="approved_by_id"/>
+                        </group>
+                    </group>
+                    <group string="Problem &amp; Root Cause Addressed">
+                        <field name="problem_symptoms" placeholder="Describe the failure modes or symptoms this solution resolves..."/>
+                        <field name="root_cause_addressed" placeholder="Underlying root causes eliminated..."/>
+                    </group>
+                    <notebook>
+                        <page string="Detailed Engineered Solution">
+                            <field name="detailed_solution"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Solution Tree -->
+    <record id="view_hse_solution_tree" model="ir.ui.view">
+        <field name="name">hse.solution.tree</field>
+        <field name="model">hse.solution</field>
+        <field name="arch" type="xml">
+            <tree string="Solutions Knowledge Base">
+                <field name="solution_code"/>
+                <field name="name"/>
+                <field name="category"/>
+                <field name="applicable_equipment"/>
+                <field name="estimated_annual_cost_avoidance" widget="monetary"/>
+                <field name="rating" widget="priority"/>
+                <field name="times_applied"/>
+                <field name="state" widget="badge" decoration-success="state == 'published'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_hse_solution" model="ir.actions.act_window">
+        <field name="name">Solutions (Knowledge Base)</field>
+        <field name="res_model">hse.solution</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Manage proven engineered solutions, standard fixes, and lessons learned.</p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,46 @@
+<odoo>
+    <data>
+
+        <!-- Asset Form View -->
+        <record id="view_assets_form" model="ir.ui.view">
+            <field name="name">assets.form.view</field>
+            <field name="model">assets.form</field>
+            <field name="arch" type="xml">
+                <form string="Assets Form">
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #0f172a 0%, #334155 100%); border-left: 6px solid #94a3b8; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🏗️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Plant Assets &amp; Equipment</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Asset master data referenced across HSE modules</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="status" widget="badge" readonly="1"/></span></div></div>
+                        <group>
+                            <field name="name"/>
+                            <field name="description"/>
+                            <field name="assets_type"/>
+                            <field name="location"/>
+                            <field name="status"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_assets_view_tree" model="ir.ui.view">
+            <field name="name">view_assets_view_tree</field>
+            <field name="model">assets.form</field>
+            <field name="arch" type="xml">
+                <tree string="view_assets_tree">
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="assets_type"/>
+                    <field name="location"/>
+                    <field name="status"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action to Open Asset Form -->
+        <record id="action_assets_form" model="ir.actions.act_window">
+            <field name="name">Assets Form</field>
+            <field name="res_model">assets.form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

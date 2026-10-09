@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 1. Standard 5x5 Risk Matrix -->
+        <record id="matrix_standard_5x5" model="hse.risk.matrix">
+            <field name="name">Standard Enterprise 5x5 Risk Matrix</field>
+            <field name="dimension">5x5</field>
+            <field name="description">Standard corporate 5x5 severity vs likelihood risk assessment matrix compliant with ISO 31000 and API RP 754.</field>
+        </record>
+
+        <!-- Consequence Levels -->
+        <record id="consequence_1" model="hse.risk.matrix.consequence">
+            <field name="matrix_id" ref="matrix_standard_5x5"/>
+            <field name="level">1</field>
+            <field name="name">1 - Negligible</field>
+            <field name="people_impact">Minor first aid only; zero lost workdays.</field>
+            <field name="environment_impact">Slight localized spill (&lt; 10 L), fully contained in bund.</field>
+            <field name="asset_impact">Financial damage &lt; $10,000; minimal equipment downtime.</field>
+            <field name="reputation_impact">No external public or regulatory impact; internal logging only.</field>
+        </record>
+
+        <record id="consequence_2" model="hse.risk.matrix.consequence">
+            <field name="matrix_id" ref="matrix_standard_5x5"/>
+            <field name="level">2</field>
+            <field name="name">2 - Minor</field>
+            <field name="people_impact">Medical Treatment Case (MTC) or restricted duty; no permanent impairment.</field>
+            <field name="environment_impact">Minor release (&lt; 1 Bbl) contained on site; minor soil excavation.</field>
+            <field name="asset_impact">Damage $10,000 - $50,000; unit partial turndown &lt; 8 hours.</field>
+            <field name="reputation_impact">Local community inquiry; zero regulatory investigation.</field>
+        </record>
+
+        <record id="consequence_3" model="hse.risk.matrix.consequence">
+            <field name="matrix_id" ref="matrix_standard_5x5"/>
+            <field name="level">3</field>
+            <field name="name">3 - Moderate</field>
+            <field name="people_impact">Lost Time Injury (LTI) &gt; 1 day away from work; non-disabling.</field>
+            <field name="environment_impact">Release 1 - 10 Bbl with limited offsite migration; remediation required.</field>
+            <field name="asset_impact">Damage $50,000 - $250,000; unit shutdown up to 24 hours.</field>
+            <field name="reputation_impact">Local media coverage; official agency inquiry/notice.</field>
+        </record>
+
+        <record id="consequence_4" model="hse.risk.matrix.consequence">
+            <field name="matrix_id" ref="matrix_standard_5x5"/>
+            <field name="level">4</field>
+            <field name="name">4 - Major</field>
+            <field name="people_impact">Severe permanent disability or single worker life-threatening injury.</field>
+            <field name="environment_impact">Significant spill (10 - 100 Bbl) affecting watercourse or public land.</field>
+            <field name="asset_impact">Damage $250,000 - $1,000,000; prolonged plant outage.</field>
+            <field name="reputation_impact">Regional media scrutiny; regulatory investigation and citation notice.</field>
+        </record>
+
+        <record id="consequence_5" model="hse.risk.matrix.consequence">
+            <field name="matrix_id" ref="matrix_standard_5x5"/>
+            <field name="level">5</field>
+            <field name="name">5 - Catastrophic</field>
+            <field name="people_impact">Single or multiple fatalities; extensive toxic exposure to community.</field>
+            <field name="environment_impact">Major disaster (&gt; 100 Bbl); widespread long-term environmental damage.</field>
+            <field name="asset_impact">Damage &gt; $1,000,000; major plant destruction / total write-off.</field>
+            <field name="reputation_impact">National / international media headline; potential revocation of operating license.</field>
+        </record>
+
+        <!-- Likelihood Levels -->
+        <record id="likelihood_1" model="hse.risk.matrix.likelihood">
+            <field name="matrix_id" ref="matrix_standard_5x5"/>
+            <field name="level">1</field>
+            <field name="name">1 - Rare</field>
+            <field name="frequency_description">Unlikely to occur; frequency &lt; once per 25 years in operating facility.</field>
+            <field name="probability_percentage">2.0</field>
+        </record>
+
+        <record id="likelihood_2" model="hse.risk.matrix.likelihood">
+            <field name="matrix_id" ref="matrix_standard_5x5"/>
+            <field name="level">2</field>
+            <field name="name">2 - Unlikely</field>
+            <field name="frequency_description">Could occur at some time; frequency once per 5 to 25 years.</field>
+            <field name="probability_percentage">10.0</field>
+        </record>
+
+        <record id="likelihood_3" model="hse.risk.matrix.likelihood">
+            <field name="matrix_id" ref="matrix_standard_5x5"/>
+            <field name="level">3</field>
+            <field name="name">3 - Possible</field>
+            <field name="frequency_description">Might occur occasionally; frequency once per 1 to 5 years.</field>
+            <field name="probability_percentage">30.0</field>
+        </record>
+
+        <record id="likelihood_4" model="hse.risk.matrix.likelihood">
+            <field name="matrix_id" ref="matrix_standard_5x5"/>
+            <field name="level">4</field>
+            <field name="name">4 - Likely</field>
+            <field name="frequency_description">Will probably occur in most circumstances; multiple times per year.</field>
+            <field name="probability_percentage">65.0</field>
+        </record>
+
+        <record id="likelihood_5" model="hse.risk.matrix.likelihood">
+            <field name="matrix_id" ref="matrix_standard_5x5"/>
+            <field name="level">5</field>
+            <field name="name">5 - Almost Certain</field>
+            <field name="frequency_description">Expected to occur frequently in normal operations; routine event.</field>
+            <field name="probability_percentage">90.0</field>
+        </record>
+
+        <!-- 2. Standard Operating Policies -->
+        <record id="policy_life_saving_rules" model="hse.operating.policy">
+            <field name="name">Life Saving Rules (10 Golden Safety Rules)</field>
+            <field name="policy_code">POL-HSE-001</field>
+            <field name="policy_type">life_saving</field>
+            <field name="iso_alignment">ISO 45001:2018 / IOGP Life Saving Rules</field>
+            <field name="effective_date">2026-01-01</field>
+            <field name="policy_statement">&lt;p&gt;&lt;strong&gt;Our Non-Negotiable Commitment:&lt;/strong&gt; Every employee, contractor, and visitor has the absolute right and duty to return home safely each day. These 10 Life-Saving Rules must be strictly complied with at all times without exception.&lt;/p&gt;</field>
+            <field name="core_principles">1. Work Authorization &amp; Permitting&#10;2. Positive Energy Isolation (LOTO)&#10;3. Atmospheric Confined Space Gas Testing&#10;4. 100% Fall Protection at Heights&#10;5. Line of Fire &amp; Suspended Load Avoidance</field>
+            <field name="mandatory_rules">Any deliberate bypass of safety interlocks or failure to obtain an active Permit to Work will result in immediate Stop Work Authority and disciplinary inquiry.</field>
+            <field name="state">approved</field>
+        </record>
+
+        <record id="policy_stop_work_authority" model="hse.operating.policy">
+            <field name="name">Stop Work Authority (SWA) Executive Mandate</field>
+            <field name="policy_code">POL-HSE-002</field>
+            <field name="policy_type">stop_work</field>
+            <field name="iso_alignment">ISO 45001:2018 Clause 5.4</field>
+            <field name="effective_date">2026-01-01</field>
+            <field name="policy_statement">&lt;p&gt;Every single individual at our facilities has the &lt;strong&gt;absolute authority and obligation to STOP WORK&lt;/strong&gt; immediately if they observe an unsafe condition, behavior, or unexplained change in process conditions without fear of reprisal.&lt;/p&gt;</field>
+            <field name="core_principles">1. Stop work when in doubt.&#10;2. Notify Area Authority immediately.&#10;3. Conduct a step-back JSA review.&#10;4. Only resume when risk is mitigated to ALARP.</field>
+            <field name="mandatory_rules">Management will unconditionally support any worker who exercises Stop Work Authority in good faith.</field>
+            <field name="state">approved</field>
+        </record>
+
+        <!-- 3. Standard Regulatory Compliance Catalog -->
+        <record id="reg_osha_1910_psm" model="hse.regulation">
+            <field name="name">OSHA 29 CFR 1910.119 - Process Safety Management of Highly Hazardous Chemicals</field>
+            <field name="code">OSHA-1910.119</field>
+            <field name="regulatory_body">OSHA (US Department of Labor)</field>
+            <field name="jurisdiction">Federal / Industry Standard</field>
+            <field name="category">process_safety</field>
+            <field name="revision_number">Rev 2026.1</field>
+            <field name="effective_date">2026-01-01</field>
+            <field name="summary">Contains requirements for preventing or minimizing the consequences of catastrophic releases of toxic, reactive, flammable, or explosive chemicals. Enforces MOC, PSSR, Hot Work Permitting, and Incident Investigation.</field>
+            <field name="state">active</field>
+        </record>
+
+        <record id="reg_osha_1910_loto" model="hse.regulation">
+            <field name="name">OSHA 29 CFR 1910.147 - The Control of Hazardous Energy (Lockout/Tagout)</field>
+            <field name="code">OSHA-1910.147</field>
+            <field name="regulatory_body">OSHA</field>
+            <field name="jurisdiction">Federal Statutory</field>
+            <field name="category">energy_isolation</field>
+            <field name="revision_number">Rev 2026.1</field>
+            <field name="effective_date">2026-01-01</field>
+            <field name="summary">Covers the servicing and maintenance of machines and equipment in which the unexpected energization or startup of the machines or release of stored energy could harm employees.</field>
+            <field name="state">active</field>
+        </record>
+
+        <record id="reg_iso_45001" model="hse.regulation">
+            <field name="name">ISO 45001:2018 - Occupational Health and Safety Management Systems</field>
+            <field name="code">ISO-45001</field>
+            <field name="regulatory_body">International Organization for Standardization (ISO)</field>
+            <field name="jurisdiction">International Standard</field>
+            <field name="category">occupational_safety</field>
+            <field name="revision_number">2018 Standard</field>
+            <field name="effective_date">2026-01-01</field>
+            <field name="summary">International standard specifying requirements for an occupational health and safety (OH&amp;S) management system, enabling organizations to proactively improve OH&amp;S performance in preventing injury and ill-health.</field>
+            <field name="state">active</field>
+        </record>
+
+        <!-- 4. Standard Competencies -->
+        <record id="comp_agt" model="hse.competency">
+            <field name="name">Authorized Gas Tester (AGT - Level 1 &amp; 2)</field>
+            <field name="code">CMP-AGT-01</field>
+            <field name="category">gas_testing</field>
+            <field name="description">Qualified to perform atmospheric testing for oxygen enrichment/deficiency, flammable gas LEL%, and toxic gases (H2S, CO) for hot work and confined space entry permits.</field>
+            <field name="validity_months">24</field>
+            <field name="mandatory_for_permits">True</field>
+        </record>
+
+        <record id="comp_cs_attendant" model="hse.competency">
+            <field name="name">Confined Space Entry Attendant (Hole Watch)</field>
+            <field name="code">CMP-CSE-02</field>
+            <field name="category">control_of_work</field>
+            <field name="description">Certified to maintain continuous count, log personnel entry/exit, monitor external hazards, and activate emergency rescue response without entering the confined space.</field>
+            <field name="validity_months">24</field>
+            <field name="mandatory_for_permits">True</field>
+        </record>
+
+        <record id="comp_loto_officer" model="hse.competency">
+            <field name="name">LOTO Authorized Energy Isolation Officer</field>
+            <field name="code">CMP-LOTO-03</field>
+            <field name="category">control_of_work</field>
+            <field name="description">Authorized to plan, apply, verify zero energy state, and manage master lockboxes for complex multi-discipline hazardous energy isolations.</field>
+            <field name="validity_months">24</field>
+            <field name="mandatory_for_permits">True</field>
+        </record>
+
+        <record id="comp_ptw_issuer" model="hse.competency">
+            <field name="name">Permit to Work Area Issuer (AI)</field>
+            <field name="code">CMP-PTW-04</field>
+            <field name="category">control_of_work</field>
+            <field name="description">Authorized to review work scopes, conduct site hazard walkthroughs, approve compensating safeguards, and issue active Permits to Work.</field>
+            <field name="validity_months">24</field>
+            <field name="mandatory_for_permits">True</field>
+        </record>
+
+        <!-- 5. Standard Location Profiles -->
+        <record id="loc_cdu1" model="hse.location.profile">
+            <field name="name">Crude Distillation Unit (CDU-100)</field>
+            <field name="code">LOC-CDU-100</field>
+            <field name="location_type">unit</field>
+            <field name="hazardous_zone">zone1</field>
+            <field name="is_sece">True</field>
+            <field name="sece_classification">SECE-HYDROCARBON-HOT</field>
+            <field name="has_gas_detection">True</field>
+            <field name="has_fire_deluge">True</field>
+            <field name="has_emergency_shutdown">True</field>
+            <field name="has_eyewash_shower">True</field>
+            <field name="muster_station_primary">Muster Station North Gate A</field>
+            <field name="muster_station_secondary">Main Administration Car Park</field>
+            <field name="environmental_sensitivity">high</field>
+            <field name="operating_state">normal</field>
+        </record>
+
+        <record id="loc_comp_train_a" model="hse.location.profile">
+            <field name="name">High Pressure Gas Compression Train A</field>
+            <field name="code">LOC-COMP-200A</field>
+            <field name="location_type">unit</field>
+            <field name="hazardous_zone">zone0</field>
+            <field name="is_sece">True</field>
+            <field name="sece_classification">SECE-HIGH-PRESSURE-GAS</field>
+            <field name="has_gas_detection">True</field>
+            <field name="has_fire_deluge">True</field>
+            <field name="has_blast_wall">True</field>
+            <field name="has_emergency_shutdown">True</field>
+            <field name="has_eyewash_shower">True</field>
+            <field name="muster_station_primary">Muster Station West Shelter B</field>
+            <field name="muster_station_secondary">Central Workshop Gate</field>
+            <field name="environmental_sensitivity">medium</field>
+            <field name="operating_state">normal</field>
+        </record>
+
+        <record id="loc_tank_farm" model="hse.location.profile">
+            <field name="name">Crude Oil Storage Tank Farm &amp; Manifold</field>
+            <field name="code">LOC-TKF-300</field>
+            <field name="location_type">storage</field>
+            <field name="hazardous_zone">zone1</field>
+            <field name="is_sece">True</field>
+            <field name="sece_classification">SECE-BULK-STORAGE</field>
+            <field name="has_gas_detection">True</field>
+            <field name="has_fire_deluge">True</field>
+            <field name="has_emergency_shutdown">True</field>
+            <field name="has_eyewash_shower">True</field>
+            <field name="containment_capacity_m3">50000.0</field>
+            <field name="environmental_sensitivity">critical</field>
+            <field name="operating_state">normal</field>
+        </record>
+
+        <!-- 6. IOGP 9 Life-Saving Rules Catalog -->
+        <record id="lsr_bypass" model="hse.lifesaving.rule">
+            <field name="name">Bypassing Safety Controls</field>
+            <field name="code">LSR-01-BYPASS</field>
+            <field name="sequence">1</field>
+            <field name="rule_category">bypass</field>
+            <field name="icon_fa">fa-toggle-off</field>
+            <field name="rule_description">Obtain authorization before overriding or disabling safety controls, interlocks, or alarms.</field>
+            <field name="mandatory_expectations">1. I understand and use critical safety-critical elements.&#10;2. I obtain Tier 3 authorization before overriding any interlock or barrier.&#10;3. Dedicated compensatory monitoring is active continuously.</field>
+        </record>
+
+        <record id="lsr_confined_space" model="hse.lifesaving.rule">
+            <field name="name">Confined Space Entry</field>
+            <field name="code">LSR-02-CSE</field>
+            <field name="sequence">2</field>
+            <field name="rule_category">confined_space</field>
+            <field name="icon_fa">fa-archive</field>
+            <field name="rule_description">Obtain authorization before entering a confined space.</field>
+            <field name="mandatory_expectations">1. I confirm energy sources are positively isolated.&#10;2. I confirm atmospheric testing is conducted and acceptable.&#10;3. A qualified attendant (hole watch) is stationed at the entrance.</field>
+        </record>
+
+        <record id="lsr_driving" model="hse.lifesaving.rule">
+            <field name="name">Driving Safety</field>
+            <field name="code">LSR-03-DRIVE</field>
+            <field name="sequence">3</field>
+            <field name="rule_category">driving</field>
+            <field name="icon_fa">fa-car</field>
+            <field name="rule_description">Follow safe driving rules: wear seatbelts, obey speed limits, do not use phones while driving.</field>
+            <field name="mandatory_expectations">1. Always wear a seatbelt.&#10;2. Do not exceed speed limits or drive under the influence.&#10;3. Never use a mobile phone or handheld device while operating a vehicle.</field>
+        </record>
+
+        <record id="lsr_energy_isolation" model="hse.lifesaving.rule">
+            <field name="name">Energy Isolation (LOTO)</field>
+            <field name="code">LSR-04-LOTO</field>
+            <field name="sequence">4</field>
+            <field name="rule_category">energy_isolation</field>
+            <field name="icon_fa">fa-lock</field>
+            <field name="rule_description">Verify isolation and zero energy state before work begins.</field>
+            <field name="mandatory_expectations">1. I have identified all energy sources (electrical, pressure, mechanical).&#10;2. I confirm zero energy state before commencing work.&#10;3. Personal lock and danger tag applied to every isolation point.</field>
+        </record>
+
+        <record id="lsr_hot_work" model="hse.lifesaving.rule">
+            <field name="name">Hot Work</field>
+            <field name="code">LSR-05-HOTWORK</field>
+            <field name="sequence">5</field>
+            <field name="rule_category">hot_work</field>
+            <field name="icon_fa">fa-fire</field>
+            <field name="rule_description">Control flammables and ignition sources in hazardous operating areas.</field>
+            <field name="mandatory_expectations">1. I identify and clear flammable materials within 15 meters.&#10;2. I confirm continuous atmospheric gas testing (0% LEL).&#10;3. Dedicated fire watch stationed with charged fire extinguisher.</field>
+        </record>
+
+        <record id="lsr_line_of_fire" model="hse.lifesaving.rule">
+            <field name="name">Line of Fire</field>
+            <field name="code">LSR-06-LOF</field>
+            <field name="sequence">6</field>
+            <field name="rule_category">line_of_fire</field>
+            <field name="icon_fa">fa-crosshairs</field>
+            <field name="rule_description">Keep yourself and others out of the line of fire.</field>
+            <field name="mandatory_expectations">1. I never position myself under a suspended load.&#10;2. I establish exclusion zones for pressurized systems and heavy machinery.&#10;3. I am aware of stored kinetic and mechanical energy.</field>
+        </record>
+
+        <record id="lsr_safe_lifting" model="hse.lifesaving.rule">
+            <field name="name">Safe Mechanical Lifting</field>
+            <field name="code">LSR-07-LIFT</field>
+            <field name="sequence">7</field>
+            <field name="rule_category">safe_lifting</field>
+            <field name="icon_fa">fa-arrows-alt-v</field>
+            <field name="rule_description">Plan lifting operations and control the lift area.</field>
+            <field name="mandatory_expectations">1. I confirm crane and rigging equipment is inspected and certified.&#10;2. The load weight is within crane load chart capacity at radius.&#10;3. Physical barricades installed to prevent entry into lift radius.</field>
+        </record>
+
+        <record id="lsr_work_authorization" model="hse.lifesaving.rule">
+            <field name="name">Work Authorization (PTW)</field>
+            <field name="code">LSR-08-PTW</field>
+            <field name="sequence">8</field>
+            <field name="rule_category">work_authorization</field>
+            <field name="icon_fa">fa-file-text-o</field>
+            <field name="rule_description">Work with a valid Permit to Work when required.</field>
+            <field name="mandatory_expectations">1. I confirm if a permit is required for my task.&#10;2. I confirm the permit is active, authorized, and signed on site.&#10;3. I stop work if scope changes or new hazards emerge.</field>
+        </record>
+
+        <record id="lsr_working_at_height" model="hse.lifesaving.rule">
+            <field name="name">Working at Heights</field>
+            <field name="code">LSR-09-HEIGHTS</field>
+            <field name="sequence">9</field>
+            <field name="rule_category">working_at_height</field>
+            <field name="icon_fa">fa-arrow-up</field>
+            <field name="rule_description">Protect yourself against a fall when working at height (&gt; 1.8m / 6ft).</field>
+            <field name="mandatory_expectations">1. I inspect fall arrest harness and lanyards before use.&#10;2. 100% tie-off to approved anchor point capable of 5,000 lbs (22 kN).&#10;3. Scaffolding tagged with valid green inspection tag.</field>
+        </record>
+    </data>
+</odoo>

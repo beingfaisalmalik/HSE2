@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Training Matrix Tree View -->
+        <record id="view_hse_training_matrix_tree" model="ir.ui.view">
+            <field name="name">hse.training.matrix.tree</field>
+            <field name="model">hse.training.matrix</field>
+            <field name="arch" type="xml">
+                <tree string="Training Matrices">
+                    <field name="name"/>
+                    <field name="department_id"/>
+                    <field name="evaluation_date"/>
+                    <field name="total_evaluated"/>
+                    <field name="compliant_count"/>
+                    <field name="gap_count"/>
+                    <field name="compliance_rate" widget="progressbar"/>
+                    <field name="state" widget="badge"
+                           decoration-info="state == 'calculated'"
+                           decoration-success="state == 'actions_generated'"
+                           decoration-muted="state == 'draft'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Training Matrix Form View -->
+        <record id="view_hse_training_matrix_form" model="ir.ui.view">
+            <field name="name">hse.training.matrix.form</field>
+            <field name="model">hse.training.matrix</field>
+            <field name="arch" type="xml">
+                <form string="Training Matrix &amp; Competency Gap Analysis">
+                    <header>
+                        <button name="action_evaluate_matrix" string="Evaluate Competency Gaps" type="object"
+                                class="oe_highlight"/>
+                        <button name="action_generate_training_actions" string="Generate Remediation CAPAs" type="object"
+                                class="btn-warning" invisible="gap_count == 0 or state == 'actions_generated'"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,calculated,actions_generated"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #1e1b4b 0%, #4f46e5 100%); border-left: 6px solid #a5b4fc; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🎓</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Training &amp; Gap Analysis</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Competency gap radar with 1-click CAPA</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="hse-x-meta" style="display: flex; gap: 16px; align-items: center; margin: -6px 0 10px 6px; font-size: 11px; color: #64748b; flex-wrap: wrap;"><span>🕒 Created <field name="create_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span><span>✏️ Updated <field name="write_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span></div>
+                        <widget name="web_ribbon" title="Evaluated" bg_color="text-bg-info"
+                                invisible="state != 'calculated'"/>
+                        <widget name="web_ribbon" title="Actions Created" bg_color="text-bg-success"
+                                invisible="state != 'actions_generated'"/>
+
+                        <field name="total_evaluated" invisible="1"/>
+                        <field name="gap_count" invisible="1"/>
+
+                        <div class="oe_title mb-4">
+                            <span class="o_form_label text-muted">Safety Competency Matrix Evaluation</span>
+                            <h1><field name="name" placeholder="e.g. Q3 Plant Operations Mandatory Safety Qualification Matrix"/></h1>
+                        </div>
+
+                        <!-- KPI Summary Cards -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-3">
+                                <div class="card p-3 border-0 shadow-sm text-center" style="background: #f8fafc; border-left: 4px solid #3b82f6 !important;">
+                                    <div class="text-muted small fw-bold">TOTAL ASSESSED</div>
+                                    <h3 class="fw-bold mb-0 text-primary"><field name="total_evaluated"/></h3>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card p-3 border-0 shadow-sm text-center" style="background: #f0fdf4; border-left: 4px solid #22c55e !important;">
+                                    <div class="text-muted small fw-bold">COMPLIANT QUALIFICATIONS</div>
+                                    <h3 class="fw-bold mb-0 text-success"><field name="compliant_count"/></h3>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card p-3 border-0 shadow-sm text-center" style="background: #fefce8; border-left: 4px solid #eab308 !important;">
+                                    <div class="text-muted small fw-bold">EXPIRING SOON (&lt; 60D)</div>
+                                    <h3 class="fw-bold mb-0 text-warning"><field name="expiring_count"/></h3>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card p-3 border-0 shadow-sm text-center" style="background: #fef2f2; border-left: 4px solid #ef4444 !important;">
+                                    <div class="text-muted small fw-bold">MISSING / EXPIRED GAPS</div>
+                                    <h3 class="fw-bold mb-0 text-danger"><field name="gap_count"/></h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <group>
+                            <group string="Matrix Scope &amp; Target Population">
+                                <field name="department_id" placeholder="All Departments if empty"/>
+                                <field name="job_ids" widget="many2many_tags" placeholder="All Job Roles if empty"/>
+                            </group>
+                            <group string="Evaluation Metadata">
+                                <field name="evaluation_date"/>
+                                <field name="evaluated_by"/>
+                                <field name="compliance_rate" widget="progressbar"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Competency Gap Matrix Lines">
+                                <field name="line_ids">
+                                    <tree string="Gap Matrix Lines" create="0" delete="0"
+                                          decoration-success="status == 'compliant'"
+                                          decoration-warning="status == 'expiring_soon'"
+                                          decoration-danger="status in ['expired', 'missing']">
+                                        <field name="employee_id"/>
+                                        <field name="job_id"/>
+                                        <field name="competency_id"/>
+                                        <field name="required_level"/>
+                                        <field name="current_level"/>
+                                        <field name="expiry_date"/>
+                                        <field name="is_mandatory" widget="boolean_toggle"/>
+                                        <field name="status" widget="badge"
+                                               decoration-success="status == 'compliant'"
+                                               decoration-warning="status == 'expiring_soon'"
+                                               decoration-danger="status in ['expired', 'missing']"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action: Training Matrix & Competency Gap Analysis -->
+        <record id="action_hse_training_matrix" model="ir.actions.act_window">
+            <field name="name">Training Matrix &amp; Competency Gaps</field>
+            <field name="res_model">hse.training.matrix</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Generate and analyze HSE training and competency matrix gaps
+                </p>
+                <p>
+                    Evaluate workforce readiness, identify missing or expiring safety certifications, and generate corrective action plans.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

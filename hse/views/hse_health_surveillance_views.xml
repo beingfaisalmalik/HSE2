@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Biological Monitoring Tree View -->
+        <record id="view_hse_ih_biological_monitoring_tree" model="ir.ui.view">
+            <field name="name">hse.ih.biological.monitoring.tree</field>
+            <field name="model">hse.ih.biological.monitoring</field>
+            <field name="arch" type="xml">
+                <tree string="Biological Exposure Monitoring"
+                      decoration-danger="state == 'medical_removal'"
+                      decoration-warning="state == 'elevated'"
+                      decoration-success="state == 'normal'">
+                    <field name="employee_id"/>
+                    <field name="chemical_agent"/>
+                    <field name="sample_date"/>
+                    <field name="measured_value"/>
+                    <field name="unit_of_measure"/>
+                    <field name="bei_limit"/>
+                    <field name="exceeds_bei" widget="boolean_toggle"/>
+                    <field name="medical_removal_required" widget="boolean_toggle"/>
+                    <field name="state" widget="badge"
+                           decoration-danger="state == 'medical_removal'"
+                           decoration-warning="state == 'elevated'"
+                           decoration-success="state == 'normal'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Biological Monitoring Form View -->
+        <record id="view_hse_ih_biological_monitoring_form" model="ir.ui.view">
+            <field name="name">hse.ih.biological.monitoring.form</field>
+            <field name="model">hse.ih.biological.monitoring</field>
+            <field name="arch" type="xml">
+                <form string="Occupational Biological Monitoring (ACGIH BEI)">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,normal,elevated,medical_removal"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #3b0764 0%, #9333ea 100%); border-left: 6px solid #d8b4fe; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🩺</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Health Surveillance</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Biological monitoring, dosimetry &amp; fitness tracking</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <group>
+                            <group string="Worker &amp; Chemical Specimen">
+                                <field name="employee_id"/>
+                                <field name="chemical_agent"/>
+                                <field name="sample_date"/>
+                            </group>
+                            <group string="Laboratory Analysis &amp; BEI Threshold">
+                                <field name="measured_value"/>
+                                <field name="unit_of_measure"/>
+                                <field name="bei_limit"/>
+                                <field name="exceeds_bei"/>
+                                <field name="medical_removal_required"/>
+                            </group>
+                        </group>
+                        <group string="Occupational Medicine Findings">
+                            <field name="occupational_physician_notes" placeholder="Clinical evaluation findings..."/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Radiation Dosimetry Tree View -->
+        <record id="view_hse_ih_radiation_dosimetry_tree" model="ir.ui.view">
+            <field name="name">hse.ih.radiation.dosimetry.tree</field>
+            <field name="model">hse.ih.radiation.dosimetry</field>
+            <field name="arch" type="xml">
+                <tree string="Personnel Radiation Dosimetry"
+                      decoration-danger="state == 'limit_exceeded'"
+                      decoration-warning="state == 'action_level'"
+                      decoration-success="state == 'normal'">
+                    <field name="employee_id"/>
+                    <field name="tld_badge_number"/>
+                    <field name="year"/>
+                    <field name="monitoring_period"/>
+                    <field name="deep_dose_hp10_msv" string="Deep Dose Hp(10) mSv"/>
+                    <field name="shallow_dose_hp07_msv" string="Skin Dose Hp(0.07) mSv"/>
+                    <field name="annual_cumulative_dose_msv" string="Cumulative Annual mSv" bold="1"/>
+                    <field name="annual_limit_msv" string="Limit (20 mSv)"/>
+                    <field name="state" widget="badge"
+                           decoration-danger="state == 'limit_exceeded'"
+                           decoration-warning="state == 'action_level'"
+                           decoration-success="state == 'normal'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Radiation Dosimetry Form View -->
+        <record id="view_hse_ih_radiation_dosimetry_form" model="ir.ui.view">
+            <field name="name">hse.ih.radiation.dosimetry.form</field>
+            <field name="model">hse.ih.radiation.dosimetry</field>
+            <field name="arch" type="xml">
+                <form string="Ionizing Radiation Personnel Dosimeter Record">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="normal,action_level,limit_exceeded"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #3b0764 0%, #9333ea 100%); border-left: 6px solid #d8b4fe; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🩺</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Health Surveillance</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Biological monitoring, dosimetry &amp; fitness tracking</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <group>
+                            <group string="Radiation Worker &amp; TLD Badge">
+                                <field name="employee_id"/>
+                                <field name="tld_badge_number"/>
+                                <field name="year"/>
+                                <field name="monitoring_period"/>
+                            </group>
+                            <group string="Dose Equivalent Readings (mSv)">
+                                <field name="deep_dose_hp10_msv"/>
+                                <field name="shallow_dose_hp07_msv"/>
+                                <field name="eye_dose_hp3_msv"/>
+                                <field name="annual_cumulative_dose_msv"/>
+                                <field name="annual_limit_msv"/>
+                                <field name="action_level_msv"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Actions -->
+        <record id="action_hse_ih_biological_monitoring" model="ir.actions.act_window">
+            <field name="name">Biological Exposure Indices (BEI)</field>
+            <field name="res_model">hse.ih.biological.monitoring</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_hse_ih_radiation_dosimetry" model="ir.actions.act_window">
+            <field name="name">Radiation Dosimetry (TLD)</field>
+            <field name="res_model">hse.ih.radiation.dosimetry</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

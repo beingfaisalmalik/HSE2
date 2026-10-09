@@ -1,0 +1,391 @@
+<odoo>
+    <data noupdate="1">
+        <record id="seq_ra_jsa_number" model="ir.sequence">
+            <field name="name">RA/JSA Reference</field>
+            <field name="code">ra_jsa.model</field>
+            <field name="prefix">RA/</field>
+            <field name="padding">5</field>
+        </record>
+
+        <!-- Sequence for Observation Model -->
+        <record id="seq_observation" model="ir.sequence">
+            <field name="name">Observation Sequence</field>
+            <field name="code">observation</field>
+            <field name="prefix">OBS/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_incident_reporting" model="ir.sequence">
+            <field name="name">Incident Reporting Sequence</field>
+            <field name="code">incident.reporting</field>
+            <field name="prefix">REP/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_incident_investigation" model="ir.sequence">
+            <field name="name">Incident Investigation Sequence</field>
+            <field name="code">incident.investigation</field>
+            <field name="prefix">INV/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- Sequences for IBM Maximo HSE Modules -->
+        <record id="seq_hse_action" model="ir.sequence">
+            <field name="name">HSE Action Sequence</field>
+            <field name="code">hse.action</field>
+            <field name="prefix">ACT/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_permit" model="ir.sequence">
+            <field name="name">Permit to Work Sequence</field>
+            <field name="code">hse.permit</field>
+            <field name="prefix">PTW/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_loto_plan" model="ir.sequence">
+            <field name="name">LOTO Isolation Plan Sequence</field>
+            <field name="code">hse.loto.plan</field>
+            <field name="prefix">LOTO/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_moc" model="ir.sequence">
+            <field name="name">Management of Change Sequence</field>
+            <field name="code">hse.moc</field>
+            <field name="prefix">MOC/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_ncr" model="ir.sequence">
+            <field name="name">Non-Conformance Report Sequence</field>
+            <field name="code">hse.ncr</field>
+            <field name="prefix">NCR/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_compliance_audit" model="ir.sequence">
+            <field name="name">Compliance Audit Sequence</field>
+            <field name="code">hse.compliance.audit</field>
+            <field name="prefix">AUD/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_preparation_activity" model="ir.sequence">
+            <field name="name">Preparation Activity Sequence</field>
+            <field name="code">hse.preparation.activity</field>
+            <field name="prefix">PREP/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_improvement" model="ir.sequence">
+            <field name="name">Improvement Sequence</field>
+            <field name="code">hse.improvement</field>
+            <field name="prefix">IMP/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_operator_log" model="ir.sequence">
+            <field name="name">Operator Shift Log Sequence</field>
+            <field name="code">hse.operator.log</field>
+            <field name="prefix">LOG/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_personnel_certification" model="ir.sequence">
+            <field name="name">Personnel Certification Sequence</field>
+            <field name="code">hse.personnel.certification</field>
+            <field name="prefix">CERT/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_equipment_certification" model="ir.sequence">
+            <field name="name">Equipment Certification Sequence</field>
+            <field name="code">hse.equipment.certification</field>
+            <field name="prefix">EQC/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_benefit_loss" model="ir.sequence">
+            <field name="name">Benefit and Loss Sequence</field>
+            <field name="code">hse.benefit.loss</field>
+            <field name="prefix">FIN/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_failure_report" model="ir.sequence">
+            <field name="name">Failure Report Sequence</field>
+            <field name="code">hse.failure.report</field>
+            <field name="prefix">FAIL/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_solution" model="ir.sequence">
+            <field name="name">Solution Sequence</field>
+            <field name="code">hse.solution</field>
+            <field name="prefix">SOL/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_defect_elimination" model="ir.sequence">
+            <field name="name">Defect Elimination Sequence</field>
+            <field name="code">hse.defect.elimination</field>
+            <field name="prefix">DEF/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_bypass" model="ir.sequence">
+            <field name="name">Bypass Management Sequence</field>
+            <field name="code">hse.bypass</field>
+            <field name="prefix">BYP/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- Enterprise Deep Sequences -->
+        <record id="seq_hse_hazop_study" model="ir.sequence">
+            <field name="name">HAZOP Study Sequence</field>
+            <field name="code">hse.hazop.study</field>
+            <field name="prefix">HAZOP/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_hazop_recommendation" model="ir.sequence">
+            <field name="name">HAZOP Recommendation Sequence</field>
+            <field name="code">hse.hazop.recommendation</field>
+            <field name="prefix">REC/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_lopa_study" model="ir.sequence">
+            <field name="name">LOPA Study Sequence</field>
+            <field name="code">hse.lopa.study</field>
+            <field name="prefix">LOPA/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_pse" model="ir.sequence">
+            <field name="name">Process Safety Event Sequence</field>
+            <field name="code">hse.pse</field>
+            <field name="prefix">PSE/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_env_air_emission" model="ir.sequence">
+            <field name="name">Air Emission GHG Sequence</field>
+            <field name="code">hse.env.air.emission</field>
+            <field name="prefix">GHG/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_env_water_monitoring" model="ir.sequence">
+            <field name="name">Wastewater Monitoring Sequence</field>
+            <field name="code">hse.env.water.monitoring</field>
+            <field name="prefix">H2O/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_env_spill" model="ir.sequence">
+            <field name="name">Chemical Spill Incident Sequence</field>
+            <field name="code">hse.env.spill</field>
+            <field name="prefix">SPILL/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_ih_sample" model="ir.sequence">
+            <field name="name">Industrial Hygiene Sample Sequence</field>
+            <field name="code">hse.ih.sample</field>
+            <field name="prefix">IH/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_ih_audiometry" model="ir.sequence">
+            <field name="name">Audiometry Test Sequence</field>
+            <field name="code">hse.ih.audiometry</field>
+            <field name="prefix">AUDIO/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_ih_respirator" model="ir.sequence">
+            <field name="name">Respirator Fit Test Sequence</field>
+            <field name="code">hse.ih.respirator</field>
+            <field name="prefix">RESP/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_ih_ergonomics" model="ir.sequence">
+            <field name="name">Ergonomics Assessment Sequence</field>
+            <field name="code">hse.ih.ergonomics</field>
+            <field name="prefix">ERGO/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_contractor_induction" model="ir.sequence">
+            <field name="name">Contractor Gate Badge Sequence</field>
+            <field name="code">hse.contractor.induction</field>
+            <field name="prefix">BADGE/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_permit_critical_lift" model="ir.sequence">
+            <field name="name">Critical Lift Permit Sequence</field>
+            <field name="code">hse.permit.critical.lift</field>
+            <field name="prefix">LIFT/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_permit_excavation" model="ir.sequence">
+            <field name="name">Excavation Permit Sequence</field>
+            <field name="code">hse.permit.excavation</field>
+            <field name="prefix">EXC/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_permit_radiography" model="ir.sequence">
+            <field name="name">Radiography Permit Sequence</field>
+            <field name="code">hse.permit.radiography</field>
+            <field name="prefix">RAD/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_emergency_plan" model="ir.sequence">
+            <field name="name">Emergency Response Plan Sequence</field>
+            <field name="code">hse.emergency.plan</field>
+            <field name="prefix">ERP/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_emergency_drill" model="ir.sequence">
+            <field name="name">Emergency Drill Sequence</field>
+            <field name="code">hse.emergency.drill</field>
+            <field name="prefix">DRILL/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_audit" model="ir.sequence">
+            <field name="name">HSE Audit Sequence</field>
+            <field name="code">hse.audit</field>
+            <field name="prefix">AUD/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_bbs_observation" model="ir.sequence">
+            <field name="name">BBS Observation Sequence</field>
+            <field name="code">hse.bbs.observation</field>
+            <field name="prefix">BBS/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_permit_confined_space" model="ir.sequence">
+            <field name="name">Confined Space Entry Sequence</field>
+            <field name="code">hse.permit.confined.space</field>
+            <field name="prefix">CSE/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_esg_accounting" model="ir.sequence">
+            <field name="name">ESG Accounting Sequence</field>
+            <field name="code">hse.esg.accounting</field>
+            <field name="prefix">ESG/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_stop_work" model="ir.sequence">
+            <field name="name">Stop Work Authority Sequence</field>
+            <field name="code">hse.stop.work</field>
+            <field name="prefix">SWA/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_hse_pse_metric" model="ir.sequence">
+            <field name="name">API RP 754 Metrics Sequence</field>
+            <field name="code">hse.pse.metric</field>
+            <field name="prefix">PSEM/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+    </data>
+</odoo>

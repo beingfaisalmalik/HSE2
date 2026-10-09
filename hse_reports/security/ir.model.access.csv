@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+hse_reports.access_hse_reports_hse_reports,access_hse_reports_hse_reports,hse_reports.model_hse_reports_hse_reports,base.group_user,1,1,1,1
+hse_reports.access_hse_wizard_report,access_hse_wizard_report,hse_reports.model_hse_wizard_report,base.group_user,1,1,1,1
+hse_reports.access_observation_wizard,access_observation_wizard,hse_reports.model_observation_wizard,base.group_user,1,1,1,1
+hse_reports.access_incident_reporting_wizard,access_incident_reporting_wizard,hse_reports.model_incident_reporting_wizard,base.group_user,1,1,1,1
+hse_reports.access_incident_investigation_wizard,access_incident_investigation_wizard,hse_reports.model_incident_investigation_wizard,base.group_user,1,1,1,1
+hse_reports.access_capa_wizard,access_capa_wizard,hse_reports.model_capa_wizard,base.group_user,1,1,1,1
+
+
+

@@ -1,0 +1,24 @@
+<odoo>
+<data>
+    <!-- Stage: New -->
+    <record id="stage_new" model="ra_jsa.stage">
+        <field name="name">New</field>
+        <field name="sequence">1</field>
+        <field name="color">1</field>
+    </record>
+
+    <!-- Stage: In Progress -->
+    <record id="stage_in_progress" model="ra_jsa.stage">
+        <field name="name">In Progress</field>
+        <field name="sequence">2</field>
+        <field name="color">2</field>
+    </record>
+
+    <!-- Stage: Done -->
+    <record id="stage_done" model="ra_jsa.stage">
+        <field name="name">Done</field>
+        <field name="sequence">3</field>
+        <field name="color">3</field>
+    </record>
+</data>
+</odoo>

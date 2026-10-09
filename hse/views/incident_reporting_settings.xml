@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--        incident reporting body part-->
+        <record id="ir_body_part_view_form" model="ir.ui.view">
+            <field name="name">ir_body_part_view_form</field>
+            <field name="model">ir.body.part</field>
+            <field name="arch" type="xml">
+                <form string="ir_body_part_form">
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #0f172a 0%, #334155 100%); border-left: 6px solid #94a3b8; border-radius: 12px; padding: 9px 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">⚙️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Incident Reporting Settings</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Notification, sequence and classification configuration</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                        <group>
+                            <field name="ir_body_part"/>
+                            <field name="ir_body_des"/>
+                        </group>
+                        <group></group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="ir_body_view_tree" model="ir.ui.view">
+            <field name="name">ir_body_view_tree</field>
+            <field name="model">ir.body.part</field>
+            <field name="arch" type="xml">
+                <tree string="ir_body_tree">
+                    <field name="ir_body_part"/>
+                    <field name="ir_body_des"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_ir_body_part" model="ir.actions.act_window">
+            <field name="name">Body Part</field>
+            <field name="res_model">ir.body.part</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!--        incident reporting injury type-->
+        <record id="ir_injury_type_view_form" model="ir.ui.view">
+            <field name="name">ir_injury_type_view_form</field>
+            <field name="model">ir.injury.type</field>
+            <field name="arch" type="xml">
+                <form string="ir_incident_type_form">
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #0f172a 0%, #334155 100%); border-left: 6px solid #94a3b8; border-radius: 12px; padding: 9px 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">⚙️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Incident Reporting Settings</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Notification, sequence and classification configuration</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                        <group>
+                            <field name="injury_type"/>
+                            <field name="injury_des"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="ir_injury_type_view_tree" model="ir.ui.view">
+            <field name="name">ir_injury_type_view_tree</field>
+            <field name="model">ir.injury.type</field>
+            <field name="arch" type="xml">
+                <tree string="ir_inju_tree">
+                    <field name="injury_type"/>
+                    <field name="injury_des"/>
+                </tree>
+            </field>
+        </record>
+        <record id="ir_injury_type_action" model="ir.actions.act_window">
+            <field name="name">ir_injury_type_action</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.injury.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!--        incident reporting incident type-->
+        <record id="ir_incident_type_view_form" model="ir.ui.view">
+            <field name="name">ir_incident_type_view_form</field>
+            <field name="model">ir.accident.type</field>
+            <field name="arch" type="xml">
+                <form string="ir_incident_type_form">
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #0f172a 0%, #334155 100%); border-left: 6px solid #94a3b8; border-radius: 12px; padding: 9px 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">⚙️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Incident Reporting Settings</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Notification, sequence and classification configuration</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                        <group>
+                            <field name="accident_type"/>
+                            <field name="accident_des"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="ir_injury_type_view_tree" model="ir.ui.view">
+            <field name="name">ir_injury_type_view_tree</field>
+            <field name="model">ir.accident.type</field>
+            <field name="arch" type="xml">
+                <tree string="ir_inju_tree">
+                    <field name="accident_type"/>
+                    <field name="accident_des"/>
+                </tree>
+            </field>
+        </record>
+        <record id="ir_incident_type_action" model="ir.actions.act_window">
+            <field name="name">ir_incident_type_action</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.accident.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+    </data>
+</odoo>

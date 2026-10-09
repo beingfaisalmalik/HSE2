@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_observation_form_user,observation_form_user,model_observation_form,base.group_user,1,1,1,1
+access_observation_form_portal,observation_form_portal,model_observation_form,base.group_portal,1,1,1,1
+
+

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_hse_hazop_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page" style="font-family: Arial, sans-serif; font-size: 10px; line-height: 1.3; color: #0f172a;">
+                            <!-- Header -->
+                            <div style="background: #1e3a8a; color: #ffffff; padding: 10px 14px; border-radius: 4px; margin-bottom: 12px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <h3 style="margin: 0; font-size: 16px; font-weight: bold; color: #ffffff;">PROCESS HAZARD ANALYSIS (PHA) / HAZOP WORKSHEET</h3>
+                                        <div style="font-size: 10px; color: #bfdbfe;">OSHA 1910.119(e) Process Safety Management Compliance Record</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 13px; font-weight: bold; color: #ffffff;"><t t-esc="doc.name"/></div>
+                                        <div style="font-size: 10px; color: #fef08a; font-weight: bold;"><t t-esc="doc.state"/></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Overview Table -->
+                            <table class="table table-bordered table-sm" style="width: 100%; margin-bottom: 10px;">
+                                <tr>
+                                    <td style="width: 20%; font-weight: bold; background: #f8fafc;">Study Title:</td>
+                                    <td colspan="3"><strong style="font-size: 11px; color: #1e3a8a;"><t t-esc="doc.title"/></strong></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Facility / Unit:</td>
+                                    <td><t t-esc="doc.location_id.name"/></td>
+                                    <td style="font-weight: bold; background: #f8fafc;">Methodology:</td>
+                                    <td><t t-esc="doc.study_type"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Facilitator (Leader):</td>
+                                    <td><t t-esc="doc.leader_id.name"/></td>
+                                    <td style="font-weight: bold; background: #f8fafc;">Date of Study:</td>
+                                    <td><t t-esc="doc.date"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">P&amp;ID Drawing References:</td>
+                                    <td colspan="3"><strong><t t-esc="doc.pid_references"/></strong></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Study Team Members:</td>
+                                    <td colspan="3"><t t-esc="doc.team_members"/></td>
+                                </tr>
+                            </table>
+
+                            <!-- Nodes & Deviations Loop -->
+                            <t t-foreach="doc.node_ids" t-as="node">
+                                <div style="background: #e2e8f0; padding: 4px 8px; font-weight: bold; font-size: 11px; margin-top: 10px; border-left: 4px solid #1e3a8a;">
+                                    Node <t t-esc="node.node_number"/>: <t t-esc="node.name"/> (<t t-esc="node.operating_press_range or ''"/> | <t t-esc="node.operating_temp_range or ''"/>)
+                                </div>
+                                <div style="font-size: 9px; color: #475569; margin-bottom: 4px; padding-left: 6px;">
+                                    Design Intent: <t t-esc="node.design_intent"/>
+                                </div>
+
+                                <table class="table table-bordered table-sm" style="width: 100%; margin-bottom: 10px; font-size: 9px;">
+                                    <thead style="background: #f1f5f9; text-align: center; font-weight: bold;">
+                                        <tr>
+                                            <th style="width: 12%;">Deviation</th>
+                                            <th style="width: 22%;">Causes</th>
+                                            <th style="width: 22%;">Consequences</th>
+                                            <th style="width: 8%;">Unmit. Risk</th>
+                                            <th style="width: 22%;">Existing Safeguards</th>
+                                            <th style="width: 8%;">Mit. Risk</th>
+                                            <th style="width: 6%;">SIL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="node.deviation_ids" t-as="dev">
+                                            <tr>
+                                                <td style="font-weight: bold; color: #1e3a8a;"><t t-esc="dev.deviation_text"/></td>
+                                                <td><t t-esc="dev.causes"/></td>
+                                                <td><t t-esc="dev.consequences"/></td>
+                                                <td style="text-align: center;"><span style="color: #ea580c; font-weight: bold;"><t t-esc="dev.unmitigated_risk_score"/></span></td>
+                                                <td><t t-esc="dev.existing_safeguards"/></td>
+                                                <td style="text-align: center;">
+                                                    <span t-attf-style="font-weight: bold; #{dev.risk_level == 'critical' and 'color: #dc2626;' or dev.risk_level == 'high' and 'color: #ea580c;' or 'color: #16a34a;'}">
+                                                        <t t-esc="dev.mitigated_risk_score"/> (<t t-esc="dev.risk_level"/>)
+                                                    </span>
+                                                </td>
+                                                <td style="text-align: center; font-weight: bold;"><t t-esc="dev.sil_target"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+
+                            <!-- Sign-Off Section -->
+                            <table class="table table-bordered table-sm" style="width: 100%; margin-top: 20px;">
+                                <tr style="background: #f8fafc; text-align: center; font-weight: bold;">
+                                    <td style="width: 33%;">HAZOP Facilitator / Leader</td>
+                                    <td style="width: 33%;">Operations Superintendent</td>
+                                    <td style="width: 34%;">Process Safety Technical Authority</td>
+                                </tr>
+                                <tr style="height: 40px;">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr style="font-size: 8px; color: #64748b; text-align: center;">
+                                    <td>Signature &amp; Date</td>
+                                    <td>Signature &amp; Date</td>
+                                    <td>Signature &amp; Date</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- HAZOP Action Report -->
+        <record id="action_report_hse_hazop" model="ir.actions.report">
+            <field name="name">HAZOP Process Hazard Worksheet</field>
+            <field name="model">hse.hazop.study</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">hse_reports.report_hse_hazop_template</field>
+            <field name="report_file">hse_reports.report_hse_hazop_template</field>
+            <field name="binding_model_id" ref="hse.model_hse_hazop_study"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

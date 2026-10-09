@@ -1,0 +1,150 @@
+<odoo>
+    <data>
+        <!-- Corrective Action Form View -->
+        <record id="view_capa_form" model="ir.ui.view">
+            <field name="name">hse.capa.model.form</field>
+            <field name="model">hse.capa.model</field>
+            <field name="arch" type="xml">
+                <form string="CAPA Action" create="false">
+                    <header>
+                        <button name="action_in_progress" type="object" string="In Progress" class="btn-primary"
+                                invisible="status in ['in_progress' , 'cancel' ,'completed']"/>
+                        <button name="action_in_cancel" type="object" string="Cancel" class="btn-danger"
+                                invisible="status in ['cancel', 'completed']"/>
+                        <button name="action_completed" type="object" string="Completed" class="btn-success"
+                                invisible="status == 'completed'"/>
+                        <field name="status" widget="statusbar"
+                               statusbar_visible="draft,in_progress,cancel,completed,"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #064e3b 0%, #059669 100%); border-left: 6px solid #6ee7b7; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">✅</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Corrective Action (CAPA)</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Track corrective actions through to verified closure</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="status" widget="badge" readonly="1"/></span></div></div>
+                        <widget name="web_ribbon" title="Completed" bg_color="text-bg-success"
+                                invisible="status != 'completed'"/>
+                        <widget name="web_ribbon" title="Cancel" bg_color="text-bg-danger"
+                                invisible="status != 'cancel'"/>
+                        <group>
+                            <group>
+                                <field name="priority"/>
+                                <field name="name" string="Action Title" required="1"/>
+                                <field name="ra_reference_number"/>
+                                <field name="select_capa" widget="radio"/>
+                                <field name="description" string="Description"/>
+                                <field name="due_date" string="Due Date"/>
+
+                            </group>
+                            <group>
+
+                                <field name="responsible_user_id" string="Responsible Person" invisible="1"/>
+                                <field name="select_department" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="responsible_person" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="assigned_person" options="{'no_open': True, 'no_create': True}"/>
+
+                                <field name="comments" string="Comments"/>
+                                <field name="completion_date" string="Completion Date"/>
+                                <field name="rel_models"/>
+<!--                                <field name="hse_source_id"/>-->
+                            </group>
+                        </group>
+
+                    </sheet>
+                    <!-- Chatter Section -->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+
+        <!-- Corrective Action Kanban View -->
+        <record id="view_capa_kanban" model="ir.ui.view">
+            <field name="name">hse.capa.model.kanban</field>
+            <field name="model">hse.capa.model</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_example" default_group_by="status">
+                    <field name="name"/>
+                    <field name="status"/>
+
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click" style="margin-bottom:10px; background-color:#a4bcc4">
+                                <div class="o_kanban_card_header"
+                                     style="display: flex; justify-content: space-between; align-items: center;">
+                                    <field name="name" class="o_kanban_card_title" style="font-weight: bold;"/>
+                                </div>
+                                <div>
+                                    <span style="font-weight: bold;">Action Title:</span>
+                                    <field name="name" style="margin-left: 5px; font-weight: bold;"/>
+                                </div>
+                                <div>
+                                    <span style="font-weight: bold;">RA Reference Number:</span>
+                                    <field name="ra_reference_number" style="margin-left: 5px; font-weight: bold;"/>
+                                </div>
+
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <!-- Corrective Action Tree View -->
+        <record id="view_capa_tree" model="ir.ui.view">
+            <field name="name">hse.capa.model.tree</field>
+            <field name="model">hse.capa.model</field>
+            <field name="arch" type="xml">
+                <tree string="CAPA Actions" create="false" >
+                    <field name="name" string="Action Title"/>
+                    <field name="ra_reference_number"/>
+                    <field name="responsible_person" string="Responsible Person"/>
+                    <field name="due_date" string="Due Date"/>
+                    <field name="select_capa"/>
+                    <field name="completion_date" string="Completion Date"/>
+                    <field name="status" string="Status"/>
+                    <field name="rel_models"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_corrective_action" model="ir.actions.act_window">
+            <field name="name">CAPA Action</field>
+            <field name="res_model">hse.capa.model</field>
+            <field name="view_mode">tree,kanban,form</field>
+
+        </record>
+
+
+        <!--        ra capa action-->
+        <record id="ra_capa_acion" model="ir.actions.act_window">
+            <field name="name">All CAPA Action</field>
+            <field name="res_model">hse.capa.model</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="domain">[('risk_assessment_id', '!=', False)]</field>
+        </record>
+
+<!--        all observation capa-->
+
+        <record id="observation_capa_acion" model="ir.actions.act_window">
+            <field name="name">All CAPA Action</field>
+            <field name="res_model">hse.capa.model</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="domain">[('observation_id', '!=', False)]</field>
+        </record>
+
+        <!--        all incident capa-->
+        <record id="inc_rep_capa_acion" model="ir.actions.act_window">
+            <field name="name">All CAPA Action</field>
+            <field name="res_model">hse.capa.model</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="domain">[('incident_reporting_id', '!=', False)]</field>
+        </record>
+
+        <!--        all investigation capa-->
+        <record id="inc_inv_capa_acion" model="ir.actions.act_window">
+            <field name="name">All CAPA Action</field>
+            <field name="res_model">hse.capa.model</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="domain">[('incident_investigation_id', '!=', False)]</field>
+        </record>
+    </data>
+</odoo>

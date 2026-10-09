@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action Form View -->
+    <record id="view_hse_action_form" model="ir.ui.view">
+        <field name="name">hse.action.form</field>
+        <field name="model">hse.action</field>
+        <field name="arch" type="xml">
+            <form string="HSE Action (CAPA)">
+                <header>
+                    <button name="action_assign" string="Assign" type="object" invisible="state != 'draft'" class="btn-primary"/>
+                    <button name="action_start" string="Start Work" type="object" invisible="state != 'assigned'" class="btn-primary"/>
+                    <button name="action_implement" string="Mark Implemented" type="object" invisible="state != 'in_progress'" class="btn-success"/>
+                    <button name="action_verify" string="Verify Effective &amp; Close" type="object" invisible="state != 'implemented'" class="btn-primary"/>
+                    <button name="action_cancel" string="Cancel Action" type="object" invisible="state in ('verified', 'cancelled')" class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,assigned,in_progress,implemented,verified"/>
+                </header>
+                <sheet>
+                    <div class="hse-x-hero" style="background: linear-gradient(135deg, #064e3b 0%, #059669 100%); border-left: 6px solid #6ee7b7; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">✅</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">CAPA Action Tracker</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Universal corrective &amp; preventive action engine</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><div class="hse-x-kpi" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; padding: 4px 12px; text-align: center; min-width: 86px;"><span class="hse-x-kpi-label" style="display: block; font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(203,213,225,0.9); font-weight: 700;">Progress %</span><field name="progress" readonly="1" style="color:#fff;font-weight:800;" widget="hse_smart_counter" /></div><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                    <div class="hse-x-meta" style="display: flex; gap: 16px; align-items: center; margin: -6px 0 10px 6px; font-size: 11px; color: #64748b; flex-wrap: wrap;"><span>🕒 Created <field name="create_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span><span>✏️ Updated <field name="write_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span></div>
+                    <div class="oe_title">
+                        <span class="text-muted"><field name="name"/></span>
+                        <h1><field name="title" placeholder="Action Title (e.g. Replace worn mechanical seal with API 682 plan 53B)"/></h1>
+                    </div>
+                    <group>
+                        <group string="Action Details">
+                            <field name="action_type"/>
+                            <field name="source_type"/>
+                            <field name="source_reference"/>
+                            <field name="incident_id" invisible="source_type != 'incident'"/>
+                            <field name="investigation_id" invisible="source_type != 'investigation'"/>
+                            <field name="priority" widget="priority"/>
+                        </group>
+                        <group string="Ownership &amp; Schedule">
+                            <field name="assigned_to"/>
+                            <field name="department_id"/>
+                            <field name="target_date"/>
+                            <field name="completion_date"/>
+                            <field name="is_overdue" widget="boolean_toggle"/>
+                            <field name="progress" widget="progressbar"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Detailed Description &amp; Implementation">
+                            <group>
+                                <field name="description" placeholder="Describe the specific action steps required to eliminate the cause..."/>
+                            </group>
+                            <group string="Implementation Evidence &amp; Completion Notes">
+                                <field name="implementation_notes" placeholder="Detail the work carried out, work orders executed, and physical modifications made..."/>
+                            </group>
+                        </page>
+                        <page string="Independent Verification &amp; Effectiveness">
+                            <group>
+                                <group>
+                                    <field name="requires_verification"/>
+                                    <field name="verifier_id"/>
+                                    <field name="verification_date"/>
+                                </group>
+                                <group>
+                                    <field name="verification_status"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="verification_notes" placeholder="Document whether the root cause has remained suppressed and zero recurrence has been observed..."/>
+                            </group>
+                        </page>
+                        <page string="Target Date Extensions">
+                            <group>
+                                <group>
+                                    <field name="original_target_date"/>
+                                    <field name="extension_approved_by"/>
+                                </group>
+                                <group>
+                                    <field name="extension_reason" placeholder="Document technical reason for schedule adjustment..."/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action Tree View -->
+    <record id="view_hse_action_tree" model="ir.ui.view">
+        <field name="name">hse.action.tree</field>
+        <field name="model">hse.action</field>
+        <field name="arch" type="xml">
+            <tree string="HSE Actions (CAPA)" decoration-danger="is_overdue and state not in ('verified', 'cancelled')" decoration-warning="state == 'implemented'" decoration-success="state == 'verified'" decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="action_type"/>
+                <field name="source_type"/>
+                <field name="assigned_to"/>
+                <field name="target_date"/>
+                <field name="progress" widget="progressbar"/>
+                <field name="priority" widget="priority"/>
+                <field name="is_overdue" column_invisible="1"/>
+                <field name="state" widget="badge" decoration-info="state == 'assigned'" decoration-primary="state == 'in_progress'" decoration-warning="state == 'implemented'" decoration-success="state == 'verified'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action Kanban View -->
+    <record id="view_hse_action_kanban" model="ir.ui.view">
+        <field name="name">hse.action.kanban</field>
+        <field name="model">hse.action</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="action_type"/>
+                <field name="priority"/>
+                <field name="target_date"/>
+                <field name="is_overdue"/>
+                <field name="progress"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click p-2 shadow-sm rounded border #{record.is_overdue.raw_value ? 'border-danger' : 'border-light'}">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="badge bg-secondary"><field name="name"/></span>
+                                <field name="priority" widget="priority"/>
+                            </div>
+                            <strong class="d-block mb-1 text-truncate"><field name="title"/></strong>
+                            <div class="text-muted small mb-2">
+                                <span class="badge bg-info text-white"><field name="action_type"/></span>
+                            </div>
+                            <div class="mb-2">
+                                <field name="progress" widget="progressbar"/>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center small text-muted">
+                                <span><field name="assigned_to"/></span>
+                                <span t-attf-class="#{record.is_overdue.raw_value ? 'text-danger font-weight-bold' : ''}">Due: <field name="target_date"/></span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Action Search View -->
+    <record id="view_hse_action_search" model="ir.ui.view">
+        <field name="name">hse.action.search</field>
+        <field name="model">hse.action</field>
+        <field name="arch" type="xml">
+            <search string="Search Actions">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="assigned_to"/>
+                <field name="department_id"/>
+                <filter name="my_actions" string="Assigned to Me" domain="[('assigned_to', '=', uid)]"/>
+                <filter name="open_actions" string="Open Actions" domain="[('state', 'in', ['draft', 'assigned', 'in_progress', 'implemented'])]"/>
+                <filter name="overdue" string="Overdue Actions" domain="[('is_overdue', '=', True)]"/>
+                <separator/>
+                <filter name="corrective" string="Corrective Actions" domain="[('action_type', '=', 'corrective')]"/>
+                <filter name="preventive" string="Preventive Actions" domain="[('action_type', '=', 'preventive')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_assignee" string="Assignee" context="{'group_by': 'assigned_to'}"/>
+                    <filter name="group_source" string="Source" context="{'group_by': 'source_type'}"/>
+                    <filter name="group_priority" string="Priority" context="{'group_by': 'priority'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hse_action" model="ir.actions.act_window">
+        <field name="name">Action Tracking (CAPA Engine)</field>
+        <field name="res_model">hse.action</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'search_default_open_actions': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Centralized Corrective &amp; Preventive Action tracking across all HSE domains.</p>
+        </field>
+    </record>
+</odoo>

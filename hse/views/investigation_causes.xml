@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Event Type Views -->
+    <record id="view_event_type_form" model="ir.ui.view">
+        <field name="name">event.type.form</field>
+        <field name="model">event.type</field>
+        <field name="arch" type="xml">
+            <form string="Event Type">
+                <sheet>
+                    <div class="hse-x-hero" style="background: linear-gradient(135deg, #0f172a 0%, #334155 100%); border-left: 6px solid #94a3b8; border-radius: 12px; padding: 9px 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🌐</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Cause Taxonomy</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Event types, immediate causes and root causes</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="event_ics_code"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_event_type_tree" model="ir.ui.view">
+        <field name="name">event.type.tree</field>
+        <field name="model">event.type</field>
+        <field name="arch" type="xml">
+            <tree string="Event Type">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="event_ics_code"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_event_type" model="ir.actions.act_window">
+        <field name="name">Event Types</field>
+        <field name="res_model">event.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Immediate Cause Views -->
+    <record id="view_immediate_cause_form" model="ir.ui.view">
+        <field name="name">immediate.cause.form</field>
+        <field name="model">immediate.cause</field>
+        <field name="arch" type="xml">
+            <form string="Immediate Cause">
+                <sheet>
+                    <div class="hse-x-hero" style="background: linear-gradient(135deg, #0f172a 0%, #334155 100%); border-left: 6px solid #94a3b8; border-radius: 12px; padding: 9px 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🌐</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Cause Taxonomy</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Event types, immediate causes and root causes</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                    <group>
+                        <field name="code"/>
+                        <field name="event_type_id" widget="many2many_tags"/>
+                        <field name="name"/>
+                        <field name="immediate_bcs_code"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_immediate_cause_tree" model="ir.ui.view">
+        <field name="name">immediate.cause.tree</field>
+        <field name="model">immediate.cause</field>
+        <field name="arch" type="xml">
+            <tree string="Immediate Cause">
+                <field name="code"/>
+                <field name="event_type_id"/>
+                <field name="name"/>
+                <field name="immediate_bcs_code"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_immediate_cause" model="ir.actions.act_window">
+        <field name="name">Immediate Causes</field>
+        <field name="res_model">immediate.cause</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Root Cause Views -->
+    <record id="view_root_cause_form" model="ir.ui.view">
+        <field name="name">root.cause.form</field>
+        <field name="model">root.cause</field>
+        <field name="arch" type="xml">
+            <form string="Root Cause">
+                <sheet>
+                    <div class="hse-x-hero" style="background: linear-gradient(135deg, #0f172a 0%, #334155 100%); border-left: 6px solid #94a3b8; border-radius: 12px; padding: 9px 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🌐</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Cause Taxonomy</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Event types, immediate causes and root causes</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                    <group>
+                        <field name="code"/>
+                        <field name="immediate_cause_id" widget="many2many_tags"/>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_root_cause_tree" model="ir.ui.view">
+        <field name="name">root.cause.tree</field>
+        <field name="model">root.cause</field>
+        <field name="arch" type="xml">
+            <tree string="Root Cause">
+                <field name="code"/>
+                <field name="immediate_cause_id"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_root_cause" model="ir.actions.act_window">
+        <field name="name">Root Causes</field>
+        <field name="res_model">root.cause</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

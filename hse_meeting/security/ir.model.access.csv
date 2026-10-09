@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+hse_meeting.access_hse_meeting,access_hse_meeting,hse_meeting.model_hse_meeting,base.group_user,1,1,1,1
+hse_meeting.access_hse_meeting_department,access_hse_meeting_department,hse_meeting.model_hse_meeting_department,base.group_user,1,1,1,1
+hse_meeting.access_hse_meeting_type,access_hse_meeting_type,hse_meeting.model_hse_meeting_type,base.group_user,1,1,1,1
+hse_meeting.access_transit_wizard,access_transit_wizard,hse_meeting.model_transit_wizard,base.group_user,1,1,1,1
+hse_meeting.access_hse_source,access_hse_source,hse_meeting.model_hse_source,base.group_user,1,1,1,1

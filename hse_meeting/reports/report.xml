@@ -1,0 +1,82 @@
+<odoo>
+  <data>
+
+    <!-- Existing HSE Meeting Report -->
+    <record id="action_hse_meeting_report" model="ir.actions.report">
+        <field name="name">Hse Meeting Report</field>
+        <field name="model">hse.meeting</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hse_meeting.report_view_hse_meeting</field>
+        <field name="report_file">hse_meeting.report_view_hse_meeting</field>
+        <field name="binding_model_id" ref="hse_meeting.model_hse_meeting"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Safety Meeting Minutes (QWeb PDF) -->
+    <template id="report_view_hse_meeting">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 11px; line-height: 1.4; color: #1e293b;">
+                        <div style="background: linear-gradient(135deg, #0f172a 0%, #0369a1 100%); color: #ffffff; padding: 14px 18px; border-radius: 8px; margin-bottom: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                                <div>
+                                    <h3 style="margin: 0; font-size: 18px; font-weight: bold; color: #ffffff;">SAFETY MEETING MINUTES</h3>
+                                    <div style="font-size: 10px; color: #bae6fd;"><t t-esc="doc.meeting_type_ids.name or 'HSE Meeting'"/></div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 14px; font-weight: bold; color: #ffffff;"><t t-esc="doc.name"/></div>
+                                    <div style="font-size: 10px; color: #e0f2fe;"><t t-esc="doc.meeting_datetime and doc.meeting_datetime.strftime('%d %b %Y %H:%M') or ''"/></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered table-sm" style="width: 100%; margin-bottom: 12px;">
+                            <tr style="background: #f1f5f9;">
+                                <th colspan="4" style="font-size: 12px;">Meeting Details</th>
+                            </tr>
+                            <tr>
+                                <td style="width: 22%; font-weight: bold; background: #f8fafc;">Topic:</td>
+                                <td colspan="3"><strong><t t-esc="doc.topic or '—'"/></strong></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; background: #f8fafc;">Department:</td>
+                                <td><t t-esc="doc.department_id.name"/></td>
+                                <td style="font-weight: bold; background: #f8fafc;">Duration (h):</td>
+                                <td><t t-esc="doc.duration"/></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; background: #f8fafc;">Total Employees:</td>
+                                <td><t t-esc="doc.total_employees"/></td>
+                                <td style="font-weight: bold; background: #f8fafc;">Present / Attended:</td>
+                                <td><strong><t t-esc="doc.present_employees"/> / <t t-esc="doc.meeting_attend_employees"/></strong>
+                                    <span t-if="doc.total_employees"> (<t t-esc="doc.percentage_total_attendees"/>%)</span></td>
+                            </tr>
+                        </table>
+
+                        <div t-if="doc.minutes_of_meeting" style="background: #f8fafc; border-left: 4px solid #0369a1; padding: 10px 14px; border-radius: 6px; margin-bottom: 12px;">
+                            <div style="font-weight: bold; margin-bottom: 4px;">Minutes of Meeting</div>
+                            <t t-esc="doc.minutes_of_meeting"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+
+    <!-- ✅ NEW Transit Report via Wizard -->
+    <record id="action_transit_report_pdf" model="ir.actions.report">
+        <field name="name">Transit Filtered Report</field>
+        <field name="model">transit.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hse_meeting.report_transit_filtered_pdf</field>
+        <field name="report_file">hse_meeting.report_transit_filtered_pdf</field>
+        <field name="binding_model_id" ref="hse_meeting.model_transit_wizard"/>
+        <field name="binding_type">report</field>
+    </record>
+
+  </data>
+</odoo>
+
+

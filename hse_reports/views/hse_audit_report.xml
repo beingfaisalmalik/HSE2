@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- HSE Audit / Inspection Report (dynamic) -->
+        <template id="report_hse_audit_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page" style="font-family: Arial, sans-serif; font-size: 11px; line-height: 1.4; color: #1e293b;">
+                            <div style="background: linear-gradient(135deg, #1e1b4b 0%, #4f46e5 100%); color: #ffffff; padding: 14px 18px; border-radius: 8px; margin-bottom: 16px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                                    <div>
+                                        <h3 style="margin: 0; font-size: 18px; font-weight: bold; color: #ffffff;">HSE AUDIT &amp; INSPECTION REPORT</h3>
+                                        <div style="font-size: 10px; color: #c7d2fe;"><t t-esc="dict(doc._fields['protocol'].selection).get(doc.protocol, doc.protocol or '')"/></div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 14px; font-weight: bold; color: #ffffff;"><t t-esc="doc.name"/></div>
+                                        <div style="font-size: 10px; color: #e0e7ff;"><t t-esc="doc.audit_date"/> → <t t-esc="doc.target_end_date"/></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table table-bordered table-sm" style="width: 100%; margin-bottom: 12px;">
+                                <tr style="background: #eef2ff;">
+                                    <th colspan="4" style="font-size: 12px;">Section 1: Audit Scope &amp; Team</th>
+                                </tr>
+                                <tr>
+                                    <td style="width: 22%; font-weight: bold; background: #f8fafc;">Title &amp; Scope:</td>
+                                    <td colspan="3"><strong><t t-esc="doc.title"/></strong></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Facility / Plant:</td>
+                                    <td><t t-esc="doc.location_id.name"/></td>
+                                    <td style="width: 18%; font-weight: bold; background: #f8fafc;">Lead Auditor:</td>
+                                    <td><t t-esc="doc.lead_auditor_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Audit Team:</td>
+                                    <td colspan="3"><t t-esc="doc.audit_team"/></td>
+                                </tr>
+                            </table>
+
+                            <table class="table table-sm" style="width: 100%; margin-bottom: 12px; border-collapse: collapse;">
+                                <tr>
+                                    <td t-foreach="['total_checks','compliant_count','minor_nc_count','major_nc_count','critical_deficiency_count']" t-as="k" style="text-align: center; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px;">
+                                        <div style="font-size: 18px; font-weight: 800; color: #1e1b4b;"><t t-esc="doc[k]"/></div>
+                                        <div style="font-size: 8.5px; text-transform: uppercase; color: #64748b;"><t t-esc="dict(doc._fields[k]._description_labels if hasattr(doc._fields[k], '_description_labels') else {}).get('','') if False else k.replace('_', ' ')"/></div>
+                                    </td>
+                                    <td style="text-align: center; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 6px; padding: 8px;">
+                                        <div style="font-size: 18px; font-weight: 800; color: #047857;"><t t-esc="doc.compliance_score_percent"/>%</div>
+                                        <div style="font-size: 8.5px; text-transform: uppercase; color: #065f46;">Compliance Score</div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table class="table table-bordered table-sm" style="width: 100%; margin-bottom: 12px;">
+                                <tr style="background: #eef2ff;">
+                                    <th colspan="3" style="font-size: 12px;">Section 2: Findings &amp; Objective Evidence</th>
+                                </tr>
+                                <tr style="background: #f8fafc; font-weight: bold;">
+                                    <td style="width: 8%;">Seq</td>
+                                    <td style="width: 40%;">Requirement / Clause</td>
+                                    <td>Finding &amp; Evidence</td>
+                                </tr>
+                                <tr t-foreach="doc.checklist_ids" t-as="line">
+                                    <td><t t-esc="line.sequence"/></td>
+                                    <td>
+                                        <strong><t t-esc="line.requirement_clause"/></strong>
+                                        <div style="font-size: 9px; color: #64748b;"><t t-esc="line.verification_criteria"/></div>
+                                    </td>
+                                    <td>
+                                        <span t-att-style="'display:inline-block; padding:1px 8px; border-radius:999px; font-size:9px; font-weight:bold; ' + ('background:#fef2f2; color:#b91c1c;' if line.finding_type in ['critical_deficiency','major_nc'] else 'background:#f0fdf4; color:#15803d;' if line.finding_type == 'compliant' else 'background:#fffbeb; color:#b45309;')">
+                                            <t t-esc="dict(line._fields['finding_type'].selection).get(line.finding_type, line.finding_type or 'Not Assessed')"/>
+                                        </span>
+                                        <div style="font-size: 9.5px; color: #334155;"><t t-esc="line.evidence_notes or ''"/></div>
+                                    </td>
+                                </tr>
+                                <tr t-if="not doc.checklist_ids">
+                                    <td colspan="3" style="text-align:center; color:#94a3b8;">No checklist findings recorded.</td>
+                                </tr>
+                            </table>
+
+                            <div t-if="doc.audit_summary" style="background: #f8fafc; border-left: 4px solid #4f46e5; padding: 10px 14px; border-radius: 6px;">
+                                <div style="font-weight: bold; margin-bottom: 4px;">Executive Audit Summary</div>
+                                <t t-esc="doc.audit_summary"/>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <record id="action_report_hse_audit" model="ir.actions.report">
+            <field name="name">HSE Audit Report</field>
+            <field name="model">hse.audit</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">hse_reports.report_hse_audit_template</field>
+            <field name="report_file">hse_reports.report_hse_audit_template</field>
+            <field name="binding_model_id" ref="hse.model_hse_audit"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

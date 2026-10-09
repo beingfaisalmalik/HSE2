@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Action First -->
+        <record id="action_hse_pse_metric" model="ir.actions.act_window">
+            <field name="name">API RP 754 Metrics &amp; Performance</field>
+            <field name="res_model">hse.pse.metric</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Metric Tree View -->
+        <record id="view_hse_pse_metric_tree" model="ir.ui.view">
+            <field name="name">hse.pse.metric.tree</field>
+            <field name="model">hse.pse.metric</field>
+            <field name="arch" type="xml">
+                <tree string="API RP 754 Process Safety Accounting"
+                      decoration-success="tier1_events_count == 0"
+                      decoration-danger="tier1_events_count &gt; 0"
+                      decoration-warning="tier2_events_count &gt; 0">
+                    <field name="name" bold="1"/>
+                    <field name="year"/>
+                    <field name="period"/>
+                    <field name="location_id"/>
+                    <field name="total_site_exposure_hours" string="Exposure Hours"/>
+                    <field name="tier1_events_count" string="PSE Tier 1"/>
+                    <field name="tier2_events_count" string="PSE Tier 2"/>
+                    <field name="pse_tier1_rate" string="Tier 1 Rate"/>
+                    <field name="pse_tier2_rate" string="Tier 2 Rate"/>
+                    <field name="process_safety_index" string="Health Index (0-100)" bold="1"/>
+                    <field name="state" widget="badge" decoration-success="state == 'published'"
+                           decoration-info="state == 'validated'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Metric Form View -->
+        <record id="view_hse_pse_metric_form" model="ir.ui.view">
+            <field name="name">hse.pse.metric.form</field>
+            <field name="model">hse.pse.metric</field>
+            <field name="arch" type="xml">
+                <form string="API RP 754 Process Safety Performance Metrics">
+                    <header>
+                        <button name="action_validate" string="Validate Metrics (PSM Lead)" type="object"
+                                class="btn-primary" invisible="state != 'draft'"/>
+                        <button name="action_publish" string="Publish Annual PSM Report" type="object"
+                                class="btn-success" invisible="state != 'validated'"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,validated,published"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #2e1065 0%, #7c3aed 100%); border-left: 6px solid #c4b5fd; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">📊</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Process Safety Metrics</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">API RP 754 leading/lagging rates &amp; health index</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_title">
+                            <label for="name" string="Performance Ledger #"/>
+                            <h1><field name="name"/></h1>
+                            <h3>Year <field name="year"/> — <field name="period"/></h3>
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-3">
+                                <div class="card p-3 bg-light border-0">
+                                    <span class="text-muted small">Process Safety Health Index</span>
+                                    <h2 class="mb-0 text-primary font-weight-bold"><field name="process_safety_index" readonly="1"/> / 100</h2>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card p-3 bg-light border-0">
+                                    <span class="text-muted small">Tier 1 Event Rate</span>
+                                    <h2 class="mb-0 text-danger font-weight-bold"><field name="pse_tier1_rate" readonly="1"/></h2>
+                                    <span class="text-muted small">Events per 200,000 hrs</span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card p-3 bg-light border-0">
+                                    <span class="text-muted small">Tier 2 Event Rate</span>
+                                    <h2 class="mb-0 text-warning font-weight-bold"><field name="pse_tier2_rate" readonly="1"/></h2>
+                                    <span class="text-muted small">Events per 200,000 hrs</span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card p-3 bg-light border-0">
+                                    <span class="text-muted small">Total Site Exposure Hours</span>
+                                    <h2 class="mb-0 text-dark font-weight-bold"><field name="total_site_exposure_hours" readonly="1"/></h2>
+                                </div>
+                            </div>
+                        </div>
+
+                        <group>
+                            <group string="Exposure &amp; Facility Context">
+                                <field name="location_id"/>
+                                <field name="total_employee_hours"/>
+                                <field name="total_contractor_hours"/>
+                            </group>
+                            <group string="Tier 1 &amp; Tier 2 Lagging Events">
+                                <field name="tier1_events_count"/>
+                                <field name="tier1_severity_score"/>
+                                <field name="tier2_events_count"/>
+                                <field name="tier2_severity_score"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Tier 3 &amp; 4 Leading Indicators" name="leading">
+                                <group>
+                                    <group string="Near-Misses &amp; Safety Challenges (Tier 3)">
+                                        <field name="challenges_safety_systems_count"/>
+                                        <field name="safe_operating_limit_excursions"/>
+                                        <field name="primary_containment_inspection_deficiencies"/>
+                                    </group>
+                                    <group string="Operating Discipline &amp; Health (Tier 4)">
+                                        <field name="psm_training_completion_pct"/>
+                                        <field name="moc_action_closure_pct"/>
+                                        <field name="pha_action_closure_pct"/>
+                                        <field name="safety_critical_maintenance_compliance_pct"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

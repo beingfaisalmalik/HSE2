@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Actions First -->
+        <record id="action_hse_ldar_component" model="ir.actions.act_window">
+            <field name="name">LDAR Fugitive Components (EPA Method 21)</field>
+            <field name="res_model">hse.ldar.component</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_hse_ldar_reading" model="ir.actions.act_window">
+            <field name="name">LDAR Method 21 Inspection Readings</field>
+            <field name="res_model">hse.ldar.reading</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Component Tree View -->
+        <record id="view_hse_ldar_component_tree" model="ir.ui.view">
+            <field name="name">hse.ldar.component.tree</field>
+            <field name="model">hse.ldar.component</field>
+            <field name="arch" type="xml">
+                <tree string="LDAR Fugitive Components" decoration-danger="is_leaking" decoration-success="not is_leaking">
+                    <field name="tag_number" bold="1"/>
+                    <field name="location_id"/>
+                    <field name="component_type"/>
+                    <field name="service_stream"/>
+                    <field name="leak_threshold_ppm"/>
+                    <field name="monitoring_frequency"/>
+                    <field name="is_leaking" widget="badge" decoration-danger="is_leaking" decoration-success="not is_leaking"/>
+                    <field name="reading_count"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Component Form View -->
+        <record id="view_hse_ldar_component_form" model="ir.ui.view">
+            <field name="name">hse.ldar.component.form</field>
+            <field name="model">hse.ldar.component</field>
+            <field name="arch" type="xml">
+                <form string="LDAR Fugitive Component Tag">
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #064e3b 0%, #059669 100%); border-left: 6px solid #6ee7b7; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">💨</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">LDAR Fugitive Emissions</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">EPA Method 21 monitoring &amp; repair clocks</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                        <div class="oe_title">
+                            <label for="tag_number" string="Component Tag #"/>
+                            <h1><field name="tag_number" placeholder="e.g. V-102-BLCK-01"/></h1>
+                        </div>
+
+                        <group>
+                            <group string="Component Taxonomy">
+                                <field name="location_id"/>
+                                <field name="component_type"/>
+                                <field name="service_stream"/>
+                            </group>
+                            <group string="Monitoring &amp; Thresholds">
+                                <field name="leak_threshold_ppm"/>
+                                <field name="monitoring_frequency"/>
+                                <field name="is_leaking" widget="boolean_toggle"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Method 21 Inspection History" name="readings">
+                                <field name="reading_ids">
+                                    <tree editable="bottom" decoration-danger="is_leak" decoration-success="not is_leak">
+                                        <field name="inspection_date"/>
+                                        <field name="inspector_name"/>
+                                        <field name="background_ppm"/>
+                                        <field name="screening_value_ppm"/>
+                                        <field name="net_leak_ppm"/>
+                                        <field name="is_leak" widget="badge"/>
+                                        <field name="first_attempt_date"/>
+                                        <field name="final_repair_date"/>
+                                        <field name="delay_of_repair_dor" widget="boolean_toggle"/>
+                                        <field name="state" widget="badge"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

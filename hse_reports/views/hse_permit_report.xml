@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Permit to Work PDF QWeb Template -->
+        <template id="report_hse_permit_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page" style="font-family: Arial, sans-serif; font-size: 11px; line-height: 1.4; color: #1e293b;">
+                            <!-- Banner -->
+                            <div style="background: #0f172a; color: #ffffff; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <h3 style="margin: 0; font-size: 18px; font-weight: bold; color: #38bdf8;">CONTROL OF WORK - PERMIT TO WORK CERTIFICATE</h3>
+                                        <div style="font-size: 10px; color: #94a3b8;">High-Risk Operational Safety Authorization &amp; Life Saving Rules Enforcement</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 14px; font-weight: bold; color: #f8fafc;"><t t-esc="doc.name"/></div>
+                                        <div style="font-size: 10px; color: #38bdf8; font-weight: bold; text-transform: uppercase;"><t t-esc="doc.state"/></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 1. Task Scope & Validity -->
+                            <table class="table table-bordered table-sm" style="width: 100%; margin-bottom: 12px;">
+                                <tr style="background: #f1f5f9;">
+                                    <th colspan="4" style="font-size: 12px; font-weight: bold; color: #0f172a;">Section 1: Work Task Scope &amp; Operating Boundary</th>
+                                </tr>
+                                <tr>
+                                    <td style="width: 25%; font-weight: bold; background: #f8fafc;">Task Title:</td>
+                                    <td colspan="3"><strong style="font-size: 12px; color: #0369a1;"><t t-esc="doc.title"/></strong></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Permit Category:</td>
+                                    <td><span style="background: #e0f2fe; padding: 2px 6px; border-radius: 4px; font-weight: bold;"><t t-esc="doc.permit_type"/></span></td>
+                                    <td style="font-weight: bold; background: #f8fafc;">Facility Location:</td>
+                                    <td><t t-esc="doc.location_id.name"/> (<t t-esc="doc.location_id.code"/>)</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Target Asset / Tag:</td>
+                                    <td><t t-esc="doc.asset_id.name or 'Facility Piping / Structural'"/></td>
+                                    <td style="font-weight: bold; background: #f8fafc;">Work Order Ref:</td>
+                                    <td><t t-esc="doc.work_order_ref or 'N/A'"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Scheduled Start:</td>
+                                    <td><t t-esc="doc.start_datetime"/></td>
+                                    <td style="font-weight: bold; background: #f8fafc;">Valid Until:</td>
+                                    <td><strong><t t-esc="doc.end_datetime"/></strong> (<t t-esc="doc.duration_hours"/> hrs)</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; background: #f8fafc;">Performing Authority:</td>
+                                    <td><t t-esc="doc.requester_id.name"/></td>
+                                    <td style="font-weight: bold; background: #f8fafc;">Contractor / Party:</td>
+                                    <td><t t-esc="doc.contractor_name or 'Internal Personnel'"/> (<t t-esc="doc.workers_count"/> workers)</td>
+                                </tr>
+                            </table>
+
+                            <!-- 2. Atmospheric Multi-Gas Testing Results -->
+                            <table class="table table-bordered table-sm" style="width: 100%; margin-bottom: 12px;">
+                                <tr style="background: #f1f5f9;">
+                                    <th colspan="7" style="font-size: 12px; font-weight: bold; color: #0f172a;">
+                                        Section 2: Authorized Gas Testing (AGT) Multi-Gas Logs
+                                    </th>
+                                </tr>
+                                <tr style="background: #f8fafc; font-weight: bold; text-align: center;">
+                                    <td>Timestamp</td>
+                                    <td>Authorized Tester</td>
+                                    <td>Oxygen (19.5 - 23.5%)</td>
+                                    <td>LEL Flammables (&lt; 5%)</td>
+                                    <td>Toxic H₂S (&lt; 5 ppm)</td>
+                                    <td>Toxic CO (&lt; 25 ppm)</td>
+                                    <td>Atmosphere Safe?</td>
+                                </tr>
+                                <t t-if="doc.gas_test_ids">
+                                    <t t-foreach="doc.gas_test_ids" t-as="gt">
+                                        <tr style="text-align: center;">
+                                            <td><t t-esc="gt.test_time"/></td>
+                                            <td><t t-esc="gt.tester_name"/></td>
+                                            <td><strong style="color: #059669;"><t t-esc="gt.oxygen_percent"/>%</strong></td>
+                                            <td><strong style="color: #059669;"><t t-esc="gt.lel_percent"/>%</strong></td>
+                                            <td><t t-esc="gt.h2s_ppm"/> ppm</td>
+                                            <td><t t-esc="gt.co_ppm"/> ppm</td>
+                                            <td>
+                                                <t t-if="gt.is_safe_to_work">
+                                                    <span style="color: #059669; font-weight: bold;">✓ VERIFIED SAFE</span>
+                                                </t>
+                                                <t t-else="">
+                                                    <span style="color: #dc2626; font-weight: bold;">✗ UNSAFE</span>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                    <tr>
+                                        <td colspan="7" style="text-align: center; color: #94a3b8; font-style: italic;">
+                                            No atmospheric gas tests registered. Continuous test required if Hot Work or Confined Space.
+                                        </td>
+                                    </tr>
+                                </t>
+                            </table>
+
+                            <!-- 3. SIMOPS & Hazard Controls Checklist -->
+                            <div class="row" style="margin-bottom: 12px;">
+                                <div class="col-6">
+                                    <table class="table table-bordered table-sm" style="width: 100%;">
+                                        <tr style="background: #f1f5f9;">
+                                            <th colspan="2" style="font-weight: bold; color: #0f172a;">Section 3: Mandatory Controls &amp; PPE</th>
+                                        </tr>
+                                        <tr>
+                                            <td>Continuous Gas Testing:</td>
+                                            <td><t t-if="doc.req_gas_test"><strong>[X] Mandatory</strong></t><t t-else="">[ ] N/A</t></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Dedicated Fire Watch Stationed:</td>
+                                            <td><t t-if="doc.req_fire_watch"><strong>[X] Stationed</strong></t><t t-else="">[ ] N/A</t></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Confined Space Entry Hole Watch:</td>
+                                            <td><t t-if="doc.req_hole_watch"><strong>[X] Stationed</strong></t><t t-else="">[ ] N/A</t></td>
+                                        </tr>
+                                        <tr>
+                                            <td>LOTO Energy Isolation Applied:</td>
+                                            <td><t t-if="doc.req_lockout"><strong>[X] Verified</strong></t><t t-else="">[ ] N/A</t></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Breathing Apparatus (SCBA):</td>
+                                            <td><t t-if="doc.req_breathing_apparatus"><strong>[X] Mandatory</strong></t><t t-else="">[ ] N/A</t></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-6">
+                                    <table class="table table-bordered table-sm" style="width: 100%;">
+                                        <tr style="background: #f1f5f9;">
+                                            <th colspan="2" style="font-weight: bold; color: #0f172a;">Section 4: SIMOPS &amp; Associated Schemes</th>
+                                        </tr>
+                                        <tr>
+                                            <td>SIMOPS Collision Flag:</td>
+                                            <td>
+                                                <t t-if="doc.has_simops_conflict">
+                                                    <span style="color: #dc2626; font-weight: bold;">[!] SIMOPS DETECTED (<t t-esc="doc.simops_risk_level"/>)</span>
+                                                </t>
+                                                <t t-else="">
+                                                    <span style="color: #059669;">[✓] Zero Simultaneous Conflict</span>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>SIMOPS Coordinator:</td>
+                                            <td><t t-esc="doc.simops_authorized_by.name or 'N/A'"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Linked JSA / Risk Assessment:</td>
+                                            <td><t t-esc="doc.risk_assessment_id.name or 'N/A'"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Linked LOTO Isolation Plan:</td>
+                                            <td><t t-esc="doc.loto_plan_id.name or 'N/A'"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>SIMOPS Mitigations:</td>
+                                            <td><t t-esc="doc.simops_mitigation or 'Standard separation maintained.'"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- 4. Formal Authorizations & Handback -->
+                            <table class="table table-bordered table-sm" style="width: 100%; margin-top: 14px;">
+                                <tr style="background: #f1f5f9;">
+                                    <th colspan="3" style="font-size: 12px; font-weight: bold; color: #0f172a;">Section 5: Multi-Discipline Control of Work Authorization Signatures</th>
+                                </tr>
+                                <tr style="height: 60px;">
+                                    <td style="width: 33.3%;">
+                                        <div style="font-weight: bold; color: #475569;">1. Performing Authority:</div>
+                                        <div style="margin-top: 4px;"><t t-esc="doc.requester_id.name"/></div>
+                                        <div style="color: #94a3b8; font-size: 9px;">Signed: <t t-esc="doc.pa_signed_date or 'Pending'"/></div>
+                                    </td>
+                                    <td style="width: 33.3%;">
+                                        <div style="font-weight: bold; color: #475569;">2. Area Authority (Issuer):</div>
+                                        <div style="margin-top: 4px;"><t t-esc="doc.issuer_id.name or 'Pending Review'"/></div>
+                                        <div style="color: #94a3b8; font-size: 9px;">Signed: <t t-esc="doc.issuer_signed_date or 'Pending'"/></div>
+                                    </td>
+                                    <td style="width: 33.3%;">
+                                        <div style="font-weight: bold; color: #475569;">3. HSE Authority:</div>
+                                        <div style="margin-top: 4px;"><t t-esc="doc.safety_officer_id.name or 'Pending Approval'"/></div>
+                                        <div style="color: #94a3b8; font-size: 9px;">Signed: <t t-esc="doc.safety_signed_date or 'Pending'"/></div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <div style="margin-top: 10px; padding: 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 9px; color: #64748b;">
+                                <strong>STOP WORK AUTHORITY:</strong> Any person who perceives an unsafe condition, unexpected gas alarm, change in weather, or concurrent SIMOPS risk has the mandatory obligation and executive authority to halt work immediately and notify the Control Room.
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Permit Report Action -->
+        <record id="action_report_hse_permit" model="ir.actions.report">
+            <field name="name">Permit to Work Safe Work Certificate</field>
+            <field name="model">hse.permit</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">hse_reports.report_hse_permit_template</field>
+            <field name="report_file">hse_reports.report_hse_permit_template</field>
+            <field name="binding_model_id" ref="hse.model_hse_permit"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

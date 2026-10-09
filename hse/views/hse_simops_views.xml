@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- SIMOPS Matrix Tree View -->
+        <record id="view_hse_simops_matrix_tree" model="ir.ui.view">
+            <field name="name">hse.simops.matrix.tree</field>
+            <field name="model">hse.simops.matrix</field>
+            <field name="arch" type="xml">
+                <tree string="SIMOPS Permitted Activity Matrix"
+                      decoration-danger="compatibility == 'prohibited'"
+                      decoration-warning="compatibility == 'restricted'"
+                      decoration-info="compatibility == 'caution'"
+                      decoration-success="compatibility == 'compatible'">
+                    <field name="name"/>
+                    <field name="activity_type_a"/>
+                    <field name="activity_type_b"/>
+                    <field name="compatibility" widget="badge"
+                           decoration-danger="compatibility == 'prohibited'"
+                           decoration-warning="compatibility == 'restricted'"
+                           decoration-info="compatibility == 'caution'"
+                           decoration-success="compatibility == 'compatible'"/>
+                    <field name="min_separation_distance_m"/>
+                    <field name="mitigation_required"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- SIMOPS Matrix Form View -->
+        <record id="view_hse_simops_matrix_form" model="ir.ui.view">
+            <field name="name">hse.simops.matrix.form</field>
+            <field name="model">hse.simops.matrix</field>
+            <field name="arch" type="xml">
+                <form string="SIMOPS Activity Interaction Rule">
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #78350f 0%, #d97706 100%); border-left: 6px solid #fcd34d; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🎯</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">SIMOPS Radar &amp; Rules</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Spatial collision detection &amp; activity compatibility</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                        <group>
+                            <group string="Activity Interaction Pair">
+                                <field name="activity_type_a"/>
+                                <field name="activity_type_b"/>
+                            </group>
+                            <group string="Safety Barrier &amp; Clearance Rule">
+                                <field name="compatibility"/>
+                                <field name="min_separation_distance_m"/>
+                            </group>
+                        </group>
+                        <group string="Mandatory Risk Mitigation Requirements">
+                            <field name="mitigation_required" placeholder="Mandatory blast shielding, fire watch, continuous gas monitoring..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- SIMOPS Radar Plot Tree View -->
+        <record id="view_hse_simops_radar_plot_tree" model="ir.ui.view">
+            <field name="name">hse.simops.radar.plot.tree</field>
+            <field name="model">hse.simops.radar.plot</field>
+            <field name="arch" type="xml">
+                <tree string="Active Spatial Operations &amp; Collision Radar"
+                      decoration-danger="has_conflict" decoration-success="not has_conflict and active"
+                      decoration-muted="not active">
+                    <field name="name" bold="1"/>
+                    <field name="location_id"/>
+                    <field name="grid_zone"/>
+                    <field name="source_type" widget="badge"/>
+                    <field name="coord_x"/>
+                    <field name="coord_y"/>
+                    <field name="hazard_radius_m"/>
+                    <field name="active" widget="boolean_toggle"/>
+                    <field name="has_conflict" widget="badge" decoration-danger="has_conflict" decoration-success="not has_conflict"/>
+                    <field name="conflict_count"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- SIMOPS Radar Plot Form View -->
+        <record id="view_hse_simops_radar_plot_form" model="ir.ui.view">
+            <field name="name">hse.simops.radar.plot.form</field>
+            <field name="model">hse.simops.radar.plot</field>
+            <field name="arch" type="xml">
+                <form string="Spatial Operation Plot &amp; SIMOPS Radar">
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #78350f 0%, #d97706 100%); border-left: 6px solid #fcd34d; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🎯</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">SIMOPS Radar &amp; Rules</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Spatial collision detection &amp; activity compatibility</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                        <field name="has_conflict" invisible="1"/>
+                        <div class="oe_title">
+                            <label for="name" string="Operation Identifier"/>
+                            <h1><field name="name" placeholder="e.g. Unit-100 Crude Preheat Welder Tent"/></h1>
+                        </div>
+
+                        <div class="alert alert-danger d-flex align-items-center mb-3" role="alert"
+                             invisible="not has_conflict">
+                            <i class="fa fa-crosshairs fa-2x me-3"/>
+                            <div>
+                                <h5 class="alert-heading mb-1 font-weight-bold">
+                                    SPATIAL COLLISION DETECTED (<field name="conflict_count" readonly="1"/> Conflicting Operations)
+                                </h5>
+                                <field name="conflict_summary" readonly="1"/>
+                            </div>
+                        </div>
+
+                        <group>
+                            <group string="Spatial Plant Coordinates (Meters)">
+                                <field name="location_id"/>
+                                <field name="grid_zone"/>
+                                <field name="coord_x"/>
+                                <field name="coord_y"/>
+                                <field name="hazard_radius_m"/>
+                            </group>
+                            <group string="Operational Context">
+                                <field name="source_type"/>
+                                <field name="permit_id"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Actions -->
+        <record id="action_hse_simops_radar_plot" model="ir.actions.act_window">
+            <field name="name">SIMOPS Spatial Collision Radar</field>
+            <field name="res_model">hse.simops.radar.plot</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_hse_simops_matrix" model="ir.actions.act_window">
+            <field name="name">SIMOPS Activity Rules Matrix</field>
+            <field name="res_model">hse.simops.matrix</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

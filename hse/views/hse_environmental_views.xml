@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- ================================================================= -->
+        <!-- 1. Air Emissions & Greenhouse Gas (GHG) Views                    -->
+        <!-- ================================================================= -->
+        <record id="view_hse_env_air_emission_tree" model="ir.ui.view">
+            <field name="name">hse.env.air.emission.tree</field>
+            <field name="model">hse.env.air.emission</field>
+            <field name="arch" type="xml">
+                <tree string="Air Emissions &amp; GHG Inventory" decoration-danger="permit_limit_exceeded == True">
+                    <field name="name"/>
+                    <field name="reporting_date"/>
+                    <field name="location_id"/>
+                    <field name="emission_point"/>
+                    <field name="scope"/>
+                    <field name="source_type"/>
+                    <field name="fuel_consumed"/>
+                    <field name="fuel_unit"/>
+                    <field name="co2e_tonnes"/>
+                    <field name="permit_limit_exceeded" widget="boolean_toggle"/>
+                    <field name="state" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hse_env_air_emission_form" model="ir.ui.view">
+            <field name="name">hse.env.air.emission.form</field>
+            <field name="model">hse.env.air.emission</field>
+            <field name="arch" type="xml">
+                <form string="Air Emission &amp; GHG Source Record">
+                    <header>
+                        <button name="action_verify" string="Verify Emissions" type="object" invisible="state != 'draft'" class="btn-primary"/>
+                        <button name="action_report" string="Mark Reported" type="object" invisible="state != 'verified'" class="btn-success"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,verified,reported"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #064e3b 0%, #059669 100%); border-left: 6px solid #6ee7b7; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🌿</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Environmental Compliance</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Air, water, waste &amp; spill — full media monitoring</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">Air Emission Log Ref</span>
+                            <h1><field name="name" readonly="1"/></h1>
+                            <h3><field name="emission_point" placeholder="e.g. Flare FL-101 / Crude Heater F-101"/></h3>
+                        </div>
+                        <group>
+                            <group string="Source &amp; Scope">
+                                <field name="location_id"/>
+                                <field name="reporting_date"/>
+                                <field name="scope"/>
+                                <field name="source_type"/>
+                            </group>
+                            <group string="Activity &amp; Fuel Data">
+                                <field name="fuel_type"/>
+                                <field name="fuel_consumed"/>
+                                <field name="fuel_unit"/>
+                                <field name="permit_limit_exceeded"/>
+                            </group>
+                        </group>
+                        <group string="Greenhouse Gas Calculations (Metric Tonnes)">
+                            <group>
+                                <field name="co2_tonnes" readonly="1"/>
+                                <field name="ch4_tonnes" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="n2o_tonnes" readonly="1"/>
+                                <field name="co2e_tonnes" readonly="1" style="font-weight: bold; color: #047857;"/>
+                            </group>
+                        </group>
+                        <group string="Criteria Pollutants (kg)">
+                            <group>
+                                <field name="nox_kg"/>
+                                <field name="sox_kg"/>
+                            </group>
+                            <group>
+                                <field name="voc_kg"/>
+                                <field name="pm10_kg"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hse_env_air_emission" model="ir.actions.act_window">
+            <field name="name">Air Emissions &amp; GHG Protocol</field>
+            <field name="res_model">hse.env.air.emission</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- ================================================================= -->
+        <!-- 2. Wastewater & Effluent Quality Monitoring Views                -->
+        <!-- ================================================================= -->
+        <record id="view_hse_env_water_monitoring_tree" model="ir.ui.view">
+            <field name="name">hse.env.water.monitoring.tree</field>
+            <field name="model">hse.env.water.monitoring</field>
+            <field name="arch" type="xml">
+                <tree string="Wastewater Monitoring" decoration-danger="is_compliant == False" decoration-success="is_compliant == True">
+                    <field name="name"/>
+                    <field name="sample_datetime"/>
+                    <field name="location_id"/>
+                    <field name="outfall_number"/>
+                    <field name="ph_level"/>
+                    <field name="bod_mg_l"/>
+                    <field name="cod_mg_l"/>
+                    <field name="tss_mg_l"/>
+                    <field name="oil_grease_mg_l"/>
+                    <field name="is_compliant" widget="badge" decoration-danger="is_compliant == False" decoration-success="is_compliant == True"/>
+                    <field name="state" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hse_env_water_monitoring_form" model="ir.ui.view">
+            <field name="name">hse.env.water.monitoring.form</field>
+            <field name="model">hse.env.water.monitoring</field>
+            <field name="arch" type="xml">
+                <form string="Effluent Quality Monitoring Sample">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,analyzed,compliant,exceedance"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #064e3b 0%, #059669 100%); border-left: 6px solid #6ee7b7; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🌿</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Environmental Compliance</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Air, water, waste &amp; spill — full media monitoring</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">Wastewater Sample Ref</span>
+                            <h1><field name="name" readonly="1"/></h1>
+                            <h3><field name="outfall_number" placeholder="e.g. Outfall-001 Stormwater Discharge Basin"/></h3>
+                        </div>
+                        <group>
+                            <group string="Sample Context">
+                                <field name="location_id"/>
+                                <field name="sample_datetime"/>
+                                <field name="sampled_by"/>
+                                <field name="lab_reference"/>
+                            </group>
+                            <group string="Compliance Outcome">
+                                <field name="is_compliant" readonly="1" widget="badge" decoration-danger="is_compliant == False" decoration-success="is_compliant == True"/>
+                                <field name="exceedance_parameters" readonly="1" invisible="is_compliant"/>
+                                <field name="flow_rate_m3_day"/>
+                                <field name="temperature_c"/>
+                            </group>
+                        </group>
+                        <group string="Analytical Water Chemistry">
+                            <group>
+                                <field name="ph_level"/>
+                                <field name="bod_mg_l"/>
+                                <field name="cod_mg_l"/>
+                            </group>
+                            <group>
+                                <field name="tss_mg_l"/>
+                                <field name="oil_grease_mg_l"/>
+                                <field name="ammonia_n_mg_l"/>
+                                <field name="heavy_metals_ppm"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hse_env_water_monitoring" model="ir.actions.act_window">
+            <field name="name">Wastewater &amp; Outfall Monitoring</field>
+            <field name="res_model">hse.env.water.monitoring</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- ================================================================= -->
+        <!-- 3. Hazardous Waste Manifest Views (EPA RCRA)                      -->
+        <!-- ================================================================= -->
+        <record id="view_hse_env_waste_manifest_tree" model="ir.ui.view">
+            <field name="name">hse.env.waste.manifest.tree</field>
+            <field name="model">hse.env.waste.manifest</field>
+            <field name="arch" type="xml">
+                <tree string="Hazardous Waste Manifests" decoration-danger="storage_days_remaining &lt;= 15 and state == 'storage'" decoration-warning="storage_days_remaining &lt;= 30 and state == 'storage'" decoration-success="state == 'destroyed'">
+                    <field name="name"/>
+                    <field name="location_id"/>
+                    <field name="waste_type"/>
+                    <field name="waste_description"/>
+                    <field name="epa_waste_codes"/>
+                    <field name="total_quantity"/>
+                    <field name="unit_of_measure"/>
+                    <field name="storage_days_remaining"/>
+                    <field name="transporter_company"/>
+                    <field name="tsdf_facility_name"/>
+                    <field name="certificate_of_disposal_received" widget="boolean_toggle"/>
+                    <field name="state" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hse_env_waste_manifest_form" model="ir.ui.view">
+            <field name="name">hse.env.waste.manifest.form</field>
+            <field name="model">hse.env.waste.manifest</field>
+            <field name="arch" type="xml">
+                <form string="Hazardous Waste Manifest (Cradle-to-Grave)">
+                    <header>
+                        <button name="action_ship" string="Ship Manifest (In Transit)" type="object" invisible="state != 'storage'" class="btn-primary"/>
+                        <button name="action_tsdf_accept" string="Accept at TSDF" type="object" invisible="state != 'in_transit'" class="btn-secondary"/>
+                        <button name="action_certify_destruction" string="Certify Final Destruction" type="object" invisible="state != 'accepted'" class="btn-success"/>
+                        <field name="state" widget="statusbar" statusbar_visible="storage,manifested,in_transit,accepted,destroyed"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #064e3b 0%, #059669 100%); border-left: 6px solid #6ee7b7; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🌿</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Environmental Compliance</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Air, water, waste &amp; spill — full media monitoring</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">Uniform Hazardous Waste Manifest #</span>
+                            <h1><field name="name" placeholder="e.g. MAN-2026-0881"/></h1>
+                            <h3><field name="waste_description" placeholder="e.g. RQ, Waste Flammable Liquids, n.o.s. (Spent Hexane/Toluene), 3, UN1993, PG II"/></h3>
+                        </div>
+                        <group>
+                            <group string="Generator &amp; Waste Characteristics">
+                                <field name="location_id"/>
+                                <field name="generator_epa_id"/>
+                                <field name="waste_type"/>
+                                <field name="epa_waste_codes"/>
+                                <field name="container_type"/>
+                                <field name="container_count"/>
+                                <field name="total_quantity"/>
+                                <field name="unit_of_measure"/>
+                            </group>
+                            <group string="90-Day Legal Storage Clock">
+                                <field name="accumulation_start_date"/>
+                                <field name="storage_limit_deadline" readonly="1"/>
+                                <field name="storage_days_remaining" readonly="1" widget="badge" decoration-danger="storage_days_remaining &lt;= 15" decoration-warning="storage_days_remaining &lt;= 30" decoration-success="storage_days_remaining &gt; 30"/>
+                            </group>
+                        </group>
+                        <group string="Chain of Custody: Transporter &amp; TSDF Disposal Facility">
+                            <group string="Licensed Transporter">
+                                <field name="transporter_company"/>
+                                <field name="transporter_epa_id"/>
+                                <field name="shipment_date"/>
+                            </group>
+                            <group string="TSDF Facility &amp; Destruction Certificate">
+                                <field name="tsdf_facility_name"/>
+                                <field name="tsdf_epa_id"/>
+                                <field name="management_method"/>
+                                <field name="certificate_of_disposal_received"/>
+                                <field name="certificate_date" invisible="not certificate_of_disposal_received"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hse_env_waste_manifest" model="ir.actions.act_window">
+            <field name="name">Hazardous Waste Manifests (RCRA)</field>
+            <field name="res_model">hse.env.waste.manifest</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- ================================================================= -->
+        <!-- 4. Chemical Spill & Environmental Remediation Views              -->
+        <!-- ================================================================= -->
+        <record id="view_hse_env_spill_tree" model="ir.ui.view">
+            <field name="name">hse.env.spill.tree</field>
+            <field name="model">hse.env.spill</field>
+            <field name="arch" type="xml">
+                <tree string="Chemical Spills" decoration-danger="is_reportable == True">
+                    <field name="name"/>
+                    <field name="title"/>
+                    <field name="location_id"/>
+                    <field name="spill_datetime"/>
+                    <field name="substance_name"/>
+                    <field name="volume_released"/>
+                    <field name="volume_recovered"/>
+                    <field name="unit_of_measure"/>
+                    <field name="recovery_percentage"/>
+                    <field name="is_reportable" widget="boolean_toggle"/>
+                    <field name="state" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hse_env_spill_form" model="ir.ui.view">
+            <field name="name">hse.env.spill.form</field>
+            <field name="model">hse.env.spill</field>
+            <field name="arch" type="xml">
+                <form string="Chemical Spill Incident &amp; Remediation">
+                    <header>
+                        <button name="action_contain" string="Declare Contained" type="object" invisible="state != 'active'" class="btn-primary"/>
+                        <button name="action_start_recovery" string="Start Vacuum / Recovery" type="object" invisible="state != 'contained'" class="btn-secondary"/>
+                        <button name="action_remediate" string="Remediation Complete" type="object" invisible="state != 'recovering'" class="btn-info"/>
+                        <button name="action_close" string="Close Spill" type="object" invisible="state != 'remediated'" class="btn-success"/>
+                        <field name="state" widget="statusbar" statusbar_visible="active,contained,recovering,remediated,closed"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #064e3b 0%, #059669 100%); border-left: 6px solid #6ee7b7; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🌿</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Environmental Compliance</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Air, water, waste &amp; spill — full media monitoring</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">Spill Incident Ref</span>
+                            <h1><field name="name" readonly="1"/></h1>
+                            <h3><field name="title" placeholder="e.g. 15 BBL Crude Oil Leak from Pump P-101A Mechanical Seal"/></h3>
+                        </div>
+                        <group>
+                            <group string="Release Details">
+                                <field name="location_id"/>
+                                <field name="spill_datetime"/>
+                                <field name="substance_name"/>
+                                <field name="cas_number"/>
+                                <field name="media_impacted"/>
+                                <field name="spill_source"/>
+                            </group>
+                            <group string="Quantity &amp; Regulatory Thresholds">
+                                <field name="volume_released"/>
+                                <field name="volume_recovered"/>
+                                <field name="unit_of_measure"/>
+                                <field name="recovery_percentage" readonly="1"/>
+                                <field name="cercla_rq"/>
+                                <field name="is_reportable" readonly="1" widget="badge" decoration-danger="is_reportable == True"/>
+                                <field name="nrc_incident_number" invisible="not is_reportable"/>
+                            </group>
+                        </group>
+                        <group string="Response &amp; Remediation">
+                            <field name="containment_measures"/>
+                            <field name="remediation_plan"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hse_env_spill" model="ir.actions.act_window">
+            <field name="name">Chemical &amp; Oil Spills</field>
+            <field name="res_model">hse.env.spill</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,304 @@
+<odoo>
+    <data>
+        <!-- Form View for RA/JSA -->
+        <record id="view_ra_jsa_form" model="ir.ui.view">
+            <field name="name">ra_jsa.model.form</field>
+            <field name="model">ra_jsa.model</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <!--                         In Process button: Hidden when state is 'in_process' -->
+                        <button name="action_in_process" string="In Process" type="object" class="oe_highlight"
+                                invisible="state in ['in_process', 'locked', 'cancelled', 'review', 'r_approved','reopen' ]"/>
+                        <!--                                invisible="state in ['in_review','in_process', 'approved', 'cancelled']"/>-->
+                        <button name="action_in_locked" string="Locked" type="object" class="btn-success"
+                                invisible="state not in ['in_process','reopen']"/>
+                        <button name="action_reopen" string="Re-Open" type="object" class="btn-info"
+                                invisible="state != 'locked'"/>
+
+
+                        <!-- Corrective Action button: Visible only when state is 'in_process' -->
+                        <button name="open_corrective_form" type="object" string="Create CAPA" class="oe_highlight"
+                                invisible="state not in ['in_review', 'in_process']"/>
+                        <button name="action_send_email" string="Send Email" type="object" class="btn-primary"
+                                invisible="state in ['in_review', 'draft', 'in_process', 'cancelled']"/>
+
+                        <!--                         Cancel Button (visible when state is 'in_process') -->
+                        <button name="%(action_cancel_wizard)d" type="action" string="Cancelled" class="btn btn-danger"
+                                invisible="state not in ['in_process']"/>
+                        <button name="action_open_review_wizard" string="Review" type="object" class="btn-primary"
+                                invisible="state not in ['locked', 'r_approved']"/>
+                        <button name="action_in_r_approved" string="Review Locked" type="object" class="btn-primary"
+                                invisible="state not in ['review']"/>
+                        <!--                        <button name="request_extension_date" string="Request Extent Date" type="object" class="btn-primary"-->
+                        <!--                        invisible="['|',(show_extended_date != True), (state not in ['locked','date_extention'])] "/>-->
+                        <button name="request_extension_date" string="Request Extension Date" type="object" class="btn-primary"
+                                invisible="show_extended_date != True and state not in['locked', 'date_extention']"/>
+
+
+
+                        <!-- Preventive Action button: Visible only when state is 'in_process' -->
+                        <!--                        <button name="open_preventive_form" type="object" string="Preventive Action" class="oe_highlight"-->
+                        <!--                                invisible="state not in ['in_review', 'approved', 'rejected', 'locked']" />-->
+                        <!--                        <button name="action_view_corrective_actions" type="object" string="View CAPA`s"-->
+                        <!--                                class="oe_highlight" icon="fa-list"-->
+                        <!--                                invisible = "state not in ['in_review', 'approved', 'rejected']" />-->
+                        <!--                        <button name="action_view_preventive_actions" type="object" string="Preventive Actions"-->
+                        <!--                                class="oe_highlight" icon="fa-list"-->
+                        <!--                                invisible = "state not in ['in_review', 'approved', 'rejected', 'locked']" />-->
+                        <!-- Status Bar for the state field -->
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="[draft,review,in_review,locked,cancelled]"/>
+
+
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #78350f 0%, #d97706 100%); border-left: 6px solid #fcd34d; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">⚠️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Risk Assessment / JSA</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Hazard identification, 5x5 scoring and control hierarchy</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="action_view_corrective_actions"
+                                    icon="fa-folder">
+                                <field string="View CAPA's Action" name="view_corrective_actions" widget="statinfo"/>
+                            </button>
+                            <button class="oe_stat_button" type="object" name="action_request_date" string="Date Extension"
+                                    icon="fa-folder" invisible="state != 'date_extention'">
+                                <!--                                <field string="View CAPA's Action" name="view_corrective_actions" widget="statinfo"/>-->
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="Locked" bg_color="text-bg-success"
+                                invisible="state != 'locked'"/>
+                        <widget name="web_ribbon" title="cancelled" bg_color="text-bg-danger"
+                                invisible="state != 'cancelled'"/>
+                        <widget name="web_ribbon" title="Re-Open" bg_color="text-bg-info"
+                                invisible="state != 'reopen'"/>
+                        <group>
+                            <group>
+                                <field name="set_priority"
+                                       readonly="state in ['locked' , 'cancelled']"/>
+                                <field name="name" readonly="state in ['locked' , 'cancelled']"/>
+                                <field name="type" readonly="state in ['locked' , 'cancelled']"/>
+                                <!--                                <field name="type_of_analysis" readonly="state == 'approved'"/>-->
+                                <!--                                <field name="analysis" readonly="state in ['approved' , 'cancelled']" options="{'no_open': True, 'no_create': True}"/>-->
+                                <field name="description" readonly="state in ['locked' , 'cancelled']"/>
+                                <!--                                <field name="assets" readonly="state in ['approved' , 'cancelled']"  options="{'no_open': True, 'no_create': True}"/>-->
+                                <!--                                <field name="external_team" readonly="state in ['approved' , 'cancelled']" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>-->
+
+                                <field name="due_date" readonly="state in ['locked' , 'cancelled']"/>
+                                <field name="show_extended_date" invisible="1"/>
+                                <field name="location" readonly="state in ['locked' , 'cancelled']"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                                <field name="exact_location" readonly="state in ['locked' , 'cancelled']"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                                <field name="show_pre_control"/>
+                                <!---->
+                            </group>
+                            <group>
+                                <field name="version" readonly="state in ['locked' , 'cancelled']"
+                                       invisible="state not in [ 'review', 'r_approved']"/>
+                                <field name="select_department" readonly="state in ['locked' , 'cancelled']"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                                <field name="dept_head" readonly="state in ['locked' , 'cancelled']"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                                <field name="sec_head_ids" readonly="state in ['locked' , 'cancelled']"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                                <field name="responsible_person" readonly="state in ['locked' , 'cancelled']"
+                                       options="{'no_open': True, 'no_create': True}"/>
+
+                                <field name="team_lead_ids" readonly="state in ['locked' , 'cancelled']"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                                <field name="select_team_type" widget="radio" options="{'horizontal': true}"/>
+                                <field name="team_member_id" readonly="state in ['locked' , 'cancelled']"
+                                       widget="many2many_tags" options="{'no_open': True, 'no_create': True}"
+                                       invisible="select_team_type != 'internal'"/>
+                                <field name="external_team_" readonly="state in ['locked' , 'cancelled']"
+                                       options="{'no_open': True, 'no_create': True}"
+                                       invisible="select_team_type != 'external'"/>
+                                <field name="reason_for_cancel" readonly="state in ['locked' , 'cancelled']"
+                                       invisible="state != 'cancelled'"/>
+                                <field name="approved_date" readonly="state in ['locked' , 'cancelled']"
+                                       invisible="state != 'locked'"
+                                       eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"
+                                />
+                                <field name="next_review_date" readonly="state in ['locked' , 'cancelled']"
+                                       invisible="state not in [ 'review', 'r_approved']"/>
+                                <field name="reason_for_review" invisible="state not in [ 'review', 'r_approved']"/>
+
+
+                                <!--                                &lt;!&ndash;                                <field name="due_date" readonly="state == 'approved'"/>&ndash;&gt;-->
+                                <!--                                <field name="extended_date" invisible="'show_extended_date', '=', False"/>-->
+
+
+                                <!--                                                                <field name="priority" readonly="state == 'approved'"/>-->
+                                <!--                                                                <field name="select_severity_level" readonly="state == 'approved'"/>-->
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <!-- Hazards Tab -->
+                            <page string="Hazards">
+                                <field name="hazard_ids">
+                                    <tree editable="bottom">
+                                        <!--                                        <field name="name"/>-->
+                                        <field name="hazards_selection"
+                                               readonly="parent.state in ['cancelled' , 'locked']"/>
+                                        <field name="description"
+                                               readonly="parent.state in ['cancelled' , 'locked']"/>
+                                        <field name="consequences"
+                                               readonly="parent.state in ['cancelled' , 'locked']"
+                                        />
+                                        <field name="likelihood"
+                                               readonly="parent.state in ['cancelled' , 'locked']"
+                                               column_invisible="parent.show_pre_control != True"/>
+                                        <field name="severity_level"
+                                               readonly="parent.state in ['cancelled' , 'locked']"
+                                               column_invisible="parent.show_pre_control != True"/>
+                                        <field name="risk_level" readonly="parent.state in ['cancelled' , 'locked']"
+                                               column_invisible="parent.show_pre_control != True"/>
+                                        <button name="action_show_details" type="object" icon="fa-list" title="Controls" string="Controls"/>
+                                        <field name="post_likelihood"
+                                               readonly="parent.state in ['cancelled' , 'locked']"/>
+                                        <field name="post_severity_level"
+                                               readonly="parent.state in ['cancelled' , 'locked']"/>
+                                        <field name="risk_level_"
+                                               readonly="parent.state in ['cancelled' , 'locked']"/>
+
+                                    </tree>
+                                    <form>
+                                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); border-left: 6px solid #94a3b8; border-radius: 10px; padding: 10px 14px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;"><div style="display: flex; align-items: center; gap: 10px;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 8px; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">📋</span><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 13px; letter-spacing: 0.3px;">Record</div></div><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div>
+                                        <group>
+                                            <!--                                            <field name="name"/>-->
+                                            <field name="hazards_selection"
+                                                   readonly="parent.state in ['cancelled' , 'locked']"/>
+                                            <field name="description"
+                                                   readonly="parent.state in ['cancelled' , 'locked']"/>
+                                            <field name="consequences"
+                                                   readonly="parent.state in ['cancelled' , 'locked']"/>
+                                            <field name="likelihood"
+                                                   readonly="parent.state in ['cancelled' , 'locked']"/>
+                                            <field name="severity_level"
+                                                   widget="hse_risk_matrix"
+                                                   readonly="parent.state in ['cancelled' , 'locked']"/>
+                                            <field name="risk_level"
+                                                   readonly="parent.state in ['cancelled' , 'locked']"/>
+                                            <field name="control_ids"
+                                                   readonly="parent.state in ['cancelled' , 'locked']"
+                                                   widget="many2many_tags" required="True"/>
+                                            <field name="post_likelihood"
+                                                   readonly="parent.state in ['cancelled' , 'locked']"/>
+                                            <field name="post_severity_level"
+                                                   readonly="parent.state in ['cancelled' , 'locked']"/>
+                                            <field name="control_description"
+                                                   readonly="parent.state in ['cancelled' , 'locked']"/>
+                                            <field name="risk_level_"
+                                                   readonly="parent.state in ['cancelled' , 'locked']"/>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <!-- Chatter Section -->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="view_ra_jsa_view_tree" model="ir.ui.view">
+            <field name="name">view_ra_jsa_view_tree</field>
+            <field name="model">ra_jsa.model</field>
+            <field name="arch" type="xml">
+                <tree string="view_ra_jsa_tree">
+                    <field name="name"/>
+                    <field name="set_priority"/>
+                    <field name="due_date"/>
+                    <field name="dept_head"/>
+                    <field name="responsible_person"/>
+                    <field name="team_lead_ids"/>
+                    <field name="state"/>
+
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="view_ra_jsa_kanban" model="ir.ui.view">
+            <field name="name">ra_jsa.model.kanban</field>
+            <field name="model">ra_jsa.model</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_example" default_group_by="state">
+                    <field name="name"/>
+                    <field name="state"/>
+                    <progressbar field="set_priority"
+                                 colors="{&quot;1&quot;: &quot;info&quot;, &quot;2&quot;: &quot;success&quot;}"/>
+
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click" style="margin-bottom:10px; background-color:#a4bcc4">
+                                <div class="o_kanban_card_header"
+                                     style="display: flex; justify-content: space-between; align-items: center;">
+                                    <field name="name" class="o_kanban_card_title" style="font-weight: bold;"/>
+                                    <field name="set_priority" widget="priority"
+                                           readonly="state in ['locked' , 'cancelled']"/>
+                                </div>
+                                <div>
+                                    <span style="font-weight: bold;">Assessment Type:</span>
+                                    <field name="type" style="margin-left: 5px; font-weight: bold;"/>
+                                </div>
+                                <div>
+                                    <span style="font-weight: bold;">Responsible Person:</span>
+                                    <field name="responsible_person" style="margin-left: 5px; font-weight: bold;"/>
+                                </div>
+                                <div>
+                                    <span style="font-weight: bold;">Date:</span>
+                                    <field name="due_date" style="margin-left: 5px; font-weight: bold;"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_ra_jsa_pivot" model="ir.ui.view">
+            <field name="name">ra_jsa.model.pivot</field>
+            <field name="model">ra_jsa.model</field>
+            <field name="arch" type="xml">
+                <pivot string="RA/JSA Pivot">
+                    <field name="type" type="row"/>
+                    <field name="state" type="col"/>
+                    <!--                    <field name="id" type="measure" operator="count"/>-->
+
+                </pivot>
+            </field>
+        </record>
+        <record id="view_ra_jsa_graph" model="ir.ui.view">
+            <field name="name">ra_jsa.model.graph</field>
+            <field name="model">ra_jsa.model</field>
+            <field name="arch" type="xml">
+                <graph string="RA/JSA Graph" type="bar">
+                    <field name="type" type="row"/>
+<!--                    <field name="state" type="row"/>-->
+                    <field name="id" type="measure" operator="count"/>
+                </graph>
+            </field>
+        </record>
+
+
+        <!-- Action for RA/JSA Model -->
+        <record id="action_ra_jsa" model="ir.actions.act_window">
+            <field name="name">Risk Assessment/JSA</field>
+            <field name="res_model">ra_jsa.model</field>
+            <field name="view_mode">tree,kanban,form,graph,pivot</field>
+        </record>
+
+        <record id="action_preventive_action" model="ir.actions.act_window">
+            <field name="name">Preventive Action</field>
+            <field name="res_model">ra_jsa.model</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+        </record>
+    </data>
+</odoo>

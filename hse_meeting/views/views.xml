@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="hse_department_view_tree" model="ir.ui.view">
+            <field name="name">hse.department.view.tree</field>
+            <field name="model">hse.meeting.department</field>
+            <field name="arch" type="xml">
+                <tree string="HSE Departments">
+                    <field name="name"/>
+                    <field name="number_of_employees"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hse_department_view_form" model="ir.ui.view">
+            <field name="name">hse.department.view.form</field>
+            <field name="model">hse.meeting.department</field>
+            <field name="arch" type="xml">
+                <form string="HSE Department">
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #164e63 0%, #0891b2 100%); border-left: 6px solid #67e8f9; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">👥</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">HSE Safety Meetings</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Toolbox talks, attendance analytics &amp; CAPA launch</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                        <group>
+                            <field name="name"/>
+                            <field name="number_of_employees"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hse_department_action" model="ir.actions.act_window">
+            <field name="name">HSE Departments</field>
+            <field name="res_model">hse.meeting.department</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new HSE Department
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="hse_root_menu" name="HSE Meetings" sequence="10" web_icon="hse_meeting,static/description/meeting.png"/>
+        <menuitem id="hse_config_menu" name="Configuration" parent="hse_root_menu" sequence="100"/>
+        <menuitem id="hse_department_menu_item" name="Departments" parent="hse_config_menu"
+                  action="hse_department_action" sequence="10"/>
+        <menuitem id="hse_meeting_type_menu_item" name="Meeting Type" parent="hse_config_menu"
+                  action="hse_meeting_type_action" sequence="20"/>
+
+        <menuitem id="hse_meeting_report_menu_item" name="Print Report" parent="hse_root_menu"
+                  action="action_transit_wizard" sequence="130"/>
+
+
+
+
+        <record id="hse_meeting_view_tree" model="ir.ui.view">
+            <field name="name">hse.meeting.view.tree</field>
+            <field name="model">hse.meeting</field>
+            <field name="arch" type="xml">
+                <tree string="HSE Meetings">
+                    <field name="meeting_datetime"/>
+                    <field name="department_id"/>
+                    <field name="meeting_type_ids"/>
+                    <field name="total_employees"/>
+                    <field name="present_employees"/>
+                    <field name="meeting_attend_employees"/>
+                    <field name="percentage_total_attendees" widget="percentpie"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hse_meeting_view_form" model="ir.ui.view">
+            <field name="name">hse.meeting.view.form</field>
+            <field name="model">hse.meeting</field>
+            <field name="arch" type="xml">
+                <form string="HSE Meeting">
+                    <header>
+                        <button name="open_corrective_form" type="object" string="Create CAPA" class="oe_highlight"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #164e63 0%, #0891b2 100%); border-left: 6px solid #67e8f9; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">👥</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">HSE Safety Meetings</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Toolbox talks, attendance analytics &amp; CAPA launch</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                        <group>
+                            <group>
+                                <field name="name" readonly="1"/>
+                                <field name="meeting_datetime" widget="datetime"/>
+                                <field name="duration" widget="float_time"/>
+                                <field name="department_id"/>
+                                <field name="meeting_type_ids"/>
+                            </group>
+                            <group>
+                                <field name="total_employees" readonly="1"/>
+                                <field name="present_employees"/>
+                                <field name="meeting_attend_employees"/>
+                                <field name="percentage_total_attendees" string='Total in Percentage' widget="percentpie" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Minutes of Meeting">
+                                <field name="minutes_of_meeting" widget="html"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="hse_meeting_view_calendar" model="ir.ui.view">
+            <field name="name">hse.meeting.view.calendar</field>
+            <field name="model">hse.meeting</field>
+            <field name="arch" type="xml">
+                <calendar string="HSE Meetings" date_start="meeting_datetime" mode="month" color="department_id" >
+                    <field name="meeting_datetime"/>
+                    <field name="department_id"/>
+                    <field name="meeting_type_ids"/>
+                    <field name="total_employees"/>
+                    <field name="present_employees"/>
+                    <field name="meeting_attend_employees"/>
+                    <field name="percentage_total_attendees"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="hse_meeting_view_pivot" model="ir.ui.view">
+            <field name="name">hse.meeting.view.pivot</field>
+            <field name="model">hse.meeting</field>
+            <field name="arch" type="xml">
+                <pivot string="HSE Meetings">
+                    <field name="meeting_datetime" type="row"/>
+                    <field name="department_id" type="row"/>
+                    <field name="meeting_type_ids" type="col"/>
+                    <field name="total_employees" type="measure"/>
+                    <field name="present_employees" type="measure"/>
+                    <field name="meeting_attend_employees" type="measure"/>
+                    <field name="percentage_total_attendees" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="hse_meeting_action" model="ir.actions.act_window">
+            <field name="name">HSE Meetings</field>
+            <field name="res_model">hse.meeting</field>
+            <field name="view_mode">tree,form,calendar,pivot</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new HSE Safety Meeting
+                </p>
+            </field>
+        </record>
+
+        <!--        <menuitem id="hse_meeting_menu_item" name="Meetings" parent="hse_root_menu"-->
+        <!--                  action="hse_meeting_action" sequence="10"/>-->
+        <menuitem id="hse_meeting_menu_item" name="Meetings" parent="hse_root_menu"
+                  action="hse_meeting_action" sequence="40" />
+
+        <!-- Master HSE App Integration -->
+        <menuitem id="menu_hse_meeting_master_sub"
+                  name="Safety Committee &amp; Toolbox Meetings"
+                  parent="hse.menu_hse_incidents"
+                  action="hse_meeting_action"
+                  sequence="25"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Personnel Certification Form -->
+    <record id="view_hse_personnel_certification_form" model="ir.ui.view">
+        <field name="name">hse.personnel.certification.form</field>
+        <field name="model">hse.personnel.certification</field>
+        <field name="arch" type="xml">
+            <form string="Personnel Certification / License">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="valid,expiring,expired"/>
+                </header>
+                <sheet>
+                    <div class="hse-x-hero" style="background: linear-gradient(135deg, #1e1b4b 0%, #4f46e5 100%); border-left: 6px solid #a5b4fc; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🪪</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Personnel Certifications</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">License &amp; ticket expiry surveillance (60-day radar)</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                    <div class="oe_title">
+                        <span class="text-muted"><field name="certificate_number"/></span>
+                        <h1><field name="certification_name" placeholder="Certificate Title (e.g. OPITO BOSIET with EBS)"/></h1>
+                    </div>
+                    <group>
+                        <group string="Personnel &amp; Classification">
+                            <field name="person_type"/>
+                            <field name="employee_id" invisible="person_type != 'employee'"/>
+                            <field name="contractor_person_name" invisible="person_type != 'contractor'"/>
+                            <field name="contractor_company" invisible="person_type != 'contractor'"/>
+                            <field name="certification_type"/>
+                        </group>
+                        <group string="Validity &amp; Expiration">
+                            <field name="issuing_body"/>
+                            <field name="issue_date"/>
+                            <field name="expiry_date"/>
+                            <field name="days_to_expire"/>
+                            <field name="verification_url" widget="url"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Certificate Document Attachment">
+                            <group>
+                                <field name="certificate_document" filename="document_filename"/>
+                                <field name="document_filename" invisible="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Personnel Certification Tree -->
+    <record id="view_hse_personnel_certification_tree" model="ir.ui.view">
+        <field name="name">hse.personnel.certification.tree</field>
+        <field name="model">hse.personnel.certification</field>
+        <field name="arch" type="xml">
+            <tree string="Personnel Certifications" decoration-danger="state == 'expired'" decoration-warning="state == 'expiring'" decoration-success="state == 'valid'">
+                <field name="certificate_number"/>
+                <field name="certification_name"/>
+                <field name="certification_type"/>
+                <field name="employee_id"/>
+                <field name="contractor_person_name"/>
+                <field name="issuing_body"/>
+                <field name="issue_date"/>
+                <field name="expiry_date"/>
+                <field name="days_to_expire"/>
+                <field name="state" widget="badge" decoration-success="state == 'valid'" decoration-warning="state == 'expiring'" decoration-danger="state == 'expired'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_hse_personnel_certification_search" model="ir.ui.view">
+        <field name="name">hse.personnel.certification.search</field>
+        <field name="model">hse.personnel.certification</field>
+        <field name="arch" type="xml">
+            <search string="Search Certifications">
+                <field name="certification_name"/>
+                <field name="certificate_number"/>
+                <field name="employee_id"/>
+                <filter name="valid_certs" string="Valid" domain="[('state', '=', 'valid')]"/>
+                <filter name="expiring_soon" string="Expiring within 60 Days" domain="[('state', '=', 'expiring')]"/>
+                <filter name="expired" string="Expired" domain="[('state', '=', 'expired')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_type" string="Category" context="{'group_by': 'certification_type'}"/>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hse_personnel_certification" model="ir.actions.act_window">
+        <field name="name">Personnel Certification Tracking</field>
+        <field name="res_model">hse.personnel.certification</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Track workforce qualifications, offshore survival, medicals, and license expiration alerts.</p>
+        </field>
+    </record>
+</odoo>

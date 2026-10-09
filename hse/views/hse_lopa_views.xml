@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- LOPA Study Tree View -->
+        <record id="view_hse_lopa_study_tree" model="ir.ui.view">
+            <field name="name">hse.lopa.study.tree</field>
+            <field name="model">hse.lopa.study</field>
+            <field name="arch" type="xml">
+                <tree string="Layers of Protection Analysis (LOPA)" decoration-danger="required_sil in ['sil3', 'sil4']" decoration-warning="required_sil in ['sil1', 'sil2']" decoration-success="target_met == True">
+                    <field name="name"/>
+                    <field name="title"/>
+                    <field name="location_id"/>
+                    <field name="severity_category"/>
+                    <field name="initiating_event_freq"/>
+                    <field name="unmitigated_frequency"/>
+                    <field name="mitigated_frequency"/>
+                    <field name="target_mitigated_frequency"/>
+                    <field name="risk_reduction_factor"/>
+                    <field name="required_sil" widget="badge" decoration-danger="required_sil in ['sil3', 'sil4']" decoration-warning="required_sil in ['sil1', 'sil2']" decoration-success="required_sil == 'none'"/>
+                    <field name="target_met" widget="boolean_toggle"/>
+                    <field name="state" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- LOPA Study Form View -->
+        <record id="view_hse_lopa_study_form" model="ir.ui.view">
+            <field name="name">hse.lopa.study.form</field>
+            <field name="model">hse.lopa.study</field>
+            <field name="arch" type="xml">
+                <form string="Layers of Protection Analysis (LOPA) Scenario">
+                    <header>
+                        <button name="action_validate" string="Validate" type="object" invisible="state != 'draft'" class="btn-primary"/>
+                        <button name="action_approve" string="Endorse by Technical Authority" type="object" invisible="state != 'validated'" class="btn-success"/>
+                        <button name="action_close" string="Close LOPA" type="object" invisible="state != 'approved'" class="btn-secondary"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,validated,approved,closed"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #2e1065 0%, #7c3aed 100%); border-left: 6px solid #c4b5fd; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">📉</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Layers of Protection Analysis</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">IPL credits, PFD math &amp; SIL targeting (IEC 61511)</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">LOPA Scenario Reference</span>
+                            <h1><field name="name" readonly="1"/></h1>
+                            <h3><field name="title" placeholder="e.g. Separator V-101 High Pressure Rupture from Control Valve Fail Open"/></h3>
+                        </div>
+                        <group>
+                            <group string="Scenario Context">
+                                <field name="location_id"/>
+                                <field name="hazop_deviation_id"/>
+                                <field name="date"/>
+                                <field name="facilitator_id"/>
+                                <field name="participants"/>
+                            </group>
+                            <group string="Consequence &amp; Target Criteria">
+                                <field name="consequence_description"/>
+                                <field name="severity_category"/>
+                                <field name="target_mitigated_frequency"/>
+                            </group>
+                        </group>
+                        <group string="Initiating Event &amp; Conditional Modifiers">
+                            <group>
+                                <field name="initiating_event_desc"/>
+                                <field name="initiating_event_freq"/>
+                            </group>
+                            <group>
+                                <field name="enabling_condition_prob"/>
+                                <field name="time_in_area_prob"/>
+                                <field name="ignition_prob"/>
+                                <field name="unmitigated_frequency" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Independent Protection Layers (IPLs)" name="ipls">
+                                <field name="ipl_ids">
+                                    <tree string="IPLs" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="ipl_type"/>
+                                        <field name="pfd"/>
+                                        <field name="is_valid_ipl"/>
+                                        <field name="proof_test_interval_months"/>
+                                        <field name="justification"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="SIL Determination &amp; Risk Gap" name="sil_results">
+                                <group>
+                                    <group string="Calculated Frequencies">
+                                        <field name="total_ipl_pfd" readonly="1"/>
+                                        <field name="mitigated_frequency" readonly="1"/>
+                                        <field name="target_met" readonly="1"/>
+                                    </group>
+                                    <group string="Safety Integrity Level (SIL) Requirement">
+                                        <field name="risk_reduction_factor" readonly="1"/>
+                                        <field name="required_sil" readonly="1" widget="badge" decoration-danger="required_sil in ['sil3', 'sil4']" decoration-warning="required_sil in ['sil1', 'sil2']" decoration-success="required_sil == 'none'"/>
+                                    </group>
+                                </group>
+                                <group string="Safety Requirement Specification (SRS) Actions">
+                                    <field name="recommendations" placeholder="Specify Safety Instrumented Function (SIF) architecture (e.g. 1oo2 voting, proof test interval, SIL-rated sensors)..."/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- LOPA Action Window -->
+        <record id="action_hse_lopa_study" model="ir.actions.act_window">
+            <field name="name">Layers of Protection Analysis (LOPA)</field>
+            <field name="res_model">hse.lopa.study</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

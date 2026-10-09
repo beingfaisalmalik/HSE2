@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit Incident Reporting Form -->
+    <record id="view_incident_reporting_form_inherit_advanced" model="ir.ui.view">
+        <field name="name">incident.reporting.form.inherit.advanced</field>
+        <field name="model">incident.reporting</field>
+        <field name="inherit_id" ref="hse.view_incident_reporting_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_create_investigation" string="Initiate Investigation (RCA)" type="object" class="btn-primary" invisible="state not in ('in_process', 'locked')"/>
+                <button name="action_create_action" string="Create CAPA Action" type="object" class="btn-success"/>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mb-0" role="alert" invisible="not is_osha_recordable">
+                    <i class="fa fa-exclamation-circle me-2" aria-label="OSHA Alert" role="img">OSHA Alert</i> <strong>OSHA 300 RECORDABLE INCIDENT:</strong> This case involves a recordable injury/illness. Ensure OSHA 300 / 301 logs are maintained.
+                </div>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Sequence of Events (Timeline)">
+                    <field name="event_ids">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="event_time"/>
+                            <field name="event_type"/>
+                            <field name="title"/>
+                            <field name="description"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Injuries &amp; OSHA 300 Log">
+                    <group>
+                        <group string="OSHA 300 Recordability &amp; Statutory Deadlines">
+                            <field name="is_osha_recordable" widget="boolean_toggle"/>
+                            <field name="osha_case_number"/>
+                            <field name="statutory_report_due" readonly="1"/>
+                            <field name="statutory_agency"/>
+                            <field name="statutory_notified" widget="boolean_toggle"/>
+                        </group>
+                        <group string="Process Safety &amp; Workdays Lost">
+                            <field name="process_safety_tier"/>
+                            <field name="total_lost_workdays" readonly="1"/>
+                            <field name="total_restricted_days" readonly="1"/>
+                        </group>
+                    </group>
+                    <field name="injury_ids">
+                        <tree editable="bottom">
+                            <field name="person_type"/>
+                            <field name="employee_id"/>
+                            <field name="person_name"/>
+                            <field name="injury_severity"/>
+                            <field name="body_part_affected"/>
+                            <field name="days_away_from_work"/>
+                            <field name="days_restricted_duty"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Environmental Release &amp; Spill">
+                    <field name="environmental_ids">
+                        <tree editable="bottom">
+                            <field name="substance_name"/>
+                            <field name="spill_volume"/>
+                            <field name="volume_unit"/>
+                            <field name="media_affected"/>
+                            <field name="recovered_volume"/>
+                            <field name="containment_status"/>
+                            <field name="regulator_notified" widget="boolean_toggle"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Financial Impact &amp; Damages">
+                    <group>
+                        <group>
+                            <field name="financial_property_loss" widget="monetary"/>
+                            <field name="financial_production_loss" widget="monetary"/>
+                        </group>
+                        <group>
+                            <field name="financial_cleanup_loss" widget="monetary"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Incident Investigation Form -->
+    <record id="view_incident_investigation_form_inherit_advanced" model="ir.ui.view">
+        <field name="name">incident.investigation.form.inherit.advanced</field>
+        <field name="model">incident.investigation</field>
+        <field name="inherit_id" ref="hse.view_incident_investigation_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_create_capa" string="Create Investigation CAPA" type="object" class="btn-success"/>
+            </xpath>
+            <xpath expr="//group" position="before">
+                <group string="Root Cause Analysis (RCA) Framework">
+                    <field name="rca_method"/>
+                    <field name="human_error_type"/>
+                </group>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="5 Whys Root Cause Analysis">
+                    <field name="why_ids">
+                        <tree editable="bottom">
+                            <field name="why_number"/>
+                            <field name="question"/>
+                            <field name="answer"/>
+                            <field name="is_root_cause" widget="boolean_toggle"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Bow-Tie Barrier Analysis" name="bowtie_page">
+                    <field name="rca_method" widget="hse_bowtie"/>
+                    <field name="bowtie_barrier_ids">
+                        <tree editable="bottom" decoration-danger="barrier_status == 'failed'" decoration-warning="barrier_status == 'degraded'" decoration-success="barrier_status == 'effective'">
+                            <field name="sequence" widget="handle"/>
+                            <field name="side"/>
+                            <field name="barrier_category"/>
+                            <field name="threat_or_consequence"/>
+                            <field name="barrier_name"/>
+                            <field name="barrier_status" widget="badge" decoration-danger="barrier_status == 'failed'" decoration-warning="barrier_status == 'degraded'" decoration-success="barrier_status == 'effective'"/>
+                            <field name="failure_mechanism"/>
+                            <field name="action_id"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Ishikawa / Fishbone Diagram (6M)">
+                    <field name="fishbone_ids">
+                        <tree editable="bottom">
+                            <field name="category"/>
+                            <field name="cause_description"/>
+                            <field name="significance"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Chronological Sequence of Events">
+                    <field name="timeline_ids">
+                        <tree editable="bottom">
+                            <field name="event_time"/>
+                            <field name="description"/>
+                            <field name="source_evidence"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Human &amp; Organizational Factors">
+                    <group>
+                        <field name="organizational_factors" placeholder="Evaluate fatigue, staffing levels, communication barriers, time pressure, and procedure ergonomics..."/>
+                    </group>
+                </page>
+                <page string="Formal Sign-offs &amp; Approvals">
+                    <group>
+                        <group string="Independent Peer Review">
+                            <field name="peer_reviewer_id"/>
+                            <field name="peer_review_date"/>
+                        </group>
+                        <group string="Management Authorization">
+                            <field name="management_approver_id"/>
+                            <field name="approval_date"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

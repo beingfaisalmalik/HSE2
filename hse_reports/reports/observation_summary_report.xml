@@ -1,0 +1,72 @@
+<odoo>
+    <data>
+        <template id="hse_observation_report">
+            <t t-call="web.html_container">
+                <t t-call="web.basic_layout">
+                    <h1>Summary Report Of Observation</h1>
+                    <t t-if="data">
+                        <div class="page" style="padding: 40px; font-family: 'Arial', sans-serif; line-height: 1.6;">
+
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td>
+                                            Name:
+                                        </td>
+                                        <td>
+                                            Observation Type:
+                                        </td>
+                                        <td>
+                                            Observation:
+                                        </td>
+                                        <td>
+                                            Observation Date:
+                                        </td>
+                                        <td>
+                                            Observer:
+                                        </td>
+                                        <td>
+                                            Status:
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                     <t t-foreach="data.items()" t-as="t">
+                                        <tr>
+                                            <td>
+                                                <t t-esc="t[1]['name']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="t[1]['observation_type']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="t[1]['observation']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="t[1]['observation_date']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="t[1]['observer_id.name']"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="t[1]['state']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="page"
+                             style="padding: 40px; font-family: 'Arial', sans-serif; line-height: 1.6; text-align: center;">
+                            <p>No data found for the selected date range.</p>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

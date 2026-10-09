@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Operating Policy Form -->
+    <record id="view_hse_operating_policy_form" model="ir.ui.view">
+        <field name="name">hse.operating.policy.form</field>
+        <field name="model">hse.operating.policy</field>
+        <field name="arch" type="xml">
+            <form string="HSE Operating Policy">
+                <header>
+                    <button name="action_approve" string="Executive Approve &amp; Release" type="object" invisible="state != 'draft'" class="btn-success"/>
+                    <button name="action_retire" string="Retire Policy" type="object" invisible="state != 'approved'" class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,retired"/>
+                </header>
+                <sheet>
+                    <div class="hse-x-hero" style="background: linear-gradient(135deg, #0f172a 0%, #334155 100%); border-left: 6px solid #94a3b8; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">📜</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">HSE Operating Policies</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Executive policy governance &amp; acknowledgment tracking</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                    <div class="oe_title">
+                        <span class="text-muted"><field name="policy_code"/></span>
+                        <h1><field name="name" placeholder="Policy Title (e.g. Life Saving Rules)"/></h1>
+                    </div>
+                    <group>
+                        <group string="Policy Scope &amp; Governance">
+                            <field name="policy_type"/>
+                            <field name="iso_alignment"/>
+                            <field name="effective_date"/>
+                            <field name="review_frequency_years"/>
+                        </group>
+                        <group string="Ownership &amp; Statistics">
+                            <field name="policy_owner_id"/>
+                            <field name="approved_by_id"/>
+                            <field name="total_acknowledgments"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Executive Policy Statement">
+                            <field name="policy_statement"/>
+                        </page>
+                        <page string="Core Principles &amp; Mandatory Rules">
+                            <group>
+                                <field name="core_principles"/>
+                                <field name="mandatory_rules"/>
+                            </group>
+                        </page>
+                        <page string="Workforce Sign-offs &amp; Acknowledgments">
+                            <field name="acknowledgment_ids">
+                                <tree editable="bottom">
+                                    <field name="employee_id"/>
+                                    <field name="ack_date"/>
+                                    <field name="confirmed" widget="boolean_toggle"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Operating Policy Tree -->
+    <record id="view_hse_operating_policy_tree" model="ir.ui.view">
+        <field name="name">hse.operating.policy.tree</field>
+        <field name="model">hse.operating.policy</field>
+        <field name="arch" type="xml">
+            <tree string="Operating Policies">
+                <field name="policy_code"/>
+                <field name="name"/>
+                <field name="policy_type"/>
+                <field name="iso_alignment"/>
+                <field name="effective_date"/>
+                <field name="policy_owner_id"/>
+                <field name="total_acknowledgments"/>
+                <field name="state" widget="badge" decoration-success="state == 'approved'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_hse_operating_policy" model="ir.actions.act_window">
+        <field name="name">Operating Policy</field>
+        <field name="res_model">hse.operating.policy</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Manage corporate HSE policies, life-saving rules, and employee sign-offs.</p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="hazard_control_view_form" model="ir.ui.view">
+            <field name="name">harzard_control_view_form</field>
+            <field name="model">ra_jsa.control</field>
+            <field name="arch" type="xml">
+                <form string="harzard_control_form">
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #0f172a 0%, #334155 100%); border-left: 6px solid #94a3b8; border-radius: 12px; padding: 9px 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🎛️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Hazard Controls</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Control descriptions and measures</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                        <group>
+                            <field name="code"/>
+                            <field name="control_measure"/>
+                            <field name="supporting_information"/>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="hazard_control_view_tree" model="ir.ui.view">
+            <field name="name">haz_view_tree</field>
+            <field name="model">ra_jsa.control</field>
+            <field name="arch" type="xml">
+                <tree string="haz_tree">
+                    <field name="code"/>
+                    <field name="control_measure"/>
+                    <field name="supporting_information"/>
+                </tree>
+            </field>
+        </record>
+        <record id="hazard_control_action" model="ir.actions.act_window">
+            <field name="name">hazard_control_action</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ra_jsa.control</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <record id="control_description_view_form" model="ir.ui.view">
+            <field name="name">control_description_view_form</field>
+            <field name="model">control.description</field>
+            <field name="arch" type="xml">
+                <form string="harzard_control_form">
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #0f172a 0%, #334155 100%); border-left: 6px solid #94a3b8; border-radius: 12px; padding: 9px 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🎛️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Hazard Controls</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Control descriptions and measures</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                        <group>
+                            <field name="control_detail"/>
+                        </group>
+                        <notebook>
+                            <page string="Controls">
+                                <field name="select_control_ids">
+                                    <tree editable="bottom">
+                                        <field name="select_control"/>
+                                        <field name="control_detail"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="control_description_view_tree" model="ir.ui.view">
+            <field name="name">control_description_view_tree</field>
+            <field name="model">control.description</field>
+            <field name="arch" type="xml">
+                <tree string="haz_tree">
+                    <field name="select_control"/>
+                    <field name="control_detail"/>
+                </tree>
+            </field>
+        </record>
+        <record id="control_description_action" model="ir.actions.act_window">
+            <field name="name">control_description_action</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">control.description</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

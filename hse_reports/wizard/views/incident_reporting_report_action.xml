@@ -1,0 +1,12 @@
+<odoo>
+    <data>
+        <record id="incident_reporting_report_action" model="ir.actions.report">
+            <field name="name">Incident Reporting Report </field>
+            <field name="model">incident.reporting.wizard</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">hse_reports.hse_incident_reporting_report</field>
+            <field name="report_file">hse_reports.hse_incident_reporting_report</field>
+            <field name="binding_type">report</field>
+        </record>z
+    </data>
+</odoo>

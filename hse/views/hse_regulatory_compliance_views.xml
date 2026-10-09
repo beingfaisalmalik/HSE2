@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Regulation Form View -->
+    <record id="view_hse_regulation_form" model="ir.ui.view">
+        <field name="name">hse.regulation.form</field>
+        <field name="model">hse.regulation</field>
+        <field name="arch" type="xml">
+            <form string="Regulation &amp; Standard">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="active,under_review,superseded"/>
+                </header>
+                <sheet>
+                    <div class="hse-x-hero" style="background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%); border-left: 6px solid #93c5fd; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">⚖️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Regulatory Compliance Register</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Statutory obligations, audits and compliance calendar</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                    <div class="oe_title">
+                        <span class="text-muted"><field name="code"/></span>
+                        <h1><field name="name" placeholder="Regulation / Standard Title"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="regulatory_body"/>
+                            <field name="jurisdiction"/>
+                            <field name="category"/>
+                        </group>
+                        <group>
+                            <field name="revision_number"/>
+                            <field name="effective_date"/>
+                            <field name="technical_authority_id"/>
+                            <field name="full_text_url" widget="url"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="summary" placeholder="Summary of statutory standard..."/>
+                    </group>
+                    <notebook>
+                        <page string="Specific Compliance Obligations">
+                            <field name="obligation_ids">
+                                <tree editable="bottom">
+                                    <field name="clause_code"/>
+                                    <field name="name"/>
+                                    <field name="monitoring_frequency"/>
+                                    <field name="compliance_status" widget="badge" decoration-success="compliance_status == 'compliant'" decoration-warning="compliance_status == 'partial'" decoration-danger="compliance_status == 'non_compliant'"/>
+                                    <field name="responsible_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Compliance Audits Conducted">
+                            <field name="audit_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="title"/>
+                                    <field name="location_id"/>
+                                    <field name="audit_date"/>
+                                    <field name="score_percentage"/>
+                                    <field name="state" widget="badge"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Regulation Tree View -->
+    <record id="view_hse_regulation_tree" model="ir.ui.view">
+        <field name="name">hse.regulation.tree</field>
+        <field name="model">hse.regulation</field>
+        <field name="arch" type="xml">
+            <tree string="Regulations &amp; Standards">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="regulatory_body"/>
+                <field name="category"/>
+                <field name="revision_number"/>
+                <field name="technical_authority_id"/>
+                <field name="state" widget="badge" decoration-success="state == 'active'" decoration-warning="state == 'under_review'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Compliance Audit Form View -->
+    <record id="view_hse_compliance_audit_form" model="ir.ui.view">
+        <field name="name">hse.compliance.audit.form</field>
+        <field name="model">hse.compliance.audit</field>
+        <field name="arch" type="xml">
+            <form string="Compliance Audit">
+                <header>
+                    <button name="action_start" string="Start Audit" type="object" invisible="state != 'scheduled'" class="btn-primary"/>
+                    <button name="action_complete" string="Complete Audit" type="object" invisible="state != 'in_progress'" class="btn-success"/>
+                    <button name="action_close" string="Close Audit" type="object" invisible="state not in ('completed', 'action_tracking')" class="btn-primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="scheduled,in_progress,completed,closed"/>
+                </header>
+                <sheet>
+                    <div class="hse-x-hero" style="background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%); border-left: 6px solid #93c5fd; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">⚖️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Regulatory Compliance Register</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Statutory obligations, audits and compliance calendar</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                    <div class="oe_title">
+                        <span class="text-muted"><field name="name"/></span>
+                        <h1><field name="title" placeholder="Audit Title"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="regulation_id"/>
+                            <field name="location_id"/>
+                        </group>
+                        <group>
+                            <field name="lead_auditor_id"/>
+                            <field name="audit_date"/>
+                            <field name="score_percentage" widget="progressbar"/>
+                            <field name="findings_count"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="findings_summary" placeholder="Summary of discrepancies and required CAPA actions..."/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Compliance Audit Tree View -->
+    <record id="view_hse_compliance_audit_tree" model="ir.ui.view">
+        <field name="name">hse.compliance.audit.tree</field>
+        <field name="model">hse.compliance.audit</field>
+        <field name="arch" type="xml">
+            <tree string="Compliance Audits" decoration-success="state == 'closed'">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="regulation_id"/>
+                <field name="location_id"/>
+                <field name="audit_date"/>
+                <field name="score_percentage"/>
+                <field name="findings_count"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_hse_regulation" model="ir.actions.act_window">
+        <field name="name">Regulatory Compliance</field>
+        <field name="res_model">hse.regulation</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_hse_compliance_audit" model="ir.actions.act_window">
+        <field name="name">Compliance Audits</field>
+        <field name="res_model">hse.compliance.audit</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

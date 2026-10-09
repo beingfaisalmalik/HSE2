@@ -1,0 +1,75 @@
+<odoo>
+    <data>
+        <record id="email_template_name" model="mail.template">
+            <field name="name">EMAIL TEMPLATE NAME</field>
+            <field name="model_id" ref="hse.model_ra_jsa_model"/>
+            <field name="subject">testing email form hse</field>
+            <field name="email_from"></field>
+            <field name="email_to">{{ object.responsible_person.login }}</field>
+            <field name="description">Add Description</field>
+            <field name="body_html" type="html">
+                <div>
+                    <p>
+                        <h2>
+                            Dear <t t-out="object.responsible_person.name"/>
+                        </h2>
+                        <h3> Reference Number <t t-out="object.name"/> </h3>
+                        <h3> Description <t t-out="object.description"/> </h3>
+                        <br/><br/>
+                        Please initiate the valuation with the documents attached:
+                        <!--                        <br/><br/>-->
+                        <!--                        1. Payment receipt-->
+                        <!--                        <br/>-->
+                        <!--                        2. MOU-->
+                        <!--                        <br/>-->
+                        <!--                        3. Seller Passport, EID and Visa-->
+                        <!--                        <br/>-->
+                        <!--                        4. Title Deed-->
+                        <!--                        <br/>-->
+                        <!--                        5. Floor Plan-->
+                        <!--                        <br/>-->
+                        <!--                        6. Contact person: <t t-out="object.contact_person"/> (<t t-out="object.contact_person_number"/>)-->
+                        <!--                        <br/><br/>-->
+                        <!--                        Thank you.-->
+                        <!--                        <br/<br/>-->
+                    </p>
+                </div>
+            </field>
+        </record>
+
+<!--        below code is for incident reporting email template-->
+        <record id="email_template_of_incident_reporting" model="mail.template">
+            <field name="name">Incident Reporting</field>
+            <field name="model_id" ref="hse.model_incident_reporting"/>
+            <field name="subject">testing email form hse</field>
+            <field name="email_from"></field>
+            <field name="email_to">{{ object.responsible_person.login }}</field>
+            <field name="description">Add Description</field>
+            <field name="body_html" type="html">
+                <div>
+                    <p>
+                        <h2>
+                            Dear <t t-out="object.responsible_person.name"/>
+                        </h2>
+                        <h3> Reference Number <t t-out="object.name"/> </h3>
+                        <h3> Description <t t-out="object.ir_description"/> </h3>
+                        <br/><br/>
+                    </p>
+                </div>
+            </field>
+        </record>
+
+    </data>
+    <!--    <record id="email_template_id" model="mail.template">-->
+    <!--        <field name="name">HSE Email Template</field>-->
+    <!--        <field name="email_from">${(user.email or 'info@yourdomain.com')}</field>-->
+    <!--        <field name="email_to">${object.email}</field>-->
+    <!--        <field name="subject">Notification: ${object.name}</field>-->
+    <!--        <field name="body_html"><![CDATA[-->
+    <!--            <p>Dear ${object.name},</p>-->
+    <!--            <p>${object.message}</p>-->
+    <!--            <p>Thank you!</p>-->
+    <!--        ]]></field>-->
+    <!--        <field name="model_id" ref="model_ra_jsa_model"/>-->
+    <!--    </record>-->
+</odoo>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- LOTO Form View -->
+    <record id="view_hse_loto_form" model="ir.ui.view">
+        <field name="name">hse.loto.plan.form</field>
+        <field name="model">hse.loto.plan</field>
+        <field name="arch" type="xml">
+            <form string="LOTO Isolation Plan">
+                <header>
+                    <button name="action_approve" string="Approve Scheme" type="object" invisible="state != 'draft'" class="btn-primary"/>
+                    <button name="action_isolate" string="Confirm Isolation &amp; Zero Energy" type="object" invisible="state != 'approved'" class="btn-danger"/>
+                    <button name="action_deisolate" string="De-Isolate &amp; Re-Energize" type="object" invisible="state != 'isolated'" class="btn-warning"/>
+                    <button name="action_cancel" string="Cancel Plan" type="object" invisible="state in ('de-isolated', 'cancelled')" class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,isolated,de-isolated"/>
+                </header>
+                <sheet>
+                    <div class="hse-x-hero" style="background: linear-gradient(135deg, #78350f 0%, #d97706 100%); border-left: 6px solid #fcd34d; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🔒</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Lockout / Tagout Isolation</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Hazardous energy isolation, zero-energy verification &amp; 3-point clearance</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                    <div class="hse-x-meta" style="display: flex; gap: 16px; align-items: center; margin: -6px 0 10px 6px; font-size: 11px; color: #64748b; flex-wrap: wrap;"><span>🕒 Created <field name="create_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span><span>✏️ Updated <field name="write_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span></div>
+                    <div class="oe_title">
+                        <span class="text-muted"><field name="name"/></span>
+                        <h1><field name="title" placeholder="Isolation Scheme Title (e.g. Isolation of Crude Charge Pump P-101A)"/></h1>
+                    </div>
+                    <group>
+                        <group string="Target Equipment &amp; Area">
+                            <field name="location_id"/>
+                            <field name="asset_id"/>
+                            <field name="lead_isolation_officer_id"/>
+                            <field name="master_lockbox_no"/>
+                        </group>
+                        <group string="Hazardous Energy Types Identified">
+                            <field name="energy_electrical"/>
+                            <field name="energy_mechanical"/>
+                            <field name="energy_hydraulic"/>
+                            <field name="energy_pneumatic"/>
+                            <field name="energy_chemical"/>
+                            <field name="energy_thermal"/>
+                            <field name="energy_gravitational"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="system_description" placeholder="Describe the physical isolation boundary and equipment out of service..."/>
+                    </group>
+                    <notebook>
+                        <page string="Isolation Points Table">
+                            <field name="point_ids">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="point_identifier"/>
+                                    <field name="isolation_type"/>
+                                    <field name="location_desc"/>
+                                    <field name="lock_number"/>
+                                    <field name="tag_number"/>
+                                    <field name="applied_by"/>
+                                    <field name="is_restored" widget="boolean_toggle"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Zero Energy State Verification">
+                            <group>
+                                <group>
+                                    <field name="zero_energy_method"/>
+                                    <field name="zero_energy_verified"/>
+                                </group>
+                                <group>
+                                    <field name="zero_energy_verified_by"/>
+                                    <field name="zero_energy_verified_date"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="De-Isolation Safety Clearance" name="deisolation_tab">
+                            <group>
+                                <group string="Safety Re-Energization Checklist">
+                                    <field name="deisolate_tools_cleared" widget="boolean_toggle"/>
+                                    <field name="deisolate_guards_replaced" widget="boolean_toggle"/>
+                                    <field name="deisolate_personnel_clear" widget="boolean_toggle"/>
+                                </group>
+                                <group string="De-Isolation Inspection Sign-off">
+                                    <field name="deisolate_inspected_by"/>
+                                    <field name="deisolate_datetime"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- LOTO Tree View -->
+    <record id="view_hse_loto_tree" model="ir.ui.view">
+        <field name="name">hse.loto.plan.tree</field>
+        <field name="model">hse.loto.plan</field>
+        <field name="arch" type="xml">
+            <tree string="LOTO Isolation Plans" decoration-danger="state == 'isolated'" decoration-success="state == 'de-isolated'">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="location_id"/>
+                <field name="asset_id"/>
+                <field name="lead_isolation_officer_id"/>
+                <field name="zero_energy_verified" widget="boolean_toggle"/>
+                <field name="state" widget="badge" decoration-warning="state == 'approved'" decoration-danger="state == 'isolated'" decoration-success="state == 'de-isolated'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_hse_loto_plan" model="ir.actions.act_window">
+        <field name="name">Lock &amp; Tag Out Plans (LOTO)</field>
+        <field name="res_model">hse.loto.plan</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Manage energy isolation schemes, lockout points, and zero energy verification.</p>
+        </field>
+    </record>
+</odoo>

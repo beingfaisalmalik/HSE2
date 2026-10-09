@@ -1,0 +1,88 @@
+<odoo>
+    <data>
+
+        <!-- Define the Report Template with Professional Styling -->
+        <template id="incident_investigation_report_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+
+                        <div class="page" style="padding: 40px; font-family: 'Arial', sans-serif; line-height: 1.6;">
+                            <!-- Header Section -->
+
+                            <div style="text-align: center; margin-bottom: 30px;">
+                                <h2 style="color: #003366; font-size: 28px; font-weight: bold;">Incident Investigation Report</h2>
+                                <p style="font-size: 14px; color: #777;">Date: <t t-esc="doc.create_date"/></p>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p><strong>Investigation Reference:</strong> <t t-esc="doc.name"/></p>
+                                        <p><strong>Incident:</strong> <t t-esc="doc.incident_id.name"/></p>
+                                        <p><strong>Investigation Leader:</strong> <t t-esc="doc.investigation_leader.name"/></p>
+                                        <p><strong>Team Members:</strong>
+<!--                                            <t t-foreach="doc.team_members" t-as="member">-->
+<!--                                                <span><t t-esc="member.name"/>,-->
+<!--                                                </span>-->
+<!--                                            </t>-->
+                                              <t t-foreach="doc.team_members" t-as="control">
+                                                <t t-esc="control.name"/>
+                                                <t t-if="control != doc.team_members[-1]">, </t>
+                                            </t>
+                                        </p>
+                                        <p><strong>Target Completion Date:</strong> <t t-esc="doc.target_date"/></p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p><strong>Actual Completion Date:</strong> <t t-esc="doc.actual_completion_date"/></p>
+                                        <p><strong>Delay (in days):</strong> <t t-esc="doc.delay_days"/></p>
+                                        <p><strong>Immediate Cause:</strong> <t t-esc="doc.immediate_cause"/></p>
+                                        <p><strong>Underlying Cause:</strong> <t t-esc="doc.underlying_cause"/></p>
+                                        <p><strong>Root Cause:</strong> <t t-esc="doc.root_cause"/></p>
+                                        <p><strong>Investigation Notes:</strong> <t t-esc="doc.investigation_notes"/></p>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!--                            <table class="table table-bordered">-->
+                            <!--                                <thead>-->
+                            <!--                                    <tr>-->
+                            <!--                                        <th>Hazards</th>-->
+                            <!--                                        <th>Description</th>-->
+                            <!--                                        <th>Risk Level</th>-->
+                            <!--                                        <th>Controls</th>-->
+                            <!--                                    </tr>-->
+                            <!--                                </thead>-->
+                            <!--                                <tbody>-->
+                            <!--                                    <t t-foreach="doc.hazard_incident_investigation_ids" t-as="line">-->
+                            <!--                                        <tr>-->
+                            <!--                                            <td><t t-esc="line.hazards_selection.name"/></td>-->
+                            <!--                                            <td><t t-esc="line.description"/></td>-->
+                            <!--                                            <td><t t-esc="line.risk_level"/></td>-->
+                            <!--                                            <td><t t-esc="line.control_ids.name"/></td>-->
+                            <!--                                        </tr>-->
+                            <!--                                    </t>-->
+                            <!--                                </tbody>-->
+                            <!--                            </table>-->
+
+                        </div>
+
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Define the Report Action -->
+        <record id="action_incident_investigation_report" model="ir.actions.report">
+            <field name="name">Incident Investigation Report</field>
+            <field name="model">incident.investigation</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">hse_reports.incident_investigation_report_template</field>
+            <field name="report_file">hse_reports.incident_investigation_report_template</field>
+            <field name="binding_model_id" ref="hse.model_incident_investigation"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>

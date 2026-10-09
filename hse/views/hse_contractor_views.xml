@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- ================================================================= -->
+        <!-- 1. Contractor Profile & Safety Scoring Views                     -->
+        <!-- ================================================================= -->
+        <record id="view_hse_contractor_tree" model="ir.ui.view">
+            <field name="name">hse.contractor.tree</field>
+            <field name="model">hse.contractor</field>
+            <field name="arch" type="xml">
+                <tree string="Contractor HSE Profiles" decoration-danger="safety_grade == 'disqualified'" decoration-warning="safety_grade == 'conditional'" decoration-success="safety_grade in ['grade_a', 'grade_b']">
+                    <field name="name"/>
+                    <field name="trade_category"/>
+                    <field name="emr_rate"/>
+                    <field name="trir_3year_avg"/>
+                    <field name="fatalities_last_5years"/>
+                    <field name="insurance_expiry_date"/>
+                    <field name="safety_grade" widget="badge" decoration-danger="safety_grade == 'disqualified'" decoration-warning="safety_grade == 'conditional'" decoration-success="safety_grade == 'grade_a'" decoration-info="safety_grade == 'grade_b'"/>
+                    <field name="worker_count"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hse_contractor_form" model="ir.ui.view">
+            <field name="name">hse.contractor.form</field>
+            <field name="model">hse.contractor</field>
+            <field name="arch" type="xml">
+                <form string="Contractor HSE Safety Profile">
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #78350f 0%, #d97706 100%); border-left: 6px solid #fcd34d; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🦺</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Contractor Safety Prequalification</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">EMR/TRIR scoring, inductions &amp; monthly KPIs</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                        <div class="hse-x-meta" style="display: flex; gap: 16px; align-items: center; margin: -6px 0 10px 6px; font-size: 11px; color: #64748b; flex-wrap: wrap;"><span>🕒 Created <field name="create_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span><span>✏️ Updated <field name="write_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">Contractor Company</span>
+                            <h1><field name="name" placeholder="e.g. Turnaround Specialist Piping Inc."/></h1>
+                            <h3><field name="trade_category"/></h3>
+                        </div>
+                        <group>
+                            <group string="Safety Performance &amp; Prequalification">
+                                <field name="emr_rate"/>
+                                <field name="trir_3year_avg"/>
+                                <field name="fatalities_last_5years"/>
+                                <field name="osha_citations_count"/>
+                                <field name="safety_grade" readonly="1" widget="badge" decoration-danger="safety_grade == 'disqualified'" decoration-warning="safety_grade == 'conditional'" decoration-success="safety_grade == 'grade_a'" decoration-info="safety_grade == 'grade_b'"/>
+                            </group>
+                            <group string="Commercial Insurance &amp; Safety Programs">
+                                <field name="vendor_id"/>
+                                <field name="insurance_policy_number"/>
+                                <field name="insurance_expiry_date"/>
+                                <field name="insurance_coverage_amount"/>
+                                <field name="safety_manual_approved"/>
+                                <field name="worker_count" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Active Inducted Workers" name="workers">
+                                <field name="induction_ids">
+                                    <tree string="Workers" decoration-danger="state == 'revoked'" decoration-warning="state == 'expired'" decoration-success="state == 'active'">
+                                        <field name="name"/>
+                                        <field name="worker_name"/>
+                                        <field name="job_title"/>
+                                        <field name="induction_date"/>
+                                        <field name="expiry_date"/>
+                                        <field name="state" widget="badge"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Monthly Safety Performance (KPIs)" name="kpis">
+                                <field name="kpi_ids">
+                                    <tree string="Monthly KPIs" editable="bottom">
+                                        <field name="year"/>
+                                        <field name="month"/>
+                                        <field name="man_hours_worked"/>
+                                        <field name="toolbox_talks_conducted"/>
+                                        <field name="recordable_incidents"/>
+                                        <field name="monthly_trir"/>
+                                        <field name="safety_violations_fines"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hse_contractor" model="ir.actions.act_window">
+            <field name="name">Contractor Safety Management</field>
+            <field name="res_model">hse.contractor</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- ================================================================= -->
+        <!-- 2. Contractor Worker Induction & Gate Passes                      -->
+        <!-- ================================================================= -->
+        <record id="view_hse_contractor_induction_tree" model="ir.ui.view">
+            <field name="name">hse.contractor.induction.tree</field>
+            <field name="model">hse.contractor.induction</field>
+            <field name="arch" type="xml">
+                <tree string="Contractor Worker Inductions" decoration-danger="state == 'revoked'" decoration-warning="state == 'expired'" decoration-success="state == 'active'">
+                    <field name="name"/>
+                    <field name="worker_name"/>
+                    <field name="contractor_id"/>
+                    <field name="job_title"/>
+                    <field name="induction_date"/>
+                    <field name="expiry_date"/>
+                    <field name="state" widget="badge" decoration-danger="state == 'revoked'" decoration-warning="state == 'expired'" decoration-success="state == 'active'"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hse_contractor_induction_form" model="ir.ui.view">
+            <field name="name">hse.contractor.induction.form</field>
+            <field name="model">hse.contractor.induction</field>
+            <field name="arch" type="xml">
+                <form string="Contractor Worker Induction &amp; Site Pass">
+                    <header>
+                        <button name="action_activate" string="Issue Gate Pass" type="object" invisible="state != 'draft'" class="btn-success"/>
+                        <button name="action_revoke" string="Revoke Badge (Safety Violation)" type="object" invisible="state != 'active'" class="btn-danger"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,active,expired,revoked"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #78350f 0%, #d97706 100%); border-left: 6px solid #fcd34d; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🦺</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Contractor Safety Prequalification</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">EMR/TRIR scoring, inductions &amp; monthly KPIs</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">Badge / Gate Pass #</span>
+                            <h1><field name="name" readonly="1"/></h1>
+                            <h3><field name="worker_name" placeholder="Full Legal Name"/></h3>
+                        </div>
+                        <group>
+                            <group string="Worker Details">
+                                <field name="contractor_id"/>
+                                <field name="national_id_passport"/>
+                                <field name="job_title"/>
+                            </group>
+                            <group string="Induction Validity">
+                                <field name="induction_date"/>
+                                <field name="expiry_date"/>
+                                <field name="trainer_id"/>
+                            </group>
+                        </group>
+                        <group string="Mandatory Verification Controls">
+                            <group>
+                                <field name="drug_alcohol_test_verified"/>
+                                <field name="trade_certificates_verified"/>
+                            </group>
+                            <group>
+                                <field name="site_rules_acknowledged"/>
+                                <field name="ppe_issued_verified"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hse_contractor_induction" model="ir.actions.act_window">
+            <field name="name">Contractor Site Inductions &amp; Gate Passes</field>
+            <field name="res_model">hse.contractor.induction</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

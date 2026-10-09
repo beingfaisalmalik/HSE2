@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Actions First -->
+        <record id="action_hse_stop_work" model="ir.actions.act_window">
+            <field name="name">Stop Work Authority (SWA) Interventions</field>
+            <field name="res_model">hse.stop.work</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Log and celebrate proactive Stop Work Authority (SWA) safety interventions.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_hse_lifesaving_rule" model="ir.actions.act_window">
+            <field name="name">IOGP Life-Saving Rules</field>
+            <field name="res_model">hse.lifesaving.rule</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Life-Saving Rules Tree View -->
+        <record id="view_hse_lifesaving_rule_tree" model="ir.ui.view">
+            <field name="name">hse.lifesaving.rule.tree</field>
+            <field name="model">hse.lifesaving.rule</field>
+            <field name="arch" type="xml">
+                <tree string="IOGP Life-Saving Rules">
+                    <field name="sequence" widget="handle"/>
+                    <field name="code" bold="1"/>
+                    <field name="name"/>
+                    <field name="rule_category" widget="badge"/>
+                    <field name="icon_fa"/>
+                    <field name="swa_count" string="SWA Interventions"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Life-Saving Rules Form View -->
+        <record id="view_hse_lifesaving_rule_form" model="ir.ui.view">
+            <field name="name">hse.lifesaving.rule.form</field>
+            <field name="model">hse.lifesaving.rule</field>
+            <field name="arch" type="xml">
+                <form string="IOGP Life-Saving Rule">
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%); border-left: 6px solid #fca5a5; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">❤️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">IOGP Life-Saving Rules</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Rule catalog &amp; Stop Work Authority register</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span></div></div>
+                        <div class="oe_title">
+                            <label for="name" string="Life-Saving Rule Name"/>
+                            <h1><field name="name" placeholder="e.g. Energy Isolation (LOTO)"/></h1>
+                            <h3>Code: <field name="code"/></h3>
+                        </div>
+
+                        <group>
+                            <group string="Rule Classification">
+                                <field name="rule_category"/>
+                                <field name="icon_fa"/>
+                                <field name="sequence"/>
+                                <field name="active"/>
+                            </group>
+                            <group string="Stop Work Statistics">
+                                <field name="swa_count" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Mandatory Expectations &amp; Scope" name="expectations">
+                                <group>
+                                    <field name="rule_description"/>
+                                    <field name="mandatory_expectations"/>
+                                </group>
+                            </page>
+                            <page string="Stop Work Interventions History" name="swa_history">
+                                <field name="swa_ids" readonly="1">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="stop_datetime"/>
+                                        <field name="location_id"/>
+                                        <field name="perceived_risk_level" widget="badge"/>
+                                        <field name="state" widget="badge"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Stop Work Authority Tree View -->
+        <record id="view_hse_stop_work_tree" model="ir.ui.view">
+            <field name="name">hse.stop.work.tree</field>
+            <field name="model">hse.stop.work</field>
+            <field name="arch" type="xml">
+                <tree string="Stop Work Authority (SWA) Interventions"
+                      decoration-danger="state == 'stopped'"
+                      decoration-warning="state == 'mitigating'"
+                      decoration-info="state == 'resumed'"
+                      decoration-success="state == 'commended'">
+                    <field name="name" bold="1"/>
+                    <field name="stop_datetime"/>
+                    <field name="intervenor_id"/>
+                    <field name="is_contractor" widget="boolean_toggle"/>
+                    <field name="location_id"/>
+                    <field name="rule_id" widget="badge"/>
+                    <field name="perceived_risk_level" widget="badge"
+                           decoration-danger="perceived_risk_level == 'imminent_danger'"
+                           decoration-warning="perceived_risk_level == 'high'"/>
+                    <field name="positive_recognition" widget="boolean_toggle"/>
+                    <field name="state" widget="badge"
+                           decoration-danger="state == 'stopped'"
+                           decoration-warning="state == 'mitigating'"
+                           decoration-success="state == 'commended'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Stop Work Authority Form View -->
+        <record id="view_hse_stop_work_form" model="ir.ui.view">
+            <field name="name">hse.stop.work.form</field>
+            <field name="model">hse.stop.work</field>
+            <field name="arch" type="xml">
+                <form string="Stop Work Authority (SWA) Intervention">
+                    <header>
+                        <button name="action_start_mitigation" string="Commence Hazard Mitigation" type="object"
+                                class="btn-warning" invisible="state != 'stopped'"/>
+                        <button name="action_authorize_resumption" string="Authorize Safe Resumption" type="object"
+                                class="btn-success" invisible="state != 'mitigating'"/>
+                        <button name="action_commend_and_close" string="Award Safety Commendation &amp; Close" type="object"
+                                class="btn-primary" invisible="state != 'resumed'"/>
+                        <field name="state" widget="statusbar" statusbar_visible="stopped,mitigating,resumed,commended"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%); border-left: 6px solid #fca5a5; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">❤️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">IOGP Life-Saving Rules</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Rule catalog &amp; Stop Work Authority register</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="oe_title">
+                            <label for="name" string="SWA Event Reference"/>
+                            <h1><field name="name"/></h1>
+                        </div>
+
+                        <div class="alert alert-success d-flex align-items-center mb-3" role="alert"
+                             invisible="not positive_recognition">
+                            <i class="fa fa-trophy fa-2x me-3"/>
+                            <div>
+                                <h5 class="mb-0 font-weight-bold">Leadership Commendation Awarded</h5>
+                                <span>Thank you for speaking up! Every worker has the unconditional right and duty to Stop Work.</span>
+                            </div>
+                        </div>
+
+                        <group>
+                            <group string="Intervention Details">
+                                <field name="stop_datetime"/>
+                                <field name="intervenor_id"/>
+                                <field name="is_contractor"/>
+                                <field name="contractor_name" invisible="not is_contractor"/>
+                                <field name="contractor_id" invisible="not is_contractor"/>
+                                <field name="location_id"/>
+                                <field name="permit_id"/>
+                            </group>
+                            <group string="Risk &amp; Life-Saving Rule">
+                                <field name="rule_id"/>
+                                <field name="perceived_risk_level"/>
+                                <field name="supervisor_id"/>
+                                <field name="resumption_authorized"/>
+                                <field name="resumption_authorizer_id" invisible="not resumption_authorized"/>
+                                <field name="positive_recognition"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Hazard Description &amp; Actions" name="hazard">
+                                <group>
+                                    <field name="hazard_description"/>
+                                    <field name="immediate_action_taken"/>
+                                    <field name="resolution_details"/>
+                                </group>
+                            </page>
+                            <page string="Commendation &amp; Recognition" name="recognition">
+                                <group>
+                                    <field name="recognition_notes"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

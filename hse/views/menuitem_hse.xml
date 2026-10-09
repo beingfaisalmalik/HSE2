@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!--Risk Assessment-->
+        <menuitem id="menu_risk_assessment_main" name="Risk Assessment" sequence="10"/>
+        <menuitem id="menu_risk_assessment"
+                  name="Risk Assessment/JSA"
+                  parent="menu_risk_assessment_main"
+                  action="hse.action_ra_jsa"
+                  sequence="1"/>
+        <menuitem id="menu_ra_corrective" name="All CAPA Action" parent="menu_risk_assessment_main" action="hse.ra_capa_acion"
+                  sequence="20"/>
+        <menuitem id="menu_ra_setting" name="Settings" parent="menu_risk_assessment_main"
+                  sequence="30"/>
+        <menuitem id="menu_hazard_settings"
+                  name="Hazard Settings"
+                  parent="menu_ra_setting"
+                  action="hse.action_hazard_settings"
+                  sequence="1"/>
+        <menuitem id="hazard_control_menu"
+                  name="Hazard Control"
+                  parent="menu_ra_setting"
+                  action="hse.hazard_control_action"
+                  sequence="2"/>
+        <menuitem id="menu_location_form"
+                  name="Location Form"
+                  parent="menu_ra_setting"
+                  action="hse.location_form_action" sequence="40"/>
+        <menuitem id="menu_extension_date"
+                  name="Extention Date"
+                  parent="menu_ra_setting"
+                  action="hse.req_date_ext_action"
+                  sequence="7"/>
+
+
+        <!--Observation-->
+        <menuitem id="menu_observation_main" name="Observation" sequence="15"/>
+        <menuitem id="menu_observation" name="Observation Form" parent="hse.menu_observation_main" action="action_observation"
+                  sequence="1"/>
+        <menuitem id="menu_obs_corrective" name="All CAPA Action" parent="menu_observation_main" action="hse.observation_capa_acion"
+                  sequence="20"/>
+
+        <menuitem id="menu_observation_setting" name="Settings" parent="menu_observation_main" sequence="30"/>
+        <menuitem id="menu_severity_level"
+                  name="Severity Level"
+                  parent="menu_observation_setting"
+                  action="hse.action_severity_level"
+                  sequence="4"/>
+        <!-- Reporting-->
+        <menuitem id="menu_incident_reporting_main" name="Incident Reporting" sequence="20"/>
+        <menuitem id="menu_incident_reporting" name="Incident Reporting Form" parent="hse.menu_incident_reporting_main" action="incident_reporting_action"
+                  sequence="1"/>
+        <menuitem id="menu_rep_corrective" name="All CAPA Action" parent="menu_incident_reporting_main" action="hse.inc_rep_capa_acion"
+                  sequence="20"/>
+
+
+        <menuitem id="menu_incident_reporting_setting" name="Settings" parent="menu_incident_reporting_main" sequence="30"/>
+        <menuitem id="menu_body_part"
+                  name="Body Part"
+                  parent="menu_incident_reporting_setting"
+                  action="hse.action_ir_body_part"
+                  sequence="1"/>
+        <menuitem id="menu_location_form"
+                  name="Location Form"
+                  parent="menu_incident_reporting_setting"
+                  action="hse.location_form_action" sequence="2"/>
+        <menuitem id="menu_injury_create_level"
+                  name="Injury Grade/Levels"
+                  action="action_injury_create_level"
+                  parent="menu_incident_reporting_setting"
+                  sequence="3"/>
+
+        <!--Investigation-->
+        <menuitem id="menu_incident_investigation_main" name="Incident Investigation" sequence="25"/>
+        <menuitem id="menu_incident_investigation" name="Incident Investigation Form" parent="hse.menu_incident_investigation_main" action="action_incident_investigation"
+                  sequence="1"/>
+        <menuitem id="menu_inv_corrective" name="All CAPA Action" parent="menu_incident_investigation_main" action="hse.inc_inv_capa_acion"
+                  sequence="20"/>
+
+
+        <menuitem id="menu_incident_investigation_setting" name="Settings" parent="menu_incident_investigation_main" sequence="30"/>
+        <menuitem id="menu_incident_member_list"
+                  name="Incident Member List"
+                  action="hse.action_incident_member_list"
+                  parent="menu_incident_investigation_setting"
+                  sequence="15"/>
+        <menuitem id="menu_action_event_type"
+                  name="Select Event Type"
+                  parent="menu_incident_investigation_setting"
+                  action="hse.action_event_type"
+                  sequence="16"/>
+
+        <menuitem id="menu_action_immediate_cause"
+                  name="Select Immediate Cause"
+                  action="hse.action_immediate_cause"
+                  parent="menu_incident_investigation_setting"
+                  sequence="17"/>
+        <menuitem id="menu_action_root_cause"
+                  name="Select Root Cause"
+                  action="hse.action_root_cause"
+                  parent="menu_incident_investigation_setting"
+                  sequence="18"/>
+
+    </data>
+</odoo>

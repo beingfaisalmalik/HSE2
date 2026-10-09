@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Operator Log Form -->
+    <record id="view_hse_operator_log_form" model="ir.ui.view">
+        <field name="name">hse.operator.log.form</field>
+        <field name="model">hse.operator.log</field>
+        <field name="arch" type="xml">
+            <form string="Operator Shift Log &amp; Handover">
+                <header>
+                    <button name="action_initiate_handover" string="Initiate Shift Handover" type="object" invisible="state != 'open'" class="btn-primary"/>
+                    <button name="action_accept_handover" string="Accept Handover (Relieve Shift)" type="object" invisible="state != 'handover_review'" class="btn-success"/>
+                    <field name="state" widget="statusbar" statusbar_visible="open,handover_review,relieved"/>
+                </header>
+                <sheet>
+                    <div class="hse-x-hero" style="background: linear-gradient(135deg, #0f172a 0%, #334155 100%); border-left: 6px solid #94a3b8; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">🛠️</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">Operator's Shift Log</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">Shift handover, standing alarms &amp; inspection rounds</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                    <div class="oe_title">
+                        <span class="text-muted"><field name="name"/></span>
+                        <h1><field name="location_id"/> - <field name="shift_date"/> (<field name="shift_type"/>)</h1>
+                    </div>
+                    <group>
+                        <group string="Shift Watch Personnel">
+                            <field name="shift_date"/>
+                            <field name="shift_type"/>
+                            <field name="supervisor_id"/>
+                            <field name="board_operator_id"/>
+                            <field name="field_operators"/>
+                        </group>
+                        <group string="Operating Conditions">
+                            <field name="operating_status"/>
+                            <field name="production_output"/>
+                            <field name="active_permits_count"/>
+                            <field name="active_bypasses_count"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Chronological Shift Events Log">
+                            <field name="entry_ids">
+                                <tree editable="bottom">
+                                    <field name="entry_time"/>
+                                    <field name="category"/>
+                                    <field name="priority" widget="badge" decoration-danger="priority == 'high'" decoration-warning="priority == 'medium'"/>
+                                    <field name="asset_id"/>
+                                    <field name="description"/>
+                                    <field name="logged_by_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Operating Rounds &amp; Parameter Readings">
+                            <field name="round_ids">
+                                <tree editable="bottom">
+                                    <field name="asset_id"/>
+                                    <field name="parameter_name"/>
+                                    <field name="recorded_value"/>
+                                    <field name="unit_of_measure"/>
+                                    <field name="min_limit"/>
+                                    <field name="max_limit"/>
+                                    <field name="is_abnormal" widget="boolean_toggle"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Defeated &amp; Standing Alarms (ISA 18.2)" name="alarms_page">
+                            <field name="alarm_ids">
+                                <tree editable="bottom" decoration-danger="priority == 'critical'" decoration-warning="priority == 'high'">
+                                    <field name="tag_number"/>
+                                    <field name="description"/>
+                                    <field name="priority" widget="badge"/>
+                                    <field name="status" widget="badge"/>
+                                    <field name="reason"/>
+                                    <field name="compensating_measure"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Shift Handover Protocol &amp; Relief Sign-off">
+                            <group>
+                                <group string="Outgoing Shift Handover">
+                                    <field name="outgoing_operator_signed" widget="boolean_toggle"/>
+                                    <field name="outgoing_sign_time"/>
+                                    <field name="handover_standing_orders" placeholder="Standing orders and priority tasks for oncoming shift..."/>
+                                </group>
+                                <group string="Incoming Relief Operator">
+                                    <field name="relieving_operator_id"/>
+                                    <field name="relieving_operator_signed" widget="boolean_toggle"/>
+                                    <field name="relieving_sign_time"/>
+                                    <field name="handover_critical_alarms" placeholder="Acknowledge bypassed alarms, open PTWs, and isolations..."/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Operator Log Tree -->
+    <record id="view_hse_operator_log_tree" model="ir.ui.view">
+        <field name="name">hse.operator.log.tree</field>
+        <field name="model">hse.operator.log</field>
+        <field name="arch" type="xml">
+            <tree string="Operator Shift Logs" decoration-info="state == 'open'" decoration-success="state == 'relieved'">
+                <field name="name"/>
+                <field name="location_id"/>
+                <field name="shift_date"/>
+                <field name="shift_type"/>
+                <field name="supervisor_id"/>
+                <field name="operating_status"/>
+                <field name="active_permits_count"/>
+                <field name="active_bypasses_count"/>
+                <field name="state" widget="badge" decoration-primary="state == 'open'" decoration-warning="state == 'handover_review'" decoration-success="state == 'relieved'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_hse_operator_log" model="ir.actions.act_window">
+        <field name="name">Operator's Log (Shift Handover)</field>
+        <field name="res_model">hse.operator.log</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Manage shift handovers, chronological operational logs, rounds, and relief protocols.</p>
+        </field>
+    </record>
+</odoo>

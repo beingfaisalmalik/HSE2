@@ -1,0 +1,8 @@
+<odoo>
+    <record id="rule_observation_form_user" model="ir.rule">
+        <field name="name">Observation Form Rule</field>
+        <field name="model_id" ref="model_observation_form"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+    </record>
+</odoo>

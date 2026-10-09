@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Audit Tree View -->
+        <record id="view_hse_audit_tree" model="ir.ui.view">
+            <field name="name">hse.audit.tree</field>
+            <field name="model">hse.audit</field>
+            <field name="arch" type="xml">
+                <tree string="HSE Management System Audits" decoration-danger="critical_deficiency_count &gt; 0" decoration-warning="major_nc_count &gt; 0" decoration-success="critical_deficiency_count == 0 and major_nc_count == 0">
+                    <field name="name"/>
+                    <field name="title"/>
+                    <field name="location_id"/>
+                    <field name="protocol"/>
+                    <field name="audit_date"/>
+                    <field name="compliance_score_percent"/>
+                    <field name="critical_deficiency_count"/>
+                    <field name="major_nc_count"/>
+                    <field name="minor_nc_count"/>
+                    <field name="state" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Audit Form View -->
+        <record id="view_hse_audit_form" model="ir.ui.view">
+            <field name="name">hse.audit.form</field>
+            <field name="model">hse.audit</field>
+            <field name="arch" type="xml">
+                <form string="HSE &amp; Process Safety Audit">
+                    <header>
+                        <button name="action_start_fieldwork" string="Start Fieldwork" type="object" invisible="state != 'planned'" class="btn-primary"/>
+                        <button name="action_submit_reporting" string="Draft Findings Report" type="object" invisible="state != 'fieldwork'" class="btn-secondary"/>
+                        <button name="action_approve" string="Approve Audit" type="object" invisible="state != 'reporting'" class="btn-success"/>
+                        <button name="action_close" string="Close Audit" type="object" invisible="state != 'approved'" class="btn-secondary"/>
+                        <field name="state" widget="statusbar" statusbar_visible="planned,fieldwork,reporting,approved,closed"/>
+                    </header>
+                    <sheet>
+                        <div class="hse-x-hero" style="background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%); border-left: 6px solid #93c5fd; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(2, 6, 23, 0.25);"><div style="display: flex; align-items: center; gap: 12px; min-width: 230px; flex: 1;"><span class="hse-x-icon" style="background: rgba(255,255,255,0.14); border-radius: 10px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">📋</span><div><div class="hse-x-hero-title" style="color: #ffffff; font-weight: 700; font-size: 15px; letter-spacing: 0.3px;">HSE Management System Audits</div><div class="hse-x-hero-sub" style="color: rgba(226,232,240,0.85); font-size: 11.5px;">ISO 45001/14001 &amp; PSM protocol audits</div></div></div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span class="hse-x-chip" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;">Ref: <field name="display_name" readonly="1" style="color:#fff;font-weight:700;"/></span><span class="hse-x-badge" style="background: rgba(56,189,248,0.16); border: 1px solid rgba(56,189,248,0.45); padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; color: #bae6fd;">Status: <field name="state" widget="badge" readonly="1"/></span></div></div>
+                        <div class="hse-x-meta" style="display: flex; gap: 16px; align-items: center; margin: -6px 0 10px 6px; font-size: 11px; color: #64748b; flex-wrap: wrap;"><span>🕒 Created <field name="create_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span><span>✏️ Updated <field name="write_date" widget="hse_relative_date" readonly="1" style="font-weight: 700; color: #475569;"/></span></div>
+                        <div class="oe_title">
+                            <span class="o_form_label">Audit Reference</span>
+                            <h1><field name="name" readonly="1"/></h1>
+                            <h3><field name="title" placeholder="e.g. Annual OSHA 1910.119 Process Safety Management (PSM) Compliance Audit"/></h3>
+                        </div>
+                        <group>
+                            <group string="Audit Scope &amp; Schedule">
+                                <field name="location_id"/>
+                                <field name="protocol"/>
+                                <field name="audit_date"/>
+                                <field name="target_end_date"/>
+                            </group>
+                            <group string="Auditors &amp; Compliance Scoring">
+                                <field name="lead_auditor_id"/>
+                                <field name="total_checks" readonly="1"/>
+                                <field name="compliance_score_percent" readonly="1" widget="badge" decoration-danger="compliance_score_percent &lt; 85.0" decoration-warning="compliance_score_percent &lt; 95.0" decoration-success="compliance_score_percent &gt;= 95.0"/>
+                                <field name="critical_deficiency_count" readonly="1"/>
+                                <field name="major_nc_count" readonly="1"/>
+                                <field name="minor_nc_count" readonly="1"/>
+                            </group>
+                        </group>
+                        <group string="Audit Team &amp; Executive Summary">
+                            <field name="audit_team"/>
+                            <field name="audit_summary"/>
+                        </group>
+                        <notebook>
+                            <page string="Protocol Verification Checklist &amp; Findings" name="checklist">
+                                <field name="checklist_ids">
+                                    <tree string="Checklist" editable="bottom" decoration-danger="finding_type == 'critical'" decoration-warning="finding_type == 'major_nc'" decoration-info="finding_type == 'minor_nc'" decoration-success="finding_type == 'compliant'">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="requirement_clause"/>
+                                        <field name="verification_criteria"/>
+                                        <field name="finding_type" widget="badge" decoration-danger="finding_type == 'critical'" decoration-warning="finding_type == 'major_nc'" decoration-info="finding_type == 'minor_nc'" decoration-success="finding_type == 'compliant'"/>
+                                        <field name="evidence_notes"/>
+                                        <field name="capa_action_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hse_audit" model="ir.actions.act_window">
+            <field name="name">HSE &amp; Process Safety Audits</field>
+            <field name="res_model">hse.audit</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

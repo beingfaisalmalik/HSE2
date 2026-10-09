@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- OSHA 300-Style Injury & Illness Log (dynamic, multi-record) -->
+        <template id="report_hse_osha300_log_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page" style="font-family: Arial, sans-serif; font-size: 10px; line-height: 1.35; color: #1e293b;">
+                            <div style="background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%); color: #ffffff; padding: 12px 16px; border-radius: 8px; margin-bottom: 12px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                                    <div>
+                                        <h3 style="margin: 0; font-size: 16px; font-weight: bold; color: #ffffff;">OSHA FORM 300 — LOG OF WORK-RELATED INJURIES &amp; ILLNESSES</h3>
+                                        <div style="font-size: 9.5px; color: #fecaca;">Establishment: <t t-esc="doc.company_id.name if 'company_id' in doc._fields else doc.create_uid.company_id.name"/> · Year: <t t-esc="doc.incident_date and doc.incident_date.year or '—'"/></div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 13px; font-weight: bold; color: #ffffff;"><t t-esc="doc.name"/></div>
+                                        <div style="font-size: 9.5px; color: #fee2e2;"><t t-esc="dict(doc._fields['incident_type'].selection).get(doc.incident_type, doc.incident_type or '')"/></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table table-bordered table-sm" style="width: 100%; margin-bottom: 10px;">
+                                <tr style="background: #fef2f2; font-weight: bold;">
+                                    <td style="width: 18%;">Case No.</td>
+                                    <td style="width: 20%;">Employee / Reporter</td>
+                                    <td style="width: 14%;">Date of Incident</td>
+                                    <td>Where It Occurred</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><t t-esc="doc.name"/></strong></td>
+                                    <td><t t-esc="doc.external_employee_name or doc.reported_by_id.name or '—'"/></td>
+                                    <td><t t-esc="doc.incident_date or '—'"/></td>
+                                    <td><t t-esc="doc.exact_location or '—'"/></td>
+                                </tr>
+                            </table>
+
+                            <table class="table table-bordered table-sm" style="width: 100%; margin-bottom: 10px;">
+                                <tr style="background: #fef2f2; font-weight: bold;">
+                                    <td>Description of Incident</td>
+                                    <td style="width: 16%;">Body Part</td>
+                                    <td style="width: 16%;">Injury Category</td>
+                                </tr>
+                                <tr>
+                                    <td><t t-esc="doc.summary_of_incident or doc.incident_detail or doc.ir_description or '—'"/></td>
+                                    <td><t t-esc="dict(doc._fields['body_part'].selection).get(doc.body_part, doc.body_part) if doc.body_part else '—'"/></td>
+                                    <td><t t-esc="dict(doc._fields['injury_category'].selection).get(doc.injury_category, doc.injury_category) if doc.injury_category else '—'"/></td>
+                                </tr>
+                            </table>
+
+                            <table class="table table-bordered table-sm" style="width: 100%; margin-bottom: 10px;">
+                                <tr style="background: #fef2f2; font-weight: bold;">
+                                    <td>Days Away / Restricted / Transferred</td>
+                                    <td style="width: 28%;">Treatment Provider</td>
+                                    <td style="width: 22%;">Case Status</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><t t-esc="doc.days_out_transferred_restricted or 0"/></strong> day(s)</td>
+                                    <td><t t-esc="doc.treatment_provider or '—'"/></td>
+                                    <td><t t-esc="dict(doc._fields['state'].selection).get(doc.state, doc.state or '')"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <record id="action_report_hse_osha300_log" model="ir.actions.report">
+            <field name="name">OSHA 300 Log Entry</field>
+            <field name="model">incident.reporting</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">hse_reports.report_hse_osha300_log_template</field>
+            <field name="report_file">hse_reports.report_hse_osha300_log_template</field>
+            <field name="binding_model_id" ref="hse.model_incident_reporting"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>
