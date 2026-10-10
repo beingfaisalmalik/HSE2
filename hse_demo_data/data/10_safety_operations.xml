@@ -261,11 +261,11 @@
         <!-- ================= Stop-work authority ======================== -->
         <record id="dd_swa_1" model="hse.stop.work">
             <field name="location_id" ref="dd_loc_wh"/>
-            <field name="rule_id" ref="hse.lsr_bypass"/>
+            <field name="rule_id" ref="hse.lsr_line_of_fire"/>
             <field name="perceived_risk_level">medium</field>
             <field name="hazard_description">Forklift operator working with raised mast near pedestrian walkway during racking repair.</field>
             <field name="immediate_action_taken">Work paused; walkway re-routed and mast lowered before resuming.</field>
-            <field name="supervisor_id" ref="base.user_admin"/>
+            <field name="supervisor_id" ref="dd_emp_ahmed"/>
             <field name="resolution_details">Traffic management plan briefed at toolbox; observer recognized in monthly meeting.</field>
             <field name="state">commended</field>
         </record>

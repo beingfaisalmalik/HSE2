@@ -225,7 +225,7 @@ class HSEDashboardController(http.Controller):
                     color_class = 'cell-low'
                     level_name = 'Low'
 
-                count = len([h for h in hazards if getattr(h, 'severity_level', False) and getattr(h, 'likelihood_level', False) and int(h.severity_level) == consequence and int(h.likelihood_level) == likelihood])
+                count = len([h for h in hazards if getattr(h, 'severity_level', False) and getattr(h, 'likelihood', False) and int(h.severity_level) == consequence and int(h.likelihood) == likelihood])
 
                 row.append({
                     'consequence': consequence,

@@ -1,0 +1,88 @@
+# Isolated fictional client demo. No production integrations or database mounts.
+name: hse-client-demo
+x-odoo-environment: &odoo-environment
+  HOST: db
+  PORT: "5432"
+  USER: odoo
+  PASSWORD: ${POSTGRES_PASSWORD:?Generate a private .env with demo/generate_env.py}
+  DEMO_DATABASE: ${DEMO_DATABASE:-hse_client_demo}
+  DEMO_BASE_URL: ${DEMO_BASE_URL:-http://localhost:8069}
+  DEMO_ADMIN_PASSWORD: ${DEMO_ADMIN_PASSWORD:?Set a private demo admin password}
+  DEMO_PRESENTER_PASSWORD: ${DEMO_PRESENTER_PASSWORD:?Set a private presenter password}
+  DEMO_PORTAL_PASSWORD: ${DEMO_PORTAL_PASSWORD:?Set a private portal password}
+  # Set to 1 only to reapply .env credentials and fictional branding to a database
+  # that is already provisioned. Restarting the stack does not re-provision.
+  DEMO_REPROVISION: ${DEMO_REPROVISION:-}
+  # Embedded cross-site preview compatibility only; leave empty for localhost.
+  DEMO_PREVIEW_EMBEDDED: ${DEMO_PREVIEW_EMBEDDED:-}
+  PYTHONDONTWRITEBYTECODE: "1"
+
+x-odoo-volumes: &odoo-volumes
+  - ./:/mnt/extra-addons:ro
+  - ./demo:/mnt/demo:ro
+  - hse_demo_filestore:/var/lib/odoo
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: odoo
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Generate a private .env}
+    volumes:
+      - hse_demo_database:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  demo-init:
+    image: odoo:17.0
+    depends_on:
+      db:
+        condition: service_healthy
+    environment: *odoo-environment
+    volumes: *odoo-volumes
+    command: ["bash", "/mnt/demo/bootstrap.sh"]
+    restart: "no"
+
+  web:
+    image: odoo:17.0
+    depends_on:
+      demo-init:
+        condition: service_completed_successfully
+    environment: *odoo-environment
+    volumes: *odoo-volumes
+    command: ["bash", "/mnt/demo/run.sh"]
+    ports:
+      - "${DEMO_HTTP_BIND:-127.0.0.1}:${DEMO_HTTP_PORT:-8069}:8069"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8069/web/login', timeout=5)"]
+      interval: 20s
+      timeout: 10s
+      start_period: 60s
+      retries: 6
+
+  demo-test:
+    build:
+      context: ./demo
+      dockerfile: Dockerfile.test
+    profiles: ["tests"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment: *odoo-environment
+    volumes:
+      - ./:/mnt/extra-addons:ro
+      - ./demo:/mnt/demo:ro
+      - hse_demo_test_filestore:/var/lib/odoo
+    command: ["bash", "/mnt/demo/test.sh"]
+    restart: "no"
+
+volumes:
+  hse_demo_database:
+  hse_demo_filestore:
+  hse_demo_test_filestore:

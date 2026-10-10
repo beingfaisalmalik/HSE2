@@ -8,19 +8,7 @@
                         <div class="page" style="padding: 40px; font-family: 'Arial', sans-serif; line-height: 1.6;">
 
                             <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <td>
-                                            Name:
-                                        </td>
-                                        <td>
-                                            Incident ID:
-                                        </td>
-                                        <td>
-                                            Summary:
-                                        </td>
-                                    </tr>
-                                </thead>
+                                <thead><tr><th>Action title</th><th>Reference</th><th>Action type</th><th>Status</th><th>Due date</th><th>Assigned user</th><th>Completion date</th></tr></thead>
                                 <tbody>
                                      <t t-foreach="data.items()" t-as="t">
                                         <tr>

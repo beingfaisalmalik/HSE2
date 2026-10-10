@@ -1,0 +1,18 @@
+# Python / Odoo runtime artifacts
+__pycache__/
+*.py[cod]
+.venv/
+.local/
+.pytest_cache/
+*.log
+
+# Local demo configuration, secrets and database / filestore data
+.env
+.env.*
+!.env.example
+.demo-runtime/
+
+# Browser / frontend tooling
+node_modules/
+playwright-report/
+test-results/

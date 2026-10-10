@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_demo_presenter" model="res.groups">
+        <field name="name">Client Demo Presenter</field>
+        <field name="category_id" ref="hse.module_category_hse"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('hse.group_manager'))]"/>
+    </record>
+    <record id="action_client_demo" model="ir.actions.act_url">
+        <field name="name">HSE Client Demo</field>
+        <field name="url">/hse/demo</field>
+        <field name="target">self</field>
+    </record>
+</odoo>
