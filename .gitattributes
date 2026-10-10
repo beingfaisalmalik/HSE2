@@ -1,0 +1,47 @@
+# Line endings are fixed here because the demo mounts this directory into a
+# Linux container read-only and executes the shell scripts inside it. A clone on
+# Windows with core.autocrlf=true would otherwise produce CRLF scripts that fail
+# with "$'\r': command not found" during demo initialization.
+* text=auto eol=lf
+
+# Explicit for the files the containers execute or parse.
+*.sh        text eol=lf
+*.bash      text eol=lf
+*.py        text eol=lf
+*.conf      text eol=lf
+*.cfg       text eol=lf
+*.xml       text eol=lf
+*.csv       text eol=lf
+*.md        text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.json      text eol=lf
+*.js        text eol=lf
+*.css       text eol=lf
+*.scss      text eol=lf
+*.html      text eol=lf
+*.po        text eol=lf
+*.pot       text eol=lf
+*.txt       text eol=lf
+*.svg       text eol=lf
+
+# Never let a checkout rewrite binary assets.
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.ico       binary
+*.webp      binary
+*.pdf       binary
+*.xlsx      binary
+*.xlsm      binary
+*.zip       binary
+*.gz        binary
+*.ttf       binary
+*.woff      binary
+*.woff2     binary
+*.eot       binary
+
+# Generated artifacts are not part of the reviewable change set.
+*.pyc       binary
+*.mo        binary

@@ -1,19 +1,18 @@
-from odoo import models, fields, api
+from odoo import models, fields
+from odoo.addons.hse.tools.report_dates import date_range_domain
 
 class HseWizardReport(models.TransientModel):
     #
     _name = 'hse.wizard.report'
     _description = 'HSE Wizard Report'
 
-    start_date = fields.Date(string='From Date', store=True)
-    end_date = fields.Date(string='To Date', store=True)
+    start_date = fields.Date(string='From Date', default=fields.Date.context_today, required=True)
+    end_date = fields.Date(string='To Date', default=fields.Date.context_today, required=True)
 
     def printhsereport(self):
-        print(self.start_date)
+        self.ensure_one()
 
-
-        ra_jsa_data=self.env['ra_jsa.model'].search([('create_date', '>=', self.start_date),
-            ('create_date', '<=', self.end_date)])
+        ra_jsa_data=self.env['ra_jsa.model'].search(date_range_domain(self.env, 'create_date', self.start_date, self.end_date))
         dic={}
         for rec in ra_jsa_data:
             dic[rec.id] = {
@@ -31,10 +30,5 @@ class HseWizardReport(models.TransientModel):
             }
 
         data = {'data': dic}
-        print(data)
 
         return self.env.ref('hse_reports.ra_jsa_report_action').report_action(self,data=data)
-
-
-
-

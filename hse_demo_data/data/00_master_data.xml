@@ -27,25 +27,25 @@
             <field name="name">Ahmed Raza</field>
             <field name="department_id" ref="dd_dept_operations"/>
             <field name="job_id" ref="dd_job_operator"/>
-            <field name="work_email">ahmed.raza@example-plant.com</field>
+            <field name="work_email">ahmed.raza@northstar.example</field>
         </record>
         <record id="dd_emp_sara" model="hr.employee">
             <field name="name">Sara Khan</field>
             <field name="department_id" ref="dd_dept_operations"/>
             <field name="job_id" ref="dd_job_operator"/>
-            <field name="work_email">sara.khan@example-plant.com</field>
+            <field name="work_email">sara.khan@northstar.example</field>
         </record>
         <record id="dd_emp_john" model="hr.employee">
             <field name="name">John Dsouza</field>
             <field name="department_id" ref="dd_dept_maintenance"/>
             <field name="job_id" ref="dd_job_tech"/>
-            <field name="work_email">john.dsouza@example-plant.com</field>
+            <field name="work_email">john.dsouza@northstar.example</field>
         </record>
         <record id="dd_emp_bilal" model="hr.employee">
             <field name="name">Bilal Ahmed</field>
             <field name="department_id" ref="dd_dept_maintenance"/>
             <field name="job_id" ref="dd_job_tech"/>
-            <field name="work_email">bilal.ahmed@example-plant.com</field>
+            <field name="work_email">bilal.ahmed@northstar.example</field>
         </record>
 
         <!-- ================= Locations & assets ======================== -->

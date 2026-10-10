@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Runs on install/upgrade. Stable noupdate IDs preserve client-demo edits. -->
+    <function model="hse.demo.loader" name="load_comprehensive_demo"/>
+</odoo>

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_client_demo" name="Client Demo &amp; Guided Journeys"
+              parent="hse.menu_hse_overview" action="action_client_demo" sequence="0"
+              groups="hse_demo_data.group_demo_presenter,base.group_system"/>
+
+    <template id="client_demo" name="HSE Client Demo Experience">
+        <t t-call="web.layout">
+            <t t-set="title">HSE · Client Demo Experience</t>
+            <t t-set="body_classname">hse-client-demo</t>
+            <t t-set="head">
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <meta name="robots" content="noindex, nofollow"/>
+                <link rel="icon" type="image/png" href="/hse_demo_data/static/demo/northstar_mark.png"/>
+                <link rel="stylesheet" href="/hse_demo_data/static/src/css/demo.css?v=5"/>
+                <script defer="defer" src="/hse_demo_data/static/src/js/demo.js?v=4"/>
+            </t>
+            <a class="skip-link" href="#main">Skip to content</a>
+            <aside class="sidebar" aria-label="Demo navigation">
+                <a href="/hse/demo" class="brand" aria-label="HSE client demo home">
+                    <span class="brand-symbol">
+                        <svg viewBox="0 0 32 36" fill="none" aria-hidden="true"><path d="M16 2 29 7v10c0 8-7 14-13 17C10 31 3 25 3 17V7L16 2Z" stroke="currentColor" stroke-width="2.4"/><path d="m9 17 5 5 9-11" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                    <span><strong>HSE<span class="brand-dot">.</span></strong><small>ENTERPRISE SUITE</small></span>
+                </a>
+                <div class="workspace-label">CLIENT EXPERIENCE</div>
+                <nav class="primary-nav">
+                    <a href="#overview" class="active" data-nav="overview"><span class="nav-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M9 10h12"/></svg></span> Overview</a>
+                    <a href="#journeys" data-nav="journeys"><span class="nav-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="5" r="2"/><circle cx="19" cy="19" r="2"/><path d="M5 7v6a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V7M16 10l3-3 3 3"/></svg></span> Guided journeys <span class="nav-count">8</span></a>
+                    <a href="#explorer" data-nav="explorer"><span class="nav-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span> Module explorer <span class="nav-count"><t t-out="module_count"/></span></a>
+                    <a href="#reports" data-nav="reports"><span class="nav-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span> Report library</a>
+                    <a href="#readiness" data-nav="readiness"><span class="nav-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Demo readiness</a>
+                </nav>
+                <div class="sidebar-divider"/>
+                <div class="workspace-label">YOUR DEMO TOOLKIT</div>
+                <nav class="toolkit-nav">
+                    <a t-att-href="dashboard_url" target="_blank" rel="noopener">Executive dashboard <span><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a>
+                    <a href="/hse/portal" target="_blank" rel="noopener">Frontline safety portal <span><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a>
+                    <a href="/hse/demo/guide">Download presenter guide <span><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 18v3h14v-3"/></svg></span></a>
+                    <a href="/hse/demo/coverage.csv">Export coverage checklist <span><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 18v3h14v-3"/></svg></span></a>
+                </nav>
+                <div class="sidebar-facility">
+                    <div class="facility-monogram">N</div>
+                    <strong>Northstar Petrochemicals</strong>
+                    <span>Fictional industrial complex</span>
+                    <div class="facility-badge"><span class="status-dot"/> ISOLATED DEMO DATA</div>
+                </div>
+                <div class="sidebar-footer">Odoo 17 Community <span>·</span> HSE Suite</div>
+            </aside>
+
+            <div class="app-frame">
+                <header class="topbar">
+                    <div class="breadcrumb"><span>HSE Suite</span><span class="crumb-divider">/</span><strong>Client demonstration</strong></div>
+                    <div class="topbar-right">
+                        <span class="environment-chip">DEMO ENVIRONMENT</span>
+                        <span class="presenter-avatar">EM</span>
+                        <span class="presenter-name" t-out="presenter_name"/>
+                    </div>
+                </header>
+                <main id="main" t-att-data-seed-date="seed_date">
+                    <section id="overview" class="overview">
+                        <div class="page-heading">
+                            <div><p class="eyebrow">YOUR END-TO-END HSE EXPERIENCE</p><h1>Welcome to the client demo</h1><p class="page-description">Explore the complete suite. Follow the story. See the evidence.</p></div>
+                            <a class="button secondary" t-att-href="dashboard_url" target="_blank" rel="noopener">Open HSE application <span><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a>
+                        </div>
+                        <div class="hero">
+                            <div class="hero-copy">
+                                <div class="hero-kicker"><span class="status-dot"/> ONE FACILITY. EVERY SAFETY WORKFLOW.</div>
+                                <h2>Safer operations.<br/>One connected platform.</h2>
+                                <p>From a worker’s first observation to executive assurance. Experience health, safety, environment and operational integrity in one real, working system.</p>
+                                <div class="hero-actions"><a class="button primary" href="#journeys" data-start="true">Start the guided demo <span><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></span></a><a class="hero-text-link" href="#explorer">Explore all modules <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></a></div>
+                                <div class="hero-facts"><span><strong>8</strong> guided journeys</span><span><strong t-out="module_count"/> module areas</span><span><strong>90</strong> minute full tour</span></div>
+                            </div>
+                            <div class="hero-visual" aria-label="Connected facility demo: Cracker Unit 100, Polyethylene Unit 200 and Central Warehouse">
+                                <div class="visual-label"><span class="visual-cross"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 1v5M12 18v5M1 12h5m12 0h5M4 4l4 4m8 8 4 4M4 20l4-4m8-8 4-4"/></svg></span> NORTHSTAR DEMO COMPLEX <span class="visual-badge">CONNECTED</span></div>
+                                <svg class="plant-illustration" viewBox="0 0 420 238" fill="none" aria-hidden="true">
+                                    <defs><pattern id="demo-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" stroke="#c9ded6" stroke-width=".5"/></pattern><linearGradient id="tank-fill" x1="100" y1="56" x2="250" y2="204" gradientUnits="userSpaceOnUse"><stop stop-color="#f9fffc"/><stop offset="1" stop-color="#cae5d8"/></linearGradient></defs>
+                                    <rect width="420" height="238" fill="url(#demo-grid)"/>
+                                    <path d="m40 183 168 38 171-42-159-42-180 46Z" fill="#d4e8de" stroke="#bdd6c8"/>
+                                    <path d="m83 116 57 15v59l-57-14v-60Z" fill="#d4e8de" stroke="#6f9e88"/><path d="m140 131 48-14v61l-48 12v-59Z" fill="#b7d9c7" stroke="#6f9e88"/><path d="m83 116 48-14 57 15-48 14-57-15Z" fill="#eff9f3" stroke="#6f9e88"/>
+                                    <path d="M108 117V68m18 53V53m18 68V83" stroke="#557e69" stroke-width="8"/><path d="M108 116V68m18 53V53m18 68V83" stroke="#b7d9c7" stroke-width="4"/>
+                                    <path d="M210 93v84c0 11 60 11 60 0V93" fill="url(#tank-fill)" stroke="#6f9e88"/><ellipse cx="240" cy="93" rx="30" ry="9" fill="#f4fff9" stroke="#6f9e88"/><path d="M210 137c0 11 60 11 60 0m-60 33c0 11 60 11 60 0" stroke="#82b099"/><path d="M250 103v77m4-70h-8m8 11h-8m8 11h-8m8 11h-8m8 11h-8m8 11h-8" stroke="#6f9e88"/>
+                                    <path d="m292 135 44-13 31 15v46l-44 12-31-15v-45Z" fill="#dceee4" stroke="#6f9e88"/><path d="m292 135 31 15 44-13m-44 13v45" stroke="#6f9e88"/><path d="m304 160 10 5v17l-10-5v-17Z" fill="#a6cbb7"/><path d="m334 155 22-6v11l-22 6v-11Z" fill="#a6cbb7"/>
+                                    <path d="M173 145h25v-29h12M270 160h22M67 163v-38h16" stroke="#5d967b" stroke-width="4" stroke-linejoin="round"/><path d="m140 190 41 10 43-12" stroke="#82b099" stroke-width="2" stroke-dasharray="4 4"/>
+                                    <circle cx="174" cy="60" r="13" fill="#fff" stroke="#8cbca4"/><path d="m169 60 3 3 6-7" stroke="#277952" stroke-width="2" stroke-linecap="round"/>
+                                    <circle cx="289" cy="107" r="13" fill="#fff" stroke="#8cbca4"/><path d="m284 107 3 3 6-7" stroke="#277952" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M174 75v31m115 16v29" stroke="#82b099" stroke-dasharray="3 4"/>
+                                </svg>
+                                <div class="plant-zones"><span><b>CU-100</b> Cracker unit</span><span><b>PE-200</b> Polymer unit</span><span><b>WH-01</b> Warehouse</span></div>
+                                <div class="lifecycle-strip"><span>Identify</span><i><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></i><span>Control</span><i><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></i><span>Learn</span><i><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></i><span>Assure</span></div>
+                            </div>
+                        </div>
+                        <div class="kpi-grid">
+                            <article class="kpi-card"><div class="kpi-label">Days without LTI <span class="kpi-icon green"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></svg></span></div><strong t-out="kpis['days_without_lti'] if kpis['days_without_lti'] is not False else '—'"/><p t-out="kpis['days_without_lti_label']"/><span class="kpi-tag">Incident-driven indicator</span></article>
+                            <article class="kpi-card"><div class="kpi-label">Active work permits <span class="kpi-icon blue"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span></div><strong t-out="kpis['active_permits']"/><p><t t-out="kpis['simops_conflicts_count']"/> permits with SIMOPS conflicts</p><span class="kpi-tag">Live demo database</span></article>
+                            <article class="kpi-card"><div class="kpi-label">Overdue corrective actions <span class="kpi-icon amber">!</span></div><strong t-out="kpis['overdue_actions']"/><p>Exceptions ready to investigate</p><span class="kpi-tag amber-text">Attention required</span></article>
+                            <article class="kpi-card"><div class="kpi-label">Bow-tie barrier health <span class="kpi-icon green"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 4v6c0 5-5 8-8 10-3-2-8-5-8-10V7l8-4Z"/><path d="m8 12 3 3 5-6"/></svg></span></div><strong><t t-out="kpis['barrier_health_pct']"/><small>%</small></strong><p><t t-out="kpis['total_barriers']"/> assessed investigation barriers</p><span class="kpi-tag">Evidence-backed baseline</span></article>
+                        </div>
+                        <div class="demo-disclaimer"><span class="disclaimer-icon">i</span><p><strong>Real application. Fictional data.</strong> Every link opens the native Odoo record. All people, plant measurements, costs and contacts are synthetic and for demonstration only.</p><span class="server-date">Server date: <t t-out="kpis['server_date']"/></span></div>
+                    </section>
+
+                    <section id="journeys" class="section journeys">
+                        <div class="section-heading"><div><p class="eyebrow">A STORY, NOT JUST A SCREEN TOUR</p><h2>Eight journeys. The whole picture.</h2><p>Choose a client persona and follow a connected, end-to-end workflow.</p></div><div class="journey-tools"><button class="button small secondary" data-notes="true" aria-pressed="false">Presenter notes <span><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></span></button><button class="icon-button" data-print="true" title="Print all presenter journeys" aria-label="Print presenter walkthrough"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></button></div></div>
+                        <div class="tour-progress"><div><span class="status-dot"/> <span data-tour-progress="true">0 of 8 journeys demonstrated</span><small>Personal walkthrough checklist · not workflow status</small></div><button class="text-button" data-reset-tour="true">Reset checklist</button></div>
+                        <div class="journey-grid">
+                            <t t-foreach="scenarios" t-as="journey">
+                                <details class="journey-card" t-att-data-journey="journey['key']">
+                                    <summary><div class="journey-card-top"><span class="journey-number" t-out="journey['number']"/><span class="journey-duration"><t t-out="journey['minutes']"/> min <span><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></span></div><h3 t-out="journey['title']"/><p t-out="journey['summary']"/><div class="journey-card-bottom"><span class="persona-chip" t-out="journey['persona']"/><span class="step-progress" t-att-data-progress-for="journey['key']">0 / <t t-out="len(journey['steps'])"/> shown</span><span class="expand-cue"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span></div></summary>
+                                    <div class="journey-body"><p class="journey-outcome"><strong>Client takeaway</strong><t t-out="journey['outcome']"/></p><ol class="journey-steps">
+                                        <t t-foreach="journey['steps']" t-as="step">
+                                            <li><div class="step-heading"><span class="step-number" t-out="step_index + 1"/><h4 t-out="step['title']"/></div><p class="step-proof" t-out="step['proof']"/><div class="presenter-note"><span>WHAT TO SAY &amp; SHOW</span><p t-out="step['narrative']"/></div><div class="step-actions"><a t-if="step['ready']" class="record-link" t-att-href="step['url']" target="_blank" rel="noopener">Open live record <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></a><span t-else="" class="missing">Sample unavailable</span><label class="step-checkbox"><input type="checkbox" t-att-data-step="journey['key'] + '-' + str(step_index)"/> Mark demonstrated</label></div></li>
+                                        </t>
+                                    </ol></div>
+                                </details>
+                            </t>
+                        </div>
+                        <div class="agenda-strip"><strong>Short on time?</strong><span><b>15 min</b> Executive overview + incident highlights + portal</span><span><b>45 min</b> Safety + work + process safety + workforce</span><a href="/hse/demo/guide">Get the complete talk track <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 18v3h14v-3"/></svg></a></div>
+                    </section>
+
+                    <section id="explorer" class="section module-explorer">
+                        <div class="section-heading"><div><p class="eyebrow">NOTHING LEFT EMPTY</p><h2>Explore the complete HSE suite</h2><p><t t-out="module_count"/> module areas across <t t-out="category_count"/> domains, with real forms and connected sample records.</p></div><a class="button small secondary" href="/hse/demo/coverage.csv">Export coverage <span><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 18v3h14v-3"/></svg></span></a></div>
+                        <div class="explorer-toolbar"><label class="search-field"><span aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/></svg></span><input type="search" id="module-search" placeholder="Find a module, workflow or capability…" aria-label="Search HSE modules"/></label><select id="category-filter" aria-label="Filter by HSE domain"><option value="all">All HSE domains</option><t t-foreach="categories" t-as="category"><option t-att-value="category['key']" t-out="category['title']"/></t></select><button class="text-button" data-clear-search="true">Clear filters</button></div>
+                        <div class="explorer-meta"><span data-result-count="true">Showing <t t-out="module_count"/> of <t t-out="module_count"/> module areas</span><span>Counts read from this database at page load</span></div>
+                        <div class="module-grid">
+                            <t t-foreach="modules" t-as="module">
+                                <article class="module-card" t-att-data-category="module['category']" t-att-data-search="(module['title'] + ' ' + module['description'] + ' ' + module['model']).lower()">
+                                    <div class="module-top"><span class="module-category" t-out="module['category_title']"/><span t-att-class="'record-count ' + ('ready' if module['ready'] else 'missing')"><t t-out="module['count']"/> records</span></div>
+                                    <h3 t-out="module['title']"/><p class="module-description" t-out="module['description']"/>
+                                    <div class="module-sample"><span>FEATURED SAMPLE</span><strong t-out="module['sample_label']"/><small t-if="module['sample_state']" t-out="module['sample_state']"/></div>
+                                    <div class="module-links"><a t-if="module['url']" t-att-href="module['url']" target="_blank" rel="noopener">Open register <span><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></span></a><a t-if="module['sample_url']" t-att-href="module['sample_url']" target="_blank" rel="noopener">Sample record <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></a></div>
+                                </article>
+                            </t>
+                        </div>
+                        <div class="empty-results" hidden="hidden" data-empty-results="true"><span><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/></svg></span><h3>No matching modules</h3><p>Try a different keyword or select another HSE domain.</p><button class="button secondary" data-clear-search="true">Clear filters</button></div>
+                    </section>
+
+                    <section id="reports" class="section report-library">
+                        <div class="section-heading"><div><p class="eyebrow">TURN THE DEMO INTO EVIDENCE</p><h2>Client-ready reporting</h2><p>Open reports rendered directly from the selected records. No mock charts or pre-made exports.</p></div><span t-att-class="'engine-chip ' + ('available' if pdf_available else '')"><span class="status-dot"/><t t-if="pdf_available">Native PDF engine available</t><t t-else="">HTML previews · browser print ready</t></span></div>
+                        <div class="report-grid"><t t-foreach="reports" t-as="report"><article class="report-card"><span class="report-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span><div><span class="module-category" t-out="report['category']"/><h3 t-out="report['title']"/><div class="report-links"><a t-if="report['ready']" t-att-href="report['html_url']" target="_blank" rel="noopener">Preview report <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></a><a t-if="report['ready'] and pdf_available" t-att-href="report['pdf_url']" target="_blank" rel="noopener">Download PDF <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 18v3h14v-3"/></svg></a><span t-if="not report['ready']" class="missing">Report sample unavailable</span></div></div></article></t></div>
+                        <p class="report-note">HTML reports can be saved as PDF using your browser’s Print command. Native server-side PDF export requires wkhtmltopdf; the provided Docker environment includes it. Regulatory report samples are illustrative, not official filings.</p>
+                    </section>
+
+                    <section id="readiness" class="section readiness">
+                        <div class="section-heading"><div><p class="eyebrow">BEFORE THE CLIENT JOINS</p><h2>A confident, repeatable demonstration</h2><p>Check coverage, use the right account, and be clear about the demo’s boundaries.</p></div><a class="button small secondary" href="/hse/demo">Refresh checks <span><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7a9 9 0 1 0 1 8M20 2v6h-6"/></svg></span></a></div>
+                        <div class="readiness-grid">
+                            <article class="readiness-card"><h3>Environment checklist</h3><div class="check-row"><span t-att-class="'check-icon ' + ('warning' if issues else '')"><t t-if="issues">!</t><t t-else=""><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></t></span><div><strong><t t-out="ready_count"/> / <t t-out="module_count"/> module samples available</strong><p>Native actions and featured records resolve successfully.</p></div></div><div class="check-row"><span class="check-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span><div><strong><t t-out="record_count"/> records across the module explorer</strong><p>Includes original demo samples and standard reference data.</p></div></div><div class="check-row"><span class="check-icon warning"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></svg></span><div><strong>Sample date anchor: <t t-out="seed_date"/></strong><p>Dates are relative to first installation. Rebuild an isolated database for a pristine, fresh-dated session.</p></div></div><div class="check-row"><span class="check-icon">i</span><div><strong>Mutations are real</strong><p>Workflow actions change Odoo records. “Mark demonstrated” changes only your browser checklist.</p></div></div><ul t-if="issues" class="readiness-issues"><t t-foreach="issues" t-as="issue"><li t-out="issue"/></t></ul></article>
+                            <article class="readiness-card"><h3>Two perspectives. One safety system.</h3><div class="role-row"><span class="role-avatar">EM</span><div><strong>HSE presenter</strong><code>hse.presenter</code><p>Client hub, executive dashboard, native forms and reports.</p></div></div><div class="role-row"><span class="role-avatar contractor">AM</span><div><strong>Frontline contractor</strong><code>hse.contractor</code><p>Use a private window at <a href="/hse/portal" target="_blank" rel="noopener">/hse/portal</a> for reporting, own submissions and approved content.</p></div></div><div class="role-note">Passwords are provisioned outside the addon. The contractor cannot access this presenter hub.</div><a href="/hse/demo/guide" class="button secondary full-width">Download the comprehensive walkthrough <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 18v3h14v-3"/></svg></a></article>
+                        </div>
+                        <details class="boundaries"><summary><span>i</span> Transparent demo boundaries <span><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span></summary><div><p>This environment is not a production safety system. It does not establish regulatory compliance or certify engineering calculations.</p><ul><li>All health records, chemical guidance, exposure limits, financial figures and emergency contacts are synthetic or illustrative.</li><li>PSSR completion is calculated, but the current commissioning action does not enforce a PSSR gate. Demonstrate verification, not a nonexistent block.</li><li>SIMOPS, LOTO, preparation readiness and entrant-closure exercises use actual native workflow checks.</li><li>No real notifications, physical access gates, external asset integrations or authority submissions are configured.</li><li>Internal model access is broad. Validate segregation of duties and medical-data privacy before a production deployment.</li></ul></div></details>
+                    </section>
+                    <footer class="page-footer"><span><b>HSE.</b> Safer operations, connected.</span><span>Northstar client demo · Synthetic data only · Odoo 17</span></footer>
+                </main>
+            </div>
+        </t>
+    </template>
+
+    <template id="client_demo_welcome" name="HSE Client Demo Welcome">
+        <t t-call="web.layout">
+            <t t-set="title">Northstar · HSE Client Demonstration</t>
+            <t t-set="body_classname">hse-client-demo hse-demo-entry</t>
+            <t t-set="head">
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <meta name="robots" content="noindex, nofollow"/>
+                <link rel="icon" type="image/png" href="/hse_demo_data/static/demo/northstar_mark.png"/>
+                <link rel="stylesheet" href="/hse_demo_data/static/src/css/demo.css?v=5"/>
+            </t>
+            <div class="entry-layout">
+                <section class="entry-story" aria-label="About this fictional demonstration">
+                    <div class="brand"><span class="brand-symbol"><svg viewBox="0 0 32 36" fill="none" aria-hidden="true"><path d="M16 2 29 7v10c0 8-7 14-13 17C10 31 3 25 3 17V7L16 2Z" stroke="currentColor" stroke-width="2.4"/><path d="m9 17 5 5 9-11" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></span><span><strong>HSE<span class="brand-dot">.</span></strong><small>ENTERPRISE SUITE</small></span></div>
+                    <div class="entry-story-main">
+                        <p class="eyebrow">NORTHSTAR PETROCHEMICALS · FICTIONAL FACILITY</p>
+                        <h1>One facility.<br/>Every HSE workflow.</h1>
+                        <p>From frontline reporting to executive assurance. Explore a connected, working HSE suite — not a slideshow.</p>
+                        <div class="entry-art"><svg class="plant-illustration" viewBox="0 0 420 238" fill="none" aria-hidden="true">
+                                    <defs><pattern id="demo-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" stroke="#c9ded6" stroke-width=".5"/></pattern><linearGradient id="tank-fill" x1="100" y1="56" x2="250" y2="204" gradientUnits="userSpaceOnUse"><stop stop-color="#f9fffc"/><stop offset="1" stop-color="#cae5d8"/></linearGradient></defs>
+                                    <rect width="420" height="238" fill="url(#demo-grid)"/>
+                                    <path d="m40 183 168 38 171-42-159-42-180 46Z" fill="#d4e8de" stroke="#bdd6c8"/>
+                                    <path d="m83 116 57 15v59l-57-14v-60Z" fill="#d4e8de" stroke="#6f9e88"/><path d="m140 131 48-14v61l-48 12v-59Z" fill="#b7d9c7" stroke="#6f9e88"/><path d="m83 116 48-14 57 15-48 14-57-15Z" fill="#eff9f3" stroke="#6f9e88"/>
+                                    <path d="M108 117V68m18 53V53m18 68V83" stroke="#557e69" stroke-width="8"/><path d="M108 116V68m18 53V53m18 68V83" stroke="#b7d9c7" stroke-width="4"/>
+                                    <path d="M210 93v84c0 11 60 11 60 0V93" fill="url(#tank-fill)" stroke="#6f9e88"/><ellipse cx="240" cy="93" rx="30" ry="9" fill="#f4fff9" stroke="#6f9e88"/><path d="M210 137c0 11 60 11 60 0m-60 33c0 11 60 11 60 0" stroke="#82b099"/><path d="M250 103v77m4-70h-8m8 11h-8m8 11h-8m8 11h-8m8 11h-8m8 11h-8" stroke="#6f9e88"/>
+                                    <path d="m292 135 44-13 31 15v46l-44 12-31-15v-45Z" fill="#dceee4" stroke="#6f9e88"/><path d="m292 135 31 15 44-13m-44 13v45" stroke="#6f9e88"/><path d="m304 160 10 5v17l-10-5v-17Z" fill="#a6cbb7"/><path d="m334 155 22-6v11l-22 6v-11Z" fill="#a6cbb7"/>
+                                    <path d="M173 145h25v-29h12M270 160h22M67 163v-38h16" stroke="#5d967b" stroke-width="4" stroke-linejoin="round"/><path d="m140 190 41 10 43-12" stroke="#82b099" stroke-width="2" stroke-dasharray="4 4"/>
+                                    <circle cx="174" cy="60" r="13" fill="#fff" stroke="#8cbca4"/><path d="m169 60 3 3 6-7" stroke="#277952" stroke-width="2" stroke-linecap="round"/>
+                                    <circle cx="289" cy="107" r="13" fill="#fff" stroke="#8cbca4"/><path d="m284 107 3 3 6-7" stroke="#277952" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M174 75v31m115 16v29" stroke="#82b099" stroke-dasharray="3 4"/>
+                                </svg></div>
+                        <div class="entry-domains"><span>Safety &amp; control of work</span><span>Process safety</span><span>Environment</span><span>Occupational health</span><span>Governance &amp; reliability</span></div>
+                    </div>
+                    <div class="entry-synthetic"><span class="status-dot"/> REAL ODOO APPLICATION. SYNTHETIC DATA ONLY.</div>
+                </section>
+                <section class="entry-login" aria-label="Choose your demo experience">
+                    <span class="environment-chip">CLIENT DEMONSTRATION</span>
+                    <p class="eyebrow">TWO PERSPECTIVES. ONE SAFETY SYSTEM.</p>
+                    <h2>Your client demo starts here.</h2>
+                    <p class="entry-intro">Choose a role and sign in with the credentials supplied by your presenter.</p>
+                    <p t-if="cookie_free" class="entry-sign-in-note"><strong>Sign in here—no cookies or new tab required.</strong><br/>The preview uses a private, encrypted session for this tab while keeping normal Odoo password and CSRF checks.</p>
+                    <p t-elif="separate_sign_in" class="entry-sign-in-note"><strong>Secure sign-in opens in a new tab.</strong><br/>This keeps your login session outside embedded-preview cookie restrictions. Continue the demo in that tab.</p>
+                    <a class="entry-role" href="/web/login?login=hse.presenter&amp;redirect=%2Fhse%2Fdemo" t-att-target="'_blank' if separate_sign_in else None" t-att-rel="'noopener noreferrer' if separate_sign_in else None">
+                        <span class="role-avatar">EM</span><div><strong>Presenter experience</strong><p>Guided journeys, all module areas, native forms and evidence-backed reports.</p><code>hse.presenter</code></div><span class="entry-arrow"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></span>
+                    </a>
+                    <a class="entry-role" href="/web/login?login=hse.contractor&amp;redirect=%2Fhse%2Fportal" t-att-target="'_blank' if separate_sign_in else None" t-att-rel="'noopener noreferrer' if separate_sign_in else None">
+                        <span class="role-avatar contractor">AM</span><div><strong>Frontline experience</strong><p>Contractor reporting, personal submissions, approved policies and procedures.</p><code>hse.contractor</code></div><span class="entry-arrow"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></span>
+                    </a>
+                    <div class="entry-security"><strong>Authenticated. Isolated. Repeatable.</strong><p>No business records are visible before sign-in. Use a private browser window to switch roles.</p></div>
+                    <div class="entry-footer">Odoo 17 Community · HSE Enterprise Suite<br/>Demonstration only — not for operational, medical or emergency use.</div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>

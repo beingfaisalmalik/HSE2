@@ -82,7 +82,7 @@ class HseSimopsRadarPlot(models.Model):
     conflict_count = fields.Integer(string='Overlapping Operations Count', compute='_compute_simops_collisions')
     conflict_summary = fields.Text(string='Conflict Conflict Details', compute='_compute_simops_collisions')
 
-    @api.depends('coord_x', 'coord_y', 'hazard_radius_m', 'source_type', 'active')
+    @api.depends('location_id', 'coord_x', 'coord_y', 'hazard_radius_m', 'source_type', 'active')
     def _compute_simops_collisions(self):
         Matrix = self.env['hse.simops.matrix']
         for rec in self:
@@ -95,6 +95,9 @@ class HseSimopsRadarPlot(models.Model):
             others = self.search([
                 ('id', '!=', rec.id),
                 ('active', '=', True),
+                # Coordinates are scoped to the modeled plant unit/zone; an
+                # identical coordinate in another location is not co-located.
+                ('location_id', '=', rec.location_id.id),
             ])
             conflicts = []
             for other in others:

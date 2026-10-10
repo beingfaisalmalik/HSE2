@@ -212,7 +212,7 @@ export class HSEDashboard extends Component {
             name: `Hazards (Severity: ${consequence}, Likelihood: ${likelihood})`,
             type: "ir.actions.act_window",
             res_model: "ra_jsa.hazard",
-            domain: [["severity_level", "=", consequence.toString()], ["likelihood_level", "=", likelihood.toString()]],
+            domain: [["severity_level", "=", consequence.toString()], ["likelihood", "=", likelihood.toString()]],
             views: [[false, "list"], [false, "form"]],
             target: "current",
         });

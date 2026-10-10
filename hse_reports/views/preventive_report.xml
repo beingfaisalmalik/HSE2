@@ -46,7 +46,7 @@
                                             <td><t t-esc="line.description"/></td>
                                             <td><t t-esc="line.risk_level"/></td>
                                             <td><t t-foreach="line.control_ids" t-as="control">
-                                                <t t-esc="control.name"/>
+                                                <t t-esc="control.control_measure"/>
                                                 <t t-if="control != line.control_ids[-1]">, </t>
                                             </t></td>
                                         </tr>
