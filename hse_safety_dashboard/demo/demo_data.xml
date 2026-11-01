@@ -1,0 +1,2813 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Real client records from the Safety Dashboard workbook (fa532ed). -->
+    <!-- Entries whose Excel date cell is EMPTY are imported without a -->
+    <!-- date on purpose — the data-health checks flag them; nothing is -->
+    <!-- invented. Footnote rows in the workbook are ignored. -->
+
+    <record id="base.main_company" model="res.company">
+        <field name="name">Poly Pack Films (Pvt.) Ltd.</field>
+    </record>
+
+    <record id="ca_ca_001" model="hse.corrective.action">
+        <field name="name">CA-001</field>
+        <field name="related_ref">INJ-001</field>
+        <field name="action_description">Administer first aid (ice application, immobilization) to reduce swelling, send the worker for a medical evaluation to rule out fractures, and temporarily pause manual louvre installation on the mezzanine</field>
+        <field name="responsible_person"></field>
+        <field name="state">closed</field>
+        <field name="verification">Visual Inspection Two person lift being conducted; Conduct a targeted safety briefing with the team focusing on manual material handling techniques</field>
+    </record>
+
+    <record id="ca_ca_002" model="hse.corrective.action">
+        <field name="name">CA-002</field>
+        <field name="related_ref">INJ-002</field>
+        <field name="action_description">Provide first aid to the worker's arm, Implemented a safe buffer zone requiring workers to maintain a distance from open trenches unless edge protection is secured, and brief the crew in a pre-task safety talk</field>
+        <field name="responsible_person"></field>
+        <field name="state">closed</field>
+        <field name="verification">Visual Inspection, Barrication Implementation</field>
+    </record>
+
+    <record id="ca_ca_007" model="hse.corrective.action">
+        <field name="name">CA-007</field>
+        <field name="related_ref">INJ-007</field>
+        <field name="action_description">Ensure the middle finger cut is thoroughly cleaned, disinfected, and dressed, Ensure proper PPEs worn by workers in the area</field>
+        <field name="responsible_person"></field>
+        <field name="state">closed</field>
+        <field name="verification">PPEs ensured in area</field>
+    </record>
+
+    <record id="ca_ca_012" model="hse.corrective.action">
+        <field name="name">CA-012</field>
+        <field name="related_ref">UAC-001</field>
+        <field name="action_description">• Area Owners were told to pick up any blades found if they are in their use and put them in their designated area. If the blade is not used in the vicinity by anyone it is urged by the area owner to stop this practice.</field>
+        <field name="responsible_person"></field>
+        <field name="target_date">2026-09-15</field>
+        <field name="state">open</field>
+        <field name="verification">Visual Inspection</field>
+    </record>
+
+    <record id="ca_ca_013" model="hse.corrective.action">
+        <field name="name">CA-013</field>
+        <field name="related_ref">UAC-002</field>
+        <field name="action_description">• Warned the team regarding the non compliance of Hairnets inside site.</field>
+        <field name="responsible_person"></field>
+        <field name="state">closed</field>
+        <field name="verification">Visual Inspection</field>
+    </record>
+
+    <record id="injury_inj_001" model="hse.injury.log">
+        <field name="name">INJ-001</field>
+        <field name="injury_type">mtc</field>
+        <field name="department"></field>
+        <field name="description">While laying louvres on Power House Mezzanine floor the workers hand got weight and sprained his wrist. Swelling on his right hand thumb was visible.</field>
+        <field name="person_involved"></field>
+        <field name="lost_workdays">0</field>
+        <field name="root_cause">Improper hand placement and awkward posture caused sudden weight transfer onto the wrist joint and thumb</field>
+        <field name="corrective_action_id" ref="hse_safety_dashboard.ca_ca_001"/>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="injury_inj_002" model="hse.injury.log">
+        <field name="name">INJ-002</field>
+        <field name="injury_type">lti</field>
+        <field name="department"></field>
+        <field name="description">Worker while cleaning the ground near trench tripped and fell inside the trench whire cables were being re-located. He hit his arm on the side of the trench and hurt himself.</field>
+        <field name="person_involved"></field>
+        <field name="lost_workdays">1</field>
+        <field name="root_cause">Cleaning was being conducted directly adjacent to an unguarded excavation without dedicated edge safety controls or a designated buffer zone</field>
+        <field name="corrective_action_id" ref="hse_safety_dashboard.ca_ca_002"/>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="injury_inj_003" model="hse.injury.log">
+        <field name="name">INJ-003</field>
+        <field name="injury_type">first_aid</field>
+        <field name="department"></field>
+        <field name="description">Middle finger of Right had recived  a cut due to moving trench covers improperly and not wearing Anticut gloves.</field>
+        <field name="person_involved"></field>
+        <field name="lost_workdays">0</field>
+        <field name="root_cause">The worker failed to wear required anti-cut gloves while handling sharp, rough, or heavy concrete/metal trench covers</field>
+        <field name="corrective_action_id" ref="hse_safety_dashboard.ca_ca_007"/>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="nm_nm_001" model="hse.near.miss.log">
+        <field name="name">NM-001</field>
+        <field name="date">2026-04-20</field>
+        <field name="department">MPB Kitchen</field>
+        <field name="description">Connection of LPG cylinder got loose releasing gas which caused a fire incident</field>
+        <field name="potential_severity">high</field>
+        <field name="reported_by">Admin Head - Mr. Farhan</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="uac_uac_001" model="hse.uac.log">
+        <field name="name">UAC-001</field>
+        <field name="uac_type">unsafe_condition</field>
+        <field name="department">All over site in Different Locations</field>
+        <field name="description">Randomly found blades out of their designated location may lead to injury</field>
+        <field name="reported_by">HSE Department</field>
+        <field name="immediate_action">• Area Owners were told to pick up any blades found if they are in their use and put them in their designated area. If the blade is not used in the vicinity by anyone it is urged by the area owner to stop this practice.</field>
+        <field name="corrective_action_id" ref="hse_safety_dashboard.ca_ca_012"/>
+        <field name="status">open</field>
+    </record>
+
+    <record id="uac_uac_002" model="hse.uac.log">
+        <field name="name">UAC-002</field>
+        <field name="uac_type">unsafe_act</field>
+        <field name="department">Winder</field>
+        <field name="description">03 personell were not wearing hairnets while perfoming activity in site (PPFPL Fabrication Team)</field>
+        <field name="reported_by">HSE Department</field>
+        <field name="immediate_action">• Warned the team regarding the non compliance of Hairnets inside site.</field>
+        <field name="corrective_action_id" ref="hse_safety_dashboard.ca_ca_013"/>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="inc_inc_001" model="hse.incident.log">
+        <field name="name">INC-001</field>
+        <field name="incident_type">property_damage</field>
+        <field name="department"></field>
+        <field name="description">Due to Air Blasting work at mess and shower area the residue of welding in the pipe was expelled at high velocity towards Guest house Window shattering it</field>
+        <field name="area_asset">Guest House Window</field>
+        <field name="estimated_impact">PKR 60,000 est.</field>
+        <field name="root_cause">Proper planning and risk assessment was not done</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="figure_01" model="hse.monthly.figure">
+        <field name="year">2026</field>
+        <field name="month">1</field>
+        <field name="audit_score">0.92</field>
+        <field name="completed_inspections">0</field>
+        <field name="planned_inspections">0</field>
+        <field name="ptw_issued">0</field>
+        <field name="toolbox_talks">0</field>
+        <field name="training_hours">0.0</field>
+    </record>
+
+    <record id="figure_02" model="hse.monthly.figure">
+        <field name="year">2026</field>
+        <field name="month">2</field>
+    </record>
+
+    <record id="figure_03" model="hse.monthly.figure">
+        <field name="year">2026</field>
+        <field name="month">3</field>
+        <field name="man_hours">22000.0</field>
+    </record>
+
+    <record id="figure_04" model="hse.monthly.figure">
+        <field name="year">2026</field>
+        <field name="month">4</field>
+    </record>
+
+    <record id="figure_05" model="hse.monthly.figure">
+        <field name="year">2026</field>
+        <field name="month">5</field>
+    </record>
+
+    <record id="figure_06" model="hse.monthly.figure">
+        <field name="year">2026</field>
+        <field name="month">6</field>
+    </record>
+
+    <record id="figure_07" model="hse.monthly.figure">
+        <field name="year">2026</field>
+        <field name="month">7</field>
+    </record>
+
+    <record id="figure_08" model="hse.monthly.figure">
+        <field name="year">2026</field>
+        <field name="month">8</field>
+        <field name="completed_inspections">1</field>
+        <field name="man_hours">60192.0</field>
+        <field name="planned_inspections">1</field>
+        <field name="ptw_issued">172</field>
+        <field name="toolbox_talks">172</field>
+        <field name="training_hours">15.0</field>
+    </record>
+
+    <record id="figure_09" model="hse.monthly.figure">
+        <field name="year">2026</field>
+        <field name="month">9</field>
+        <field name="ptw_issued">87</field>
+        <field name="toolbox_talks">87</field>
+        <field name="training_hours">8.0</field>
+    </record>
+
+    <record id="figure_10" model="hse.monthly.figure">
+        <field name="year">2026</field>
+        <field name="month">10</field>
+    </record>
+
+    <record id="figure_11" model="hse.monthly.figure">
+        <field name="year">2026</field>
+        <field name="month">11</field>
+    </record>
+
+    <record id="figure_12" model="hse.monthly.figure">
+        <field name="year">2026</field>
+        <field name="month">12</field>
+    </record>
+
+    <record id="ptw_r1" model="hse.ptw.register">
+        <field name="name">1</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">LV Panel Room</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r2" model="hse.ptw.register">
+        <field name="name">2</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work / Work at Height</field>
+        <field name="location">CPP Hall inside and outside</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r3" model="hse.ptw.register">
+        <field name="name">3</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">FG / Mess and Shower</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r4" model="hse.ptw.register">
+        <field name="name">4</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical Work / Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r5" model="hse.ptw.register">
+        <field name="name">5</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r6" model="hse.ptw.register">
+        <field name="name">6 &gt; 6</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Oil Heater Outside</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r7" model="hse.ptw.register">
+        <field name="name">6 &gt;7</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Winder Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r8" model="hse.ptw.register">
+        <field name="name">7</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Winder Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r9" model="hse.ptw.register">
+        <field name="name">8</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Outside Warehouse / Mess and Shower</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r10" model="hse.ptw.register">
+        <field name="name">9</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical / Hot Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r11" model="hse.ptw.register">
+        <field name="name">10</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical / Hot Work</field>
+        <field name="location">CPP Hall / Metallizer</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r12" model="hse.ptw.register">
+        <field name="name">11</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Oil Heater Backside</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r13" model="hse.ptw.register">
+        <field name="name">12</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Loading Area Warehouse</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r14" model="hse.ptw.register">
+        <field name="name">13</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">Carpentry Workshop</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r15" model="hse.ptw.register">
+        <field name="name">14</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical / Work at Height</field>
+        <field name="location">Aging Rack Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r16" model="hse.ptw.register">
+        <field name="name">15</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r17" model="hse.ptw.register">
+        <field name="name">16</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Pump Skid area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r18" model="hse.ptw.register">
+        <field name="name">17</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work / Work at Height</field>
+        <field name="location">CPP Pump Skid area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r19" model="hse.ptw.register">
+        <field name="name">18</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">CPP Pump Skid area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r20" model="hse.ptw.register">
+        <field name="name">19</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r21" model="hse.ptw.register">
+        <field name="name">20</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Outside Warehouse</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r22" model="hse.ptw.register">
+        <field name="name">21</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r23" model="hse.ptw.register">
+        <field name="name">22</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r24" model="hse.ptw.register">
+        <field name="name">23</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r25" model="hse.ptw.register">
+        <field name="name">24</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical / Work at Height</field>
+        <field name="location">Production hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r26" model="hse.ptw.register">
+        <field name="name">25</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work / Work at Height</field>
+        <field name="location">Feeding Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r27" model="hse.ptw.register">
+        <field name="name">26</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">Mechanical workshop</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r28" model="hse.ptw.register">
+        <field name="name">27</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Multi-Purpose</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r29" model="hse.ptw.register">
+        <field name="name">28</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Dispatch Loading area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r30" model="hse.ptw.register">
+        <field name="name">29</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Pump Skid area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r31" model="hse.ptw.register">
+        <field name="name">30</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r32" model="hse.ptw.register">
+        <field name="name">31</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Warehouse inside / Outside</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r33" model="hse.ptw.register">
+        <field name="name">32</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r34" model="hse.ptw.register">
+        <field name="name">33</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Mess and Shower area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r35" model="hse.ptw.register">
+        <field name="name">34</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical / Hot Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r36" model="hse.ptw.register">
+        <field name="name">35</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work / Hot Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r37" model="hse.ptw.register">
+        <field name="name">36</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work / Work at Height</field>
+        <field name="location">LV-1 / Store area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r38" model="hse.ptw.register">
+        <field name="name">37</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work / Work at Height</field>
+        <field name="location">Aging Rack Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r39" model="hse.ptw.register">
+        <field name="name">38</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Mess and Shower area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r40" model="hse.ptw.register">
+        <field name="name">39</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work / Hot Work</field>
+        <field name="location">Oil heater Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r41" model="hse.ptw.register">
+        <field name="name">40</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Power House</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r42" model="hse.ptw.register">
+        <field name="name">41</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">Multiple Location</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r43" model="hse.ptw.register">
+        <field name="name">42</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical / Hot Work</field>
+        <field name="location">AHU Roof</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r44" model="hse.ptw.register">
+        <field name="name">43</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r45" model="hse.ptw.register">
+        <field name="name">44</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r46" model="hse.ptw.register">
+        <field name="name">45</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Pump Skid area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r47" model="hse.ptw.register">
+        <field name="name">46</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Mess and Shower area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r48" model="hse.ptw.register">
+        <field name="name">47</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">LV-1 / Store area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r49" model="hse.ptw.register">
+        <field name="name">48</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Feeding Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r50" model="hse.ptw.register">
+        <field name="name">49</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Excavation work</field>
+        <field name="location">Carpentry Workshop area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r51" model="hse.ptw.register">
+        <field name="name">50</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Main Gate</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r52" model="hse.ptw.register">
+        <field name="name">51</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r53" model="hse.ptw.register">
+        <field name="name">52</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r54" model="hse.ptw.register">
+        <field name="name">53</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">LV-3</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r55" model="hse.ptw.register">
+        <field name="name">54</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Warehouse</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r56" model="hse.ptw.register">
+        <field name="name">55</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Production hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r57" model="hse.ptw.register">
+        <field name="name">56</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work / Work at Height</field>
+        <field name="location">Silo Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r58" model="hse.ptw.register">
+        <field name="name">57</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">LV-1,2,3</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r59" model="hse.ptw.register">
+        <field name="name">58</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r60" model="hse.ptw.register">
+        <field name="name">59</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Warehouse inside / Outside</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r61" model="hse.ptw.register">
+        <field name="name">60</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Air Testing</field>
+        <field name="location">CPP Pump Skid area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r62" model="hse.ptw.register">
+        <field name="name">61</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r63" model="hse.ptw.register">
+        <field name="name">62</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Plant room</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r64" model="hse.ptw.register">
+        <field name="name">63</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical / Hot Work</field>
+        <field name="location">LV-1,2,3</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r65" model="hse.ptw.register">
+        <field name="name">64</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r66" model="hse.ptw.register">
+        <field name="name">65</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Pump Skid area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r67" model="hse.ptw.register">
+        <field name="name">66</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Grid-C Fire line</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r68" model="hse.ptw.register">
+        <field name="name">67</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Warehouse inside / Outside</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r69" model="hse.ptw.register">
+        <field name="name">68</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r70" model="hse.ptw.register">
+        <field name="name">69</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">LV-1 / Store area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r71" model="hse.ptw.register">
+        <field name="name">70</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work / Work at Height</field>
+        <field name="location">Silo Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r72" model="hse.ptw.register">
+        <field name="name">71</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">Multiple Location</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r73" model="hse.ptw.register">
+        <field name="name">72</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical / Work at Height</field>
+        <field name="location">Metallizer hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r74" model="hse.ptw.register">
+        <field name="name">73</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Plant room</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r75" model="hse.ptw.register">
+        <field name="name">74</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">All Production Plant</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r76" model="hse.ptw.register">
+        <field name="name">75</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work / Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r77" model="hse.ptw.register">
+        <field name="name">76</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work/Work at Height / Manual Handling</field>
+        <field name="location">CPP Hall and Production Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r78" model="hse.ptw.register">
+        <field name="name">77</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r79" model="hse.ptw.register">
+        <field name="name">78</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Grid-C Fire line</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r80" model="hse.ptw.register">
+        <field name="name">79</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work / Work at Height</field>
+        <field name="location">Feeding Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r81" model="hse.ptw.register">
+        <field name="name">80</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Warehouse</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r82" model="hse.ptw.register">
+        <field name="name">81</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Store area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r83" model="hse.ptw.register">
+        <field name="name">82</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Production hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r84" model="hse.ptw.register">
+        <field name="name">83</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall inside and outside</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r85" model="hse.ptw.register">
+        <field name="name">84</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work / Work at Height</field>
+        <field name="location">Metallizer hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r86" model="hse.ptw.register">
+        <field name="name">85</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">open</field>
+    </record>
+
+    <record id="ptw_r87" model="hse.ptw.register">
+        <field name="name">86</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Plant room</field>
+        <field name="status">open</field>
+    </record>
+
+    <record id="ptw_r88" model="hse.ptw.register">
+        <field name="name">87</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">HSE</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Production hall</field>
+        <field name="status">open</field>
+    </record>
+
+    <record id="ptw_r89" model="hse.ptw.register">
+        <field name="name">1</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r90" model="hse.ptw.register">
+        <field name="name">2</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r91" model="hse.ptw.register">
+        <field name="name">3</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Warehouse</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r92" model="hse.ptw.register">
+        <field name="name">4</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Weight Scale Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r93" model="hse.ptw.register">
+        <field name="name">5</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Mess And Shower Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r94" model="hse.ptw.register">
+        <field name="name">6</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">AHU Roof</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r95" model="hse.ptw.register">
+        <field name="name">7</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r96" model="hse.ptw.register">
+        <field name="name">8</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r97" model="hse.ptw.register">
+        <field name="name">9</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Warehouse</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r98" model="hse.ptw.register">
+        <field name="name">10</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Grid Line C</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r99" model="hse.ptw.register">
+        <field name="name">11</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r100" model="hse.ptw.register">
+        <field name="name">12</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r101" model="hse.ptw.register">
+        <field name="name">13</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Warehouse</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r102" model="hse.ptw.register">
+        <field name="name">14</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r103" model="hse.ptw.register">
+        <field name="name">15</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r104" model="hse.ptw.register">
+        <field name="name">16</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Warehouse</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r105" model="hse.ptw.register">
+        <field name="name">17</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Connection Work</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r106" model="hse.ptw.register">
+        <field name="name">18</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Grid Line C</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r107" model="hse.ptw.register">
+        <field name="name">19</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r108" model="hse.ptw.register">
+        <field name="name">20</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r109" model="hse.ptw.register">
+        <field name="name">21</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Warehouse</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r110" model="hse.ptw.register">
+        <field name="name">22</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Winder Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r111" model="hse.ptw.register">
+        <field name="name">23</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Outside Grid Line C</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r112" model="hse.ptw.register">
+        <field name="name">24</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Oil Changing Work for Transformer</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">Tansformers</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r113" model="hse.ptw.register">
+        <field name="name">25</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Automatic Shutter Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">All Production Plant Site</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r114" model="hse.ptw.register">
+        <field name="name">26</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cable Installation</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">Mess And Shower Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r115" model="hse.ptw.register">
+        <field name="name">27</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Feeding Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r116" model="hse.ptw.register">
+        <field name="name">28</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cable Tray Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">LV 3</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r117" model="hse.ptw.register">
+        <field name="name">29</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Outside Grid Line C</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r118" model="hse.ptw.register">
+        <field name="name">30</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r119" model="hse.ptw.register">
+        <field name="name">31</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Drilling and Lights Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r120" model="hse.ptw.register">
+        <field name="name">32</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r121" model="hse.ptw.register">
+        <field name="name">33</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cable Tray Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Erema Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r122" model="hse.ptw.register">
+        <field name="name">34</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r123" model="hse.ptw.register">
+        <field name="name">35</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cable Laying Work</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">Erema Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r124" model="hse.ptw.register">
+        <field name="name">36</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Warehouse</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r125" model="hse.ptw.register">
+        <field name="name">37</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r126" model="hse.ptw.register">
+        <field name="name">38</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r127" model="hse.ptw.register">
+        <field name="name">39</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Warehouse</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r128" model="hse.ptw.register">
+        <field name="name">40</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Warehouse</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r129" model="hse.ptw.register">
+        <field name="name">41</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r130" model="hse.ptw.register">
+        <field name="name">42</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Warehouse</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r131" model="hse.ptw.register">
+        <field name="name">43</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r132" model="hse.ptw.register">
+        <field name="name">44</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cable Tray Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">LV 2</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r133" model="hse.ptw.register">
+        <field name="name">45</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cable Tray Cover Installation</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">AHU Roof</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r134" model="hse.ptw.register">
+        <field name="name">46</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r135" model="hse.ptw.register">
+        <field name="name">47</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Warehouse</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r136" model="hse.ptw.register">
+        <field name="name">48</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cladding and Insulation</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Outside Oil Heater Room</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r137" model="hse.ptw.register">
+        <field name="name">49</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r138" model="hse.ptw.register">
+        <field name="name">50</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Power House</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r139" model="hse.ptw.register">
+        <field name="name">51</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cable Tray Cover Installation</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">LV 01,02,03</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r140" model="hse.ptw.register">
+        <field name="name">52</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">AHU Roof</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r141" model="hse.ptw.register">
+        <field name="name">53</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Mess And Shower Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r142" model="hse.ptw.register">
+        <field name="name">54</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Duct Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Feeding Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r143" model="hse.ptw.register">
+        <field name="name">55</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Warehouse</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r144" model="hse.ptw.register">
+        <field name="name">56</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Outside Production Building</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r145" model="hse.ptw.register">
+        <field name="name">57</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r146" model="hse.ptw.register">
+        <field name="name">58</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Power House</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r147" model="hse.ptw.register">
+        <field name="name">59</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Outside Oil Heater Room</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r148" model="hse.ptw.register">
+        <field name="name">60</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Duct Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Feeding Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r149" model="hse.ptw.register">
+        <field name="name">61</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Wiring Work for Lights</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">Admin Block</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r150" model="hse.ptw.register">
+        <field name="name">62</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r151" model="hse.ptw.register">
+        <field name="name">63</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r152" model="hse.ptw.register">
+        <field name="name">64</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Power House</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r153" model="hse.ptw.register">
+        <field name="name">65</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Outside CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r154" model="hse.ptw.register">
+        <field name="name">66</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Duct Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Feeding Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r155" model="hse.ptw.register">
+        <field name="name">67</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r156" model="hse.ptw.register">
+        <field name="name">68</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Power House</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r157" model="hse.ptw.register">
+        <field name="name">69</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Warehouse</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r158" model="hse.ptw.register">
+        <field name="name">70</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work / Work at Height</field>
+        <field name="location">Outside Pipeline</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r159" model="hse.ptw.register">
+        <field name="name">71</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Assembling and Lifting Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r160" model="hse.ptw.register">
+        <field name="name">72</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Duct Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">AHU Roof</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r161" model="hse.ptw.register">
+        <field name="name">73</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Outside CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r162" model="hse.ptw.register">
+        <field name="name">74</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cable Routing Work</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">Oil Heater Room</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r163" model="hse.ptw.register">
+        <field name="name">75</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Sheet Installation</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Winder Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r164" model="hse.ptw.register">
+        <field name="name">76</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Metallizer Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r165" model="hse.ptw.register">
+        <field name="name">77</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Duct Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Silo Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r166" model="hse.ptw.register">
+        <field name="name">78</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r167" model="hse.ptw.register">
+        <field name="name">79</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Power House</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r168" model="hse.ptw.register">
+        <field name="name">80</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Oil Heater Room</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r169" model="hse.ptw.register">
+        <field name="name">81</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r170" model="hse.ptw.register">
+        <field name="name">82</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Assembling Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r171" model="hse.ptw.register">
+        <field name="name">83</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Insulation Work</field>
+        <field name="type_text">Cold Work / Work at Height</field>
+        <field name="location">Metallizer Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r172" model="hse.ptw.register">
+        <field name="name">84</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Drilling and Sheet Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Outside CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r173" model="hse.ptw.register">
+        <field name="name">85</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Outside CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r174" model="hse.ptw.register">
+        <field name="name">86</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Duct Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Cast Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r175" model="hse.ptw.register">
+        <field name="name">87</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r176" model="hse.ptw.register">
+        <field name="name">88</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r177" model="hse.ptw.register">
+        <field name="name">89</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Feeding Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r178" model="hse.ptw.register">
+        <field name="name">90</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">AC Installation Work</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Winder Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r179" model="hse.ptw.register">
+        <field name="name">91</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Metallizer Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r180" model="hse.ptw.register">
+        <field name="name">92</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Drilling and Sheet Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Outside CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r181" model="hse.ptw.register">
+        <field name="name">93</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Outside CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r182" model="hse.ptw.register">
+        <field name="name">94</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r183" model="hse.ptw.register">
+        <field name="name">95</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Outside CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r184" model="hse.ptw.register">
+        <field name="name">96</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work / Work at Height</field>
+        <field name="location">Metallizer Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r185" model="hse.ptw.register">
+        <field name="name">97</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work / Work at Height</field>
+        <field name="location">Outside Production Building</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r186" model="hse.ptw.register">
+        <field name="name">98</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r187" model="hse.ptw.register">
+        <field name="name">99</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Sheet Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Outside Production Building</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r188" model="hse.ptw.register">
+        <field name="name">100</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Metallizer Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r189" model="hse.ptw.register">
+        <field name="name">101</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Outside CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r190" model="hse.ptw.register">
+        <field name="name">102</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r191" model="hse.ptw.register">
+        <field name="name">103</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r192" model="hse.ptw.register">
+        <field name="name">104</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Outside Oil Heater Room</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r193" model="hse.ptw.register">
+        <field name="name">105</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Breaker Installation</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">Metallizer Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r194" model="hse.ptw.register">
+        <field name="name">106</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Outside CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r195" model="hse.ptw.register">
+        <field name="name">107</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Sheet Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Outside Production Building</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r196" model="hse.ptw.register">
+        <field name="name">108</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r197" model="hse.ptw.register">
+        <field name="name">109</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Outside CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r198" model="hse.ptw.register">
+        <field name="name">110</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r199" model="hse.ptw.register">
+        <field name="name">111</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work / Work at Height</field>
+        <field name="location">Metallizer Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r200" model="hse.ptw.register">
+        <field name="name">112</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cable Laying and Termination Work</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r201" model="hse.ptw.register">
+        <field name="name">113</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Sheet Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Outside Production Building</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r202" model="hse.ptw.register">
+        <field name="name">114</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r203" model="hse.ptw.register">
+        <field name="name">115</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Outside CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r204" model="hse.ptw.register">
+        <field name="name">116</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Tissue Installatin</field>
+        <field name="type_text">Hot Work / Cold Work</field>
+        <field name="location">Metallizer Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r205" model="hse.ptw.register">
+        <field name="name">117</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">DB Installation</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">All Production Plant Site</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r206" model="hse.ptw.register">
+        <field name="name">118</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Outside CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r207" model="hse.ptw.register">
+        <field name="name">119</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">AHU Roof</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r208" model="hse.ptw.register">
+        <field name="name">120</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cable Laying and Termination Work</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r209" model="hse.ptw.register">
+        <field name="name">121</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Assembling Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r210" model="hse.ptw.register">
+        <field name="name">122</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Duct Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Feeding Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r211" model="hse.ptw.register">
+        <field name="name">123</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Oil Heater Room</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r212" model="hse.ptw.register">
+        <field name="name">124</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Troubleshooting Work</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">Winder Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r213" model="hse.ptw.register">
+        <field name="name">125</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Warehouse</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r214" model="hse.ptw.register">
+        <field name="name">126</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r215" model="hse.ptw.register">
+        <field name="name">127</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Outside CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r216" model="hse.ptw.register">
+        <field name="name">128</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Outside CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r217" model="hse.ptw.register">
+        <field name="name">129</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Metallizer Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r218" model="hse.ptw.register">
+        <field name="name">130</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Assembling Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r219" model="hse.ptw.register">
+        <field name="name">131</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cable Laying and Termination Work</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r220" model="hse.ptw.register">
+        <field name="name">132</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">DB Installation</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">All Production Plant Site</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r221" model="hse.ptw.register">
+        <field name="name">133</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Troubleshooting Work</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">Winder Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r222" model="hse.ptw.register">
+        <field name="name">134</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">LV 03</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r223" model="hse.ptw.register">
+        <field name="name">135</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Metallizer Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r224" model="hse.ptw.register">
+        <field name="name">136</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Oil Heater Room</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r225" model="hse.ptw.register">
+        <field name="name">137</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Wiring Work and VFD installation</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r226" model="hse.ptw.register">
+        <field name="name">138</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Drilling and Sheet Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">In front of Guest House</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r227" model="hse.ptw.register">
+        <field name="name">139</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r228" model="hse.ptw.register">
+        <field name="name">140</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">DB Installation</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">All Production Plant Site</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r229" model="hse.ptw.register">
+        <field name="name">141</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Assembling Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r230" model="hse.ptw.register">
+        <field name="name">142</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cable Laying and Termination Work</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r231" model="hse.ptw.register">
+        <field name="name">143</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Oil Heater Room</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r232" model="hse.ptw.register">
+        <field name="name">144</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r233" model="hse.ptw.register">
+        <field name="name">145</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r234" model="hse.ptw.register">
+        <field name="name">146</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Duct Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Feeding Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r235" model="hse.ptw.register">
+        <field name="name">147</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Air Blasting</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">Outside CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r236" model="hse.ptw.register">
+        <field name="name">148</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r237" model="hse.ptw.register">
+        <field name="name">149</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Sheet Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">In front of Guest House</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r238" model="hse.ptw.register">
+        <field name="name">150</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r239" model="hse.ptw.register">
+        <field name="name">151</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Outside Oil Heater Room</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r240" model="hse.ptw.register">
+        <field name="name">152</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Assembling Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r241" model="hse.ptw.register">
+        <field name="name">153</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cable Laying and Termination Work</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">LV 01,02,03</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r242" model="hse.ptw.register">
+        <field name="name">154</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cable Laying and Termination Work</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">CPP Hall / Metallizer</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r243" model="hse.ptw.register">
+        <field name="name">155</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r244" model="hse.ptw.register">
+        <field name="name">156</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cable Tray Cover Installation</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">Silo Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r245" model="hse.ptw.register">
+        <field name="name">157</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Duct Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Feeding Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r246" model="hse.ptw.register">
+        <field name="name">158</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Sheet Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">In front of Guest House</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r247" model="hse.ptw.register">
+        <field name="name">159</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r248" model="hse.ptw.register">
+        <field name="name">160</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Paint Work</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">All Production Plant Site</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r249" model="hse.ptw.register">
+        <field name="name">161</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work</field>
+        <field name="location">Outside Oil Heater Room</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r250" model="hse.ptw.register">
+        <field name="name">162</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Troubleshooting Work</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">Winder Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r251" model="hse.ptw.register">
+        <field name="name">163</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cable Tray Installation</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r252" model="hse.ptw.register">
+        <field name="name">164</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Outside CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r253" model="hse.ptw.register">
+        <field name="name">165</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Duct Installation</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Feeding Area</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r254" model="hse.ptw.register">
+        <field name="name">166</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cable Laying and Termination Work</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">CPP Hall / Metallizer</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r255" model="hse.ptw.register">
+        <field name="name">167</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Outside Oil Heater Room</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r256" model="hse.ptw.register">
+        <field name="name">168</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Wiring Work</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">Carpentry Workshop</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r257" model="hse.ptw.register">
+        <field name="name">169</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cable Tray Installation</field>
+        <field name="type_text">Electrical Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r258" model="hse.ptw.register">
+        <field name="name">170</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Crusher Pipe Installation</field>
+        <field name="type_text">Cold Work</field>
+        <field name="location">CPP Hall</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r259" model="hse.ptw.register">
+        <field name="name">171</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Warehouse</field>
+        <field name="status">closed</field>
+    </record>
+
+    <record id="ptw_r260" model="hse.ptw.register">
+        <field name="name">172</field>
+        <field name="department"></field>
+        <field name="contractor"></field>
+        <field name="nature_of_work">Cutting, Welding, Grinding</field>
+        <field name="type_text">Hot Work / Work at Height</field>
+        <field name="location">Mess And Shower Area</field>
+        <field name="status">closed</field>
+    </record>
+
+</odoo>

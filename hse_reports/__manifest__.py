@@ -5,17 +5,21 @@
     'summary': "Enterprise HSE report suite: incidents/OSHA 300, audits, compliance, competency matrix, statutory certs, monthly KPIs",
 
     'description': """
-Long description of module's purpose
+Enterprise HSE Reporting Suite
+------------------------------
+- Record-based QWeb reports: permit to work, LOTO plans, HAZOP studies,
+  audits, compliance register, competency matrix, statutory certificates,
+  OSHA 300 log and monthly HSE KPI
+- Date-parameterized summary wizards (RA/JSA, observations, incident
+  reporting, incident investigation, legacy CAPA) with HTML/PDF output
+- XLSX spreadsheet exports for the RA/JSA and observation summaries
     """,
 
-    'author': "My Company",
+    'author': "HSE Global Enterprise",
     'website': "https://www.yourcompany.com",
 
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
-    # for the full list
-    'category': 'Uncategorized',
-    'version': '0.1',
+    'category': 'Human Resources/HSE',
+    'version': '17.0.1.0.0',
 
     # any module necessary for this one to work correctly
     'depends': ['base','hse','report_xlsx'],

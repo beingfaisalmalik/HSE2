@@ -547,7 +547,7 @@ SCENARIOS = [
                  'The permanent MOC is in technical review, and the commissioned temporary sample has a future expiry and complete PSSR evidence.'),
             step('Inspect startup readiness', 'dd_moc_pssr',
                  'Show the nine-item PSSR exercise with eight verified items and one open night-shift training item. Mark it verified only for demonstration and watch the computed completion flag.',
-                 'PSSR completion changes from false to true when every line is verified. The current commissioning action is NOT an enforced PSSR gate; do not claim otherwise.'),
+                 'PSSR completion changes from false to true when every line is verified, and commissioning is now gated: attempting it with the open training item raises the unverified-item list instead of commissioning.'),
             step('Return to leading and lagging indicators', 'dd_pse_2026',
                  'Show real exposure-hour inputs and API RP 754 rates, then open the classified release event and barrier register from the module explorer.',
                  'Dashboard TRIR is sourced from the seeded exposure record rather than an unexplained hard-coded headline.'),

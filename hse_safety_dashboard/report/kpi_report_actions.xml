@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_hse_monthly" model="ir.actions.report">
+        <field name="name">Monthly Safety Dashboard (PDF)</field>
+        <field name="model">hse.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hse_safety_dashboard.report_hse_monthly</field>
+        <field name="report_file">hse_safety_dashboard.report_hse_monthly</field>
+        <field name="binding_model_id" ref="model_hse_report_wizard"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_hse_yearly" model="ir.actions.report">
+        <field name="name">Yearly Safety Report (PDF)</field>
+        <field name="model">hse.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hse_safety_dashboard.report_hse_yearly</field>
+        <field name="report_file">hse_safety_dashboard.report_hse_yearly</field>
+        <field name="binding_model_id" ref="model_hse_report_wizard"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

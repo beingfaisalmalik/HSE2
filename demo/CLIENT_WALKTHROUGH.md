@@ -211,7 +211,7 @@ Review the justification, three discipline reviews and the linked engineering ac
 
 Show the nine-item PSSR exercise with eight verified items and one open night-shift training item. Mark it verified only for demonstration and watch the computed completion flag.
 
-**Show / expected evidence:** PSSR completion changes from false to true when every line is verified. The current commissioning action is NOT an enforced PSSR gate; do not claim otherwise.
+**Show / expected evidence:** PSSR completion changes from false to true when every line is verified. Commissioning enforces this gate: trying to commission while the night-shift training item is open raises an error listing the unverified items.
 
 **Stable sample:** `hse_demo_data.dd_moc_pssr`
 
@@ -498,7 +498,7 @@ Finish with the compressor lesson and reusable solution. Return to the executive
 | LOTO de-isolation | Requires zero-energy evidence and tools/guards/personnel clearance | These are software checks, not proof of actual physical isolation |
 | Concurrent work | High-risk overlapping permits require coordinator authorization before start | Approval/start changes the real permit; do not imply physical enforcement |
 | Confined-space closure | Cannot close while an entrant remains inside | Log the entrant out only in the fictional exercise |
-| PSSR | Eight of nine items are verified; all nine make completion true | Commissioning does **not** enforce this flag as a gate |
+| PSSR | Eight of nine items are verified; all nine make completion true | Commissioning **enforces** this flag: the open item blocks it with an error listing unverified lines |
 | Critical lift | The sample is critical at 82.5% utilization; >95% approval is rejected | Native checks are not certified lifting calculations |
 | Training matrix | Original five rows illustrate compliant/expired/gap cases | Reevaluation replaces lines and may generate new actions; reset to repeat the original story |
 | CAPA verification | Implementation and effectiveness verification are different stages | Do not mark an action verified without synthetic evidence in the exercise |
@@ -522,7 +522,7 @@ The suite also has legacy incident, investigation, observation, RA/JSA, correcti
 
 **Six parameterized summaries:** RA/JSA, observations, incident reports, investigations, legacy CAPA and meetings. Open the native summary action, choose dates (and meeting departments) and use **Print Report**. The first five filter **record creation timestamps**, so a same-day range on the installation date includes the seeded records. The meeting summary filters **meeting timestamps**; use the last 30 days and the Operations department for the seeded meeting story. End dates include the whole local calendar day.
 
-Native server PDF requires wkhtmltopdf. The verification checks covered HTML and Chromium/browser printing, **not** native PDF or container execution — confirm both on the presenting machine using the [first-run checklist](LOCAL.md#first-run-checklist). Spreadsheet-report placeholders are not presented as completed XLSX exports; coverage CSV and native Odoo exports are separate capabilities.
+Native server PDF requires wkhtmltopdf. The verification checks covered HTML and Chromium/browser printing, **not** native PDF or container execution — confirm both on the presenting machine using the [first-run checklist](LOCAL.md#first-run-checklist). The RA/JSA and observation summary wizards also offer **Export XLSX**, which downloads a real spreadsheet of the same date-filtered rows (regression-tested); coverage CSV and native Odoo exports are separate capabilities.
 
 ## Full coverage checklist
 
@@ -675,7 +675,7 @@ Business sample areas are listed below. Input-only report wizards are intentiona
 
 **Is this a real application or a mock-up?** The hub resolves actual Odoo records/actions. Counts, risk indicators, exceptions and reports come from the database. Synthetic data is used deliberately.
 
-**Does PSSR block commissioning?** Not in the current native implementation. Completion is computed; an enforcing commissioning gate would be additional work.
+**Does PSSR block commissioning?** Yes. When a change requires a PSSR, the commissioning action rejects the transition while any checklist line is unverified (or before the checklist is loaded) and lists the outstanding items. Only changes explicitly marked as not requiring a PSSR can commission without one.
 
 **Does contractor expiry control a physical gate?** No physical access-control integration is configured. The demo shows induction status and portal participation, not door enforcement.
 

@@ -208,7 +208,7 @@ Use a proper database login, protect the database-manager password, disable outb
 
 ## Transparent boundaries
 
-- PSSR completion is computed, but the current commissioning action does **not** enforce a PSSR gate. The walkthrough explicitly distinguishes verification from an enforced block.
+- PSSR completion is computed from the checklist lines, and the commissioning action **enforces** it: a change that requires a PSSR cannot be commissioned while any line is unverified (or before the checklist is loaded). Mark a change as not requiring a PSSR only when that is genuinely the case.
 - SIMOPS, LOTO clearance, preparation readiness, entrant closure and critical-lift exercises use genuine native checks. They are not physical safety interlocks.
 - Spatial radar comparisons are scoped to the same modeled location, using synthetic coordinates — not live geolocation or adjacent-zone hazard certification.
 - Internal HSE ACLs are broad. Production medical-data privacy, company separation and segregation of duties require review and hardening.

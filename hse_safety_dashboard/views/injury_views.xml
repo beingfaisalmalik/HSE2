@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ===================== Injury Log ===================== -->
+    <record id="view_hse_injury_log_tree" model="ir.ui.view">
+        <field name="name">hse.injury.log.tree</field>
+        <field name="model">hse.injury.log</field>
+        <field name="arch" type="xml">
+            <tree string="Injury Log"
+                  decoration-danger="lost_workdays &gt; 0"
+                  decoration-muted="status == 'closed'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="injury_type"/>
+                <field name="department"/>
+                <field name="person_involved"/>
+                <field name="lost_workdays" sum="Total Lost Workdays"/>
+                <field name="corrective_action_id"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'closed'"
+                       decoration-warning="status == 'open'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hse_injury_log_form" model="ir.ui.view">
+        <field name="name">hse.injury.log.form</field>
+        <field name="model">hse.injury.log</field>
+        <field name="arch" type="xml">
+            <form string="Injury">
+                <header>
+                    <button name="action_mark_closed" type="object"
+                            string="Mark Closed" class="btn-primary"
+                            invisible="status == 'closed'"/>
+                    <button name="action_mark_open" type="object"
+                            string="Reopen" invisible="status == 'open'"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="open,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="injury_type"/>
+                            <field name="department"/>
+                            <field name="person_involved"/>
+                        </group>
+                        <group>
+                            <field name="lost_workdays"/>
+                            <field name="corrective_action_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description" placeholder="What happened?"/>
+                        </page>
+                        <page string="Root Cause">
+                            <field name="root_cause" placeholder="Why did it happen?"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hse_injury_log_search" model="ir.ui.view">
+        <field name="name">hse.injury.log.search</field>
+        <field name="model">hse.injury.log</field>
+        <field name="arch" type="xml">
+            <search string="Injuries">
+                <field name="name"/>
+                <field name="department"/>
+                <field name="person_involved"/>
+                <filter name="filter_open" string="Open" domain="[('status','=','open')]"/>
+                <filter name="filter_lti" string="Lost Time Injuries"
+                        domain="[('injury_type','=','lti')]"/>
+                <filter name="filter_date" string="Date" date="date"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_type" string="Type" context="{'group_by': 'injury_type'}"/>
+                    <filter name="group_dept" string="Department" context="{'group_by': 'department'}"/>
+                    <filter name="group_month" string="Month" context="{'group_by': 'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hse_injury_log" model="ir.actions.act_window">
+        <field name="name">Injury Log</field>
+        <field name="res_model">hse.injury.log</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_filter_open': 1}</field>
+    </record>
+
+    <menuitem id="menu_hse_injury_log" name="Injury Log"
+              parent="hse_safety_dashboard.menu_hse_registers"
+              action="action_hse_injury_log" sequence="10"/>
+</odoo>

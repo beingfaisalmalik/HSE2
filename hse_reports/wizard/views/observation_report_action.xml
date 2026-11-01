@@ -8,5 +8,17 @@
             <field name="report_file">hse_reports.hse_observation_report</field>
             <field name="binding_type">report</field>
         </record>
+
+        <!-- Spreadsheet export of the same date-filtered observation summary.
+             report_name resolves to the report.<name> abstract model implemented
+             in hse_reports/reports/observation_summary_report.py. -->
+        <record id="observation_report_action_xlsx" model="ir.actions.report">
+            <field name="name">Observation Summary (XLSX)</field>
+            <field name="model">observation.wizard</field>
+            <field name="report_type">xlsx</field>
+            <field name="report_name">hse.observation.wizard.report.hse_observation_report</field>
+            <field name="report_file">hse_observation_report.xlsx</field>
+            <field name="binding_type">report</field>
+        </record>
     </data>
 </odoo>

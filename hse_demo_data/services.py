@@ -152,7 +152,7 @@ def build_walkthrough(context):
     lines += ['', 'HTML reports are always available. Native PDF export requires a working wkhtmltopdf engine.',
               'Use browser Print → Save as PDF for HTML reports if the server PDF engine is unavailable.', '',
               '## Known boundaries', '',
-              '- PSSR completion is computed from checklist lines; the current commissioning action does not enforce that gate.',
+              '- PSSR completion is computed from checklist lines and the commissioning action enforces that gate: commissioning is rejected with the unverified items listed until every line is verified.',
               '- Exposure limits, greenhouse-gas factors and consequence formulas are illustrative and need site-specific validation.',
               '- The demo presenter is an internal HSE user. Existing internal ACLs are broad; this is not a proof of production segregation of duties.',
               '- Use synthetic medical data only. Review health-data privacy and access controls before deployment.',

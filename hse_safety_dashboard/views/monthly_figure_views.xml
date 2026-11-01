@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ===================== Monthly Figures ===================== -->
+    <record id="view_hse_monthly_figure_tree" model="ir.ui.view">
+        <field name="name">hse.monthly.figure.tree</field>
+        <field name="model">hse.monthly.figure</field>
+        <field name="arch" type="xml">
+            <tree string="Monthly Figures" editable="bottom">
+                <field name="year"/>
+                <field name="month"/>
+                <field name="label" readonly="1"/>
+                <field name="man_hours"/>
+                <field name="planned_inspections"/>
+                <field name="completed_inspections"/>
+                <field name="toolbox_talks"/>
+                <field name="ptw_issued"/>
+                <field name="training_hours"/>
+                <field name="audit_score"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hse_monthly_figure_form" model="ir.ui.view">
+        <field name="name">hse.monthly.figure.form</field>
+        <field name="model">hse.monthly.figure</field>
+        <field name="arch" type="xml">
+            <form string="Monthly Figures">
+                <sheet>
+                    <group>
+                        <group string="Period">
+                            <field name="year"/>
+                            <field name="month"/>
+                            <field name="label"/>
+                        </group>
+                        <group string="Exposure">
+                            <field name="man_hours"/>
+                        </group>
+                    </group>
+                    <group string="Leading Indicators">
+                        <field name="planned_inspections"/>
+                        <field name="completed_inspections"/>
+                        <field name="toolbox_talks"/>
+                        <field name="ptw_issued"/>
+                        <field name="training_hours"/>
+                        <field name="audit_score" widget="percent"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hse_monthly_figure" model="ir.actions.act_window">
+        <field name="name">Monthly Figures (Man-Hours &amp; Leading)</field>
+        <field name="res_model">hse.monthly.figure</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_hse_monthly_figure" name="Monthly Figures"
+              parent="hse_safety_dashboard.menu_hse_registers"
+              action="action_hse_monthly_figure" sequence="70"/>
+
+</odoo>

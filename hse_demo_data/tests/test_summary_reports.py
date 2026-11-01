@@ -62,3 +62,33 @@ class TestHSEClientSummaryReports(TransactionCase):
             wizard = self.env[model].create({'start_date': day, 'end_date': day - timedelta(days=1)})
             with self.assertRaises(UserError):
                 wizard.printhsereport()
+
+    def test_xlsx_summary_exports_produce_spreadsheets(self):
+        """The RA/JSA and observation wizards export real .xlsx workbooks
+        with the same date-filtered rows as their QWeb counterparts."""
+        xlsx_action = self.env.ref('hse_reports.observation_report_action_xlsx',
+                                   raise_if_not_found=False)
+        if not xlsx_action:
+            self.skipTest('The optional hse_reports addon is not installed.')
+        presenter = self.env.ref('hse_demo_data.dd_user_presenter')
+        env = self.env(user=presenter, context=dict(self.env.context, tz='UTC'))
+        day = fields.Date.today()
+        cases = [
+            ('hse.wizard.report', 'dd_jsa_1', 'ra_jsa_report_action_xlsx'),
+            ('observation.wizard', 'dd_obs_1', 'observation_report_action_xlsx'),
+        ]
+        for model, sample, action_xmlid in cases:
+            wizard = env[model].create({'start_date': day, 'end_date': day})
+            action = wizard.printhsereport_xlsx()
+            self.assertEqual(action['type'], 'ir.actions.report')
+            self.assertEqual(action['report_type'], 'xlsx')
+            record = env.ref('hse_demo_data.' + sample)
+            self.assertIn(record.id, action['data']['data'], model)
+            content, fmt = env['ir.actions.report']._render_xlsx(
+                action['report_name'], wizard.ids, data=action['data'])
+            self.assertEqual(fmt, 'xlsx')
+            # A real workbook is a ZIP container starting with the OOXML magic.
+            self.assertGreater(len(content), 100)
+            self.assertEqual(content[:2], b'PK')
+            self.assertEqual(action['report_name'],
+                             env.ref('hse_reports.' + action_xmlid).report_name)

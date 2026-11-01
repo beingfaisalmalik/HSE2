@@ -3,6 +3,7 @@ from datetime import date, datetime, timedelta
 from unittest.mock import MagicMock, patch
 from odoo.tests.common import TransactionCase, tagged
 from odoo import fields
+from odoo.exceptions import UserError
 from odoo.addons.hse.controllers import hse_dashboard_controller
 
 
@@ -146,10 +147,42 @@ class TestHSEMaximoComprehensive(TransactionCase):
         self.assertEqual(moc.state, 'pssr')
         moc.action_start_implementation()
         self.assertEqual(moc.state, 'implementation')
+        moc.action_start_pssr()
+        self.assertEqual(moc.state, 'pssr')
+
+        # The PSSR gate blocks commissioning while the checklist is missing
+        # or incomplete, and reports exactly what is still unverified.
+        with self.assertRaises(UserError):
+            moc.action_commission()
+        self.assertEqual(moc.state, 'pssr')
+
+        moc.action_load_default_pssr()
+        self.assertFalse(moc.pssr_completed)
+        with self.assertRaises(UserError):
+            moc.action_commission()
+        self.assertEqual(moc.state, 'pssr')
+
+        moc.pssr_line_ids.write({'is_verified': True})
+        moc._compute_pssr_status()
+        self.assertTrue(moc.pssr_completed)
         moc.action_commission()
         self.assertEqual(moc.state, 'commissioned')
         moc.action_close()
         self.assertEqual(moc.state, 'closed')
+
+        # A change that does not require a PSSR may commission without one.
+        moc2 = MOC.create({
+            'title': 'Retagging of utility area signage',
+            'change_type': 'permanent',
+            'category': 'procedures',
+            'location_id': self.test_loc.id,
+            'description_of_change': 'Replace outdated safety signage with revised set.',
+            'justification': 'Align site signage with the current life-saving rules.',
+            'pssr_required': False,
+        })
+        moc2.action_start_pssr()
+        moc2.action_commission()
+        self.assertEqual(moc2.state, 'commissioned')
 
     # =========================================================================
     # 4. Non-Conformance Management (NCR) & Material Quarantine

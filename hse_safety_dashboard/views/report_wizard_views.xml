@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ===================== Import wizard ===================== -->
+    <record id="view_hse_excel_import_form" model="ir.ui.view">
+        <field name="name">hse.excel.import.form</field>
+        <field name="model">hse.excel.import</field>
+        <field name="arch" type="xml">
+            <form string="Import Safety Dashboard Workbook">
+                <field name="state" invisible="1"/>
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        Upload the client's <b>Safety Dashboard (.xlsx)</b>
+                        workbook. The wizard imports the Injury Log, Near-Miss
+                        Log, Unsafe Act/Condition Log, Incident Log,
+                        Corrective Actions, PTW register (both column
+                        layouts), man-hours and Leading Indicators.
+                        Existing IDs are skipped, so re-import is safe.
+                        Dates that cannot be read are left empty and will be
+                        flagged by the data-health checks — nothing is invented.
+                    </div>
+                    <group invisible="state == 'done'">
+                        <field name="filename" invisible="1"/>
+                        <field name="file" filename="filename"/>
+                    </group>
+                    <group invisible="state != 'done'">
+                        <field name="log" nolabel="1" widget="text"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_import" type="object"
+                            string="Import" class="btn-primary"
+                            invisible="state == 'done'"
+                            data-hotkey="q"/>
+                    <button string="Close" class="btn-secondary" special="cancel"
+                            data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hse_excel_import" model="ir.actions.act_window">
+        <field name="name">Import Excel Workbook</field>
+        <field name="res_model">hse.excel.import</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- ===================== Report wizard ===================== -->
+    <record id="view_hse_report_wizard_form" model="ir.ui.view">
+        <field name="name">hse.report.wizard.form</field>
+        <field name="model">hse.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Safety Reports">
+                <group>
+                    <field name="report_type"/>
+                    <field name="year"/>
+                    <field name="month"/>
+                </group>
+                <footer>
+                    <button name="action_generate" type="object"
+                            string="Generate" class="btn-primary"
+                            data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"
+                            data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hse_report_wizard" model="ir.actions.act_window">
+        <field name="name">Generate Reports</field>
+        <field name="res_model">hse.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- ===================== Reporting menus (after the actions) ======== -->
+    <menuitem id="menu_hse_import_excel"
+              name="Import Excel Workbook"
+              parent="menu_hse_reporting"
+              action="action_hse_excel_import"
+              sequence="10"
+              groups="hse_safety_dashboard.group_hse_safety_manager"/>
+
+    <menuitem id="menu_hse_report_wizard"
+              name="Generate Reports"
+              parent="menu_hse_reporting"
+              action="action_hse_report_wizard"
+              sequence="20"/>
+</odoo>

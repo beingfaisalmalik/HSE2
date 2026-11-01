@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ===================== Dashboard client actions ===================== -->
+    <record id="action_hse_safety_dashboard" model="ir.actions.client">
+        <field name="name">Monthly Dashboard</field>
+        <field name="tag">hse_safety_dashboard.dashboard</field>
+        <field name="target">current</field>
+    </record>
+
+    <record id="action_hse_safety_dashboard_yearly" model="ir.actions.client">
+        <field name="name">Yearly Dashboard</field>
+        <field name="tag">hse_safety_dashboard.dashboard</field>
+        <field name="target">current</field>
+        <field name="context">{'default_mode': 'yearly'}</field>
+    </record>
+
+    <!-- ===================== Menus ===================== -->
+    <menuitem id="menu_hse_safety_root"
+              name="HSE Safety Dashboard"
+              web_icon="hse_safety_dashboard,static/description/icon.png"
+              sequence="50"/>
+
+    <menuitem id="menu_hse_safety_dashboard"
+              name="Dashboard"
+              parent="menu_hse_safety_root"
+              action="action_hse_safety_dashboard"
+              sequence="10"/>
+
+    <menuitem id="menu_hse_safety_dashboard_yearly"
+              name="Yearly Dashboard"
+              parent="menu_hse_safety_root"
+              action="action_hse_safety_dashboard_yearly"
+              sequence="15"/>
+
+    <menuitem id="menu_hse_registers"
+              name="Registers"
+              parent="menu_hse_safety_root"
+              sequence="20"/>
+
+    <menuitem id="menu_hse_reporting"
+              name="Reporting"
+              parent="menu_hse_safety_root"
+              sequence="60"/>
+</odoo>
