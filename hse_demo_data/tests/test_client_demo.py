@@ -37,7 +37,7 @@ class TestHSEClientDemo(TransactionCase):
             self.assertIn(scenario['title'], guide)
         for module in MODULES:
             self.assertIn(module['sample'], guide)
-        self.assertIn('does not enforce', guide)
+        self.assertIn('commissioning action enforces that gate', guide)
 
     def test_every_native_business_menu_has_populated_records(self):
         root = self.env.ref('hse.menu_hse_root')

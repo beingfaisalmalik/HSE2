@@ -242,63 +242,61 @@
 
         <!-- Demo Preparation Activities -->
         <record id="demo_prep_activity" model="hse.preparation.activity">
-            <field name="name">De-inventory, Nitrogen Purge &amp; Blind Installation for Vessel V-102</field>
-            <field name="activity_type">purging</field>
-            <field name="priority">high</field>
+            <field name="name">PREP-CDU-2026-014</field>
+            <field name="title">De-inventory, Nitrogen Purge &amp; Blind Installation for Vessel V-102</field>
+            <field name="activity_type">turnaround</field>
             <field name="location_id" ref="hse.loc_cdu1"/>
             <field name="asset_id" ref="demo_asset_vessel"/>
-            <field name="estimated_duration_hours">8.0</field>
-            <field name="hazards_identified">Trapped hydrocarbons, pyrophoric iron sulfide scale, oxygen depletion from N2.</field>
-            <field name="precautions_required">Continuous hydrocarbon and O2 monitoring, deluge water hose ready, proper ESD grounding.</field>
-            <field name="state">approved</field>
+            <field name="scheduled_date">2026-11-20</field>
+            <field name="gate1_planning">True</field>
+            <field name="gate2_isolation">True</field>
+            <field name="gate3_site_prep">True</field>
+            <field name="gate4_ready">True</field>
+            <field name="state">ready</field>
         </record>
 
         <!-- Demo Operating Procedure (SOP) -->
         <record id="demo_sop_pump_startup" model="hse.operating.procedure">
             <field name="procedure_code">SOP-CDU-P101-001</field>
-            <field name="title">Crude Charge Pump P-101A/B Pre-Start Alignment and Normal Startup</field>
-            <field name="procedure_type">sop</field>
-            <field name="category">startup</field>
-            <field name="version">3.2</field>
+            <field name="name">Crude Charge Pump P-101A/B Pre-Start Alignment and Normal Startup</field>
+            <field name="procedure_type">startup</field>
+            <field name="revision">Rev 3.2</field>
             <field name="effective_date">2026-01-01</field>
-            <field name="review_due_date">2027-01-01</field>
-            <field name="scope">Covers all steps required by operations personnel to verify valve lineup, auxiliary systems, seal flush, and electric motor start for P-101A.</field>
-            <field name="consequences_of_deviation">Dry run seal damage, overpressure of casing, vapor lock, potential hydrocarbon release and fire.</field>
-            <field name="state">active</field>
+            <field name="next_review_date">2027-01-01</field>
+            <field name="purpose_and_scope">Covers all steps required by operations personnel to verify valve lineup, auxiliary systems, seal flush, and electric motor start for P-101A. Deviation from this procedure can cause dry run seal damage, overpressure of casing, vapor lock, potential hydrocarbon release and fire.</field>
+            <field name="state">published</field>
         </record>
 
         <!-- Demo Operating Policy -->
         <record id="demo_policy_zero_harm" model="hse.operating.policy">
             <field name="policy_code">POL-HSE-CORP-001</field>
-            <field name="title">Corporate Stop Work Authority (SWA) and Zero Harm Commitment</field>
-            <field name="category">safety</field>
-            <field name="version">5.0</field>
+            <field name="name">Corporate Stop Work Authority (SWA) and Zero Harm Commitment</field>
+            <field name="policy_type">stop_work</field>
             <field name="effective_date">2026-01-01</field>
-            <field name="mandatory_compliance">True</field>
-            <field name="penalties_applicable">False</field>
-            <field name="purpose">Empower every worker and contractor with unconditional authority and responsibility to stop any unsafe act or condition without fear of retribution.</field>
             <field name="policy_statement">&lt;p&gt;Safety is our non-negotiable core value. No job is so urgent that it cannot be done safely. Everyone on site has full Stop Work Authority.&lt;/p&gt;</field>
-            <field name="state">published</field>
+            <field name="core_principles">Empower every worker and contractor with unconditional authority and responsibility to stop any unsafe act or condition without fear of retribution.</field>
+            <field name="mandatory_rules">Stop-work decisions must be escalated immediately to the area authority; restart requires a documented step-back risk review and formal authorization.</field>
+            <field name="state">approved</field>
         </record>
 
         <!-- Demo Continuous Improvement (CI) -->
         <record id="demo_ci_energy" model="hse.improvement">
             <field name="title">Implementation of Automated Smart Bypass Logging and Interlock Alerting</field>
-            <field name="initiative_type">safety</field>
-            <field name="category">digitalization</field>
+            <field name="initiative_type">kaizen</field>
+            <field name="category">process_safety</field>
             <field name="location_id" ref="hse.loc_cdu1"/>
             <field name="current_state">Manual paper bypass forms occasionally led to delays in re-instating SECE safety critical alarms after maintenance was finished.</field>
             <field name="proposed_solution">Digitize bypass authorization workflow with real-time expiration countdown and automated push notifications to shift superintendent.</field>
             <field name="implementation_budget">12000.0</field>
             <field name="estimated_annual_savings">85000.0</field>
-            <field name="state">implemented</field>
+            <field name="state">closed</field>
         </record>
 
         <!-- Demo Competency Matrix -->
         <record id="demo_competency_agt" model="hse.competency">
             <field name="name">Authorized Gas Tester (AGT Level 2)</field>
             <field name="code">COMP-AGT-L2</field>
-            <field name="category">hse_critical</field>
+            <field name="category">gas_testing</field>
             <field name="description">Qualification for atmospheric testing in confined spaces and hot work areas using multi-gas detectors, photoionization detectors, and chemical detector tubes.</field>
             <field name="validity_months">24</field>
             <field name="mandatory_for_permits">True</field>
@@ -308,6 +306,7 @@
         <record id="demo_personnel_cert" model="hse.personnel.certification">
             <field name="certification_name">Authorized Gas Tester Level II - Industrial Atmospheric Sampling</field>
             <field name="certificate_number">AGT-INT-2026-041</field>
+            <field name="certification_type">other</field>
             <field name="issuing_body">National Board of Industrial Safety Certifications</field>
             <field name="issue_date">2026-03-01</field>
             <field name="expiry_date">2028-03-01</field>
@@ -326,7 +325,7 @@
             <field name="loss_environmental_cleanup">8000.0</field>
             <field name="downtime_hours">4.5</field>
             <field name="notes">Quantification of unscheduled shutdown, flaring, maintenance labor, expedited replacement parts, and environmental monitoring impact.</field>
-            <field name="state">audited</field>
+            <field name="state">verified</field>
         </record>
 
         <!-- Demo Action (CAPA) -->
@@ -374,7 +373,7 @@
 
         <!-- Demo Defeated / Standing Alarm -->
         <record id="demo_alarm_1" model="hse.operator.log.alarm">
-            <field name="log_id" ref="demo_shift_log"/>
+            <field name="log_id" ref="demo_op_log_day"/>
             <field name="tag_number">TAHH-104B</field>
             <field name="description">Atmospheric Tower Top Tray High-High Temperature Trip</field>
             <field name="priority">critical</field>

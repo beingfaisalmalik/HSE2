@@ -9,5 +9,16 @@
             <field name="binding_type">report</field>
         </record>
 
+        <!-- Spreadsheet export of the same date-filtered RA/JSA summary.
+             report_name resolves to the report.<name> abstract model implemented
+             in hse_reports/reports/ra_jsa_summary_report.py. -->
+        <record id="ra_jsa_report_action_xlsx" model="ir.actions.report">
+            <field name="name">RA/JSA Summary (XLSX)</field>
+            <field name="model">hse.wizard.report</field>
+            <field name="report_type">xlsx</field>
+            <field name="report_name">hse.wizard.report.hse_ra_jsa_report</field>
+            <field name="report_file">hse_ra_jsa_report.xlsx</field>
+            <field name="binding_type">report</field>
+        </record>
     </data>
 </odoo>

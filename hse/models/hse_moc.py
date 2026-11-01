@@ -135,6 +135,26 @@ class HSEMoc(models.Model):
         self.write({'state': 'pssr'})
 
     def action_commission(self):
+        """Commission the change, enforcing the Pre-Start Safety Review gate.
+
+        A change that requires a PSSR cannot be commissioned while any
+        checklist line is unverified (or before the checklist has been
+        loaded at all). Operators must verify every line first, or
+        explicitly mark the PSSR as not required for this change.
+        """
+        for rec in self:
+            if rec.pssr_required and not rec.pssr_completed:
+                if not rec.pssr_line_ids:
+                    raise UserError(_(
+                        "Cannot commission %s: a Pre-Start Safety Review is required "
+                        "but no PSSR checklist has been loaded. Load the standard "
+                        "checklist, verify every line, then commission."
+                    ) % rec.display_name)
+                pending = rec.pssr_line_ids.filtered(lambda line: not line.is_verified)
+                raise UserError(_(
+                    "Cannot commission %s: the Pre-Start Safety Review is incomplete. "
+                    "Unverified items: %s. Verify every PSSR line before commissioning."
+                ) % (rec.display_name, ', '.join(pending.mapped('item_description'))))
         self.write({'state': 'commissioned'})
 
     def action_close(self):

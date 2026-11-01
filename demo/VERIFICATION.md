@@ -11,6 +11,7 @@
 | Actual Odoo/PostgreSQL install | Successful installation of the complete dependency graph: 47 modules |
 | Fresh-database regression suite | **110 tests; 0 failures, 0 errors** across HSE, meetings, frontline portal and demo suites |
 | Latest upgrade/regression run | **111 tests; 0 failures, 0 errors** on a separate test database |
+| Completion run (PSSR gate, working XLSX exports, fixed `hse/demo/demo.xml`) | **112 tests; 0 failures, 0 errors** (`hse` 81, `hse_demo_data` 37, `hse_meeting` 6, `observation_portal` 4) on a fresh database with demo data enabled — the 46-record native demo now loads instead of failing silently |
 | Presenter-authorized catalog | **73 / 73 ready areas**, 14 domains, **160** primary/reference records, no readiness issues |
 | Narrative coverage | Eight journeys, 49 steps, 80-minute narrative / 90-minute full session |
 | Native backend metadata | **106** window actions resolved; **100** backend form views loaded, 99 with existing hero styling |
@@ -67,8 +68,8 @@ No deployment of this repository enables that mode by default. It was turned on 
 - The official Odoo 17 image is intended to supply wkhtmltopdf. Its historical Dockerfile includes that package, but this does not replace an actual container/PDF test in the target environment.
 - No production security/privacy assessment, engineering certification, regulatory filing, physical gate integration or external ERP/CMMS/mail/SMS integration was performed.
 - Internal model ACLs remain broad. Medical-data privacy, company separation and segregation of duties need a production review.
-- PSSR completion is computed; the current commissioning action still has **no enforcing PSSR gate**. This limitation is disclosed in the hub and walkthrough.
-- Unbound legacy spreadsheet generators are not presented as completed client-ready XLSX reports.
+- PSSR completion is computed from checklist lines and the commissioning action enforces it as a gate (added after the original verification run; covered by `test_03_management_of_change`). Commissioning with an incomplete or missing checklist raises `UserError` listing the unverified items.
+- The legacy spreadsheet generators are now bound and completed: the RA/JSA and observation summary wizards export real `.xlsx` workbooks (`report_type=xlsx`, wizard "Export XLSX" buttons), covered by `test_xlsx_summary_exports_produce_spreadsheets`. They were not part of the original verification run; native PDF export remains untested here (see the wkhtmltopdf item above).
 
 ## Runtime and reproducibility notes
 

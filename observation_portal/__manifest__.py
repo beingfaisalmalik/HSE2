@@ -2,20 +2,22 @@
 {
     'name': "observation_portal",
 
-    'summary': "Short (1 phrase/line) summary of the module's purpose",
+    'summary': "Frontline safety observation portal: photo-enabled hazard reporting and BBS submissions from any browser",
 
     'description': """
-Long description of module's purpose
+Frontline Safety Observation Portal
+-----------------------------------
+- Public/portal-friendly observation form with hazard photo upload
+- Observations flow into the native HSE observation register for review
+- Website templates for submission, confirmation and history views
+- Menu visibility restricted to internal HSE users and portal submissions
     """,
 
-    'author': "My Company",
+    'author': "HSE Global Enterprise",
     'website': "https://www.yourcompany.com",
 
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
-    # for the full list
-    'category': 'Uncategorized',
-    'version': '0.1',
+    'category': 'Human Resources/HSE',
+    'version': '17.0.1.0.0',
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'website', 'portal', 'hse'],
