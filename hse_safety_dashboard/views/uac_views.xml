@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ===================== Unsafe Act / Condition ===================== -->
+    <record id="view_hse_uac_log_tree" model="ir.ui.view">
+        <field name="name">hse.uac.log.tree</field>
+        <field name="model">hse.uac.log</field>
+        <field name="arch" type="xml">
+            <tree string="Unsafe Act &amp; Condition Log"
+                  decoration-muted="status == 'closed'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="uac_type"/>
+                <field name="department"/>
+                <field name="reported_by"/>
+                <field name="corrective_action_id"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'closed'"
+                       decoration-warning="status == 'open'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hse_uac_log_form" model="ir.ui.view">
+        <field name="name">hse.uac.log.form</field>
+        <field name="model">hse.uac.log</field>
+        <field name="arch" type="xml">
+            <form string="Observation">
+                <header>
+                    <button name="action_mark_closed" type="object"
+                            string="Mark Closed" class="btn-primary"
+                            invisible="status == 'closed'"/>
+                    <button name="action_mark_open" type="object"
+                            string="Reopen" invisible="status == 'open'"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="open,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="uac_type"/>
+                            <field name="department"/>
+                        </group>
+                        <group>
+                            <field name="reported_by"/>
+                            <field name="corrective_action_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Observation">
+                            <field name="description" placeholder="What was observed?"/>
+                        </page>
+                        <page string="Immediate Action">
+                            <field name="immediate_action" placeholder="What was done on the spot?"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hse_uac_log_search" model="ir.ui.view">
+        <field name="name">hse.uac.log.search</field>
+        <field name="model">hse.uac.log</field>
+        <field name="arch" type="xml">
+            <search string="Observations">
+                <field name="name"/>
+                <field name="department"/>
+                <filter name="filter_open" string="Open" domain="[('status','=','open')]"/>
+                <filter name="filter_act" string="Unsafe Acts"
+                        domain="[('uac_type','=','unsafe_act')]"/>
+                <filter name="filter_cond" string="Unsafe Conditions"
+                        domain="[('uac_type','=','unsafe_condition')]"/>
+                <filter name="filter_date" string="Date" date="date"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_type" string="Type" context="{'group_by': 'uac_type'}"/>
+                    <filter name="group_month" string="Month" context="{'group_by': 'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hse_uac_log" model="ir.actions.act_window">
+        <field name="name">Unsafe Act &amp; Condition Log</field>
+        <field name="res_model">hse.uac.log</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_hse_uac_log" name="Unsafe Act &amp; Condition"
+              parent="hse_safety_dashboard.menu_hse_registers"
+              action="action_hse_uac_log" sequence="30"/>
+</odoo>

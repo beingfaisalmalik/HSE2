@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================= -->
+    <!-- Monthly safety dashboard — printable PDF                       -->
+    <!-- ============================================================= -->
+    <template id="report_hse_monthly">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page hse_report">
+                    <t t-set="data" t-value="docs.get_payload()"/>
+                    <h2 class="text-center">
+                        <span t-out="data['company']"/> — HSE Safety Dashboard
+                    </h2>
+                    <h3 class="text-center" t-out="data['month_name']"/>
+                    <p class="text-muted text-center">
+                        Report date: <span t-out="data['report_date']"/>
+                        · Rate base: <span t-out="int(data['rate_base'])"/> man-hours
+                    </p>
+
+                    <!-- KPI cards -->
+                    <table class="table table-sm table-bordered hse_kpis">
+                        <thead>
+                            <tr class="table-primary">
+                                <th colspan="6">Key Performance Indicators — <span t-out="data['month_label']"/></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Lost Time Injuries (LTI)</th>
+                                <td t-out="data['stats']['lti']"/>
+                                <th>Recordable Cases (LTI + MTC)</th>
+                                <td t-out="data['stats']['recordable']"/>
+                                <th>Lost Workdays</th>
+                                <td t-out="data['stats']['lost_workdays']"/>
+                            </tr>
+                            <tr>
+                                <th>Man-Hours Worked</th>
+                                <td>
+                                    <span t-if="data['stats']['man_hours']" t-out="int(data['stats']['man_hours'])"/>
+                                    <span t-else="">n/a</span>
+                                </td>
+                                <th>LTIFR</th>
+                                <td>
+                                    <span t-if="data['stats']['ltifr'] is not None" t-out="'%.2f' % data['stats']['ltifr']"/>
+                                    <span t-else="">n/a</span>
+                                </td>
+                                <th>TRIR</th>
+                                <td>
+                                    <span t-if="data['stats']['trir'] is not None" t-out="'%.2f' % data['stats']['trir']"/>
+                                    <span t-else="">n/a</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Severity Rate</th>
+                                <td>
+                                    <span t-if="data['stats']['severity'] is not None" t-out="'%.2f' % data['stats']['severity']"/>
+                                    <span t-else="">n/a</span>
+                                </td>
+                                <th>Near Misses</th>
+                                <td t-out="data['stats']['near_misses']"/>
+                                <th>Non-Injury Incidents</th>
+                                <td t-out="data['stats']['incidents']"/>
+                            </tr>
+                            <tr>
+                                <th>Unsafe Acts</th>
+                                <td t-out="data['stats']['unsafe_acts']"/>
+                                <th>Unsafe Conditions</th>
+                                <td t-out="data['stats']['unsafe_conditions']"/>
+                                <th>Total Observations</th>
+                                <td t-out="data['stats']['observations']"/>
+                            </tr>
+                            <tr>
+                                <th>Open CAs</th>
+                                <td t-out="data['stats']['ca_open']"/>
+                                <th>CAs Overdue</th>
+                                <td t-out="data['stats']['ca_overdue']"/>
+                                <th>CA Closure Rate</th>
+                                <td>
+                                    <span t-if="data['stats']['ca_closure_rate'] is not None"
+                                          t-out="'%.0f%%' % (data['stats']['ca_closure_rate'] * 100)"/>
+                                    <span t-else="">n/a</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>PTW Issued</th>
+                                <td>
+                                    <span t-out="data['stats']['ptw_issued']"/>
+                                    (<span t-out="data['stats']['ptw_register_rows']"/> register rows)
+                                </td>
+                                <th>Toolbox Talks</th>
+                                <td t-out="data['stats']['toolbox_talks']"/>
+                                <th>Training Hours</th>
+                                <td t-out="data['stats']['training_hours']"/>
+                            </tr>
+                            <tr>
+                                <th>Inspection Compliance</th>
+                                <td>
+                                    <span t-if="data['stats']['insp_compliance'] is not None"
+                                          t-out="'%.0f%%' % (data['stats']['insp_compliance'] * 100)"/>
+                                    <span t-else="">n/a</span>
+                                    (<span t-out="data['stats']['insp_completed']"/> of <span t-out="data['stats']['insp_planned']"/>)
+                                </td>
+                                <th>Internal Audit Score</th>
+                                <td>
+                                    <span t-if="data['stats']['audit_score'] not in (None, False)"
+                                          t-out="'%.2f' % data['stats']['audit_score']"/>
+                                    <span t-else="">n/a</span>
+                                </td>
+                                <th>Days since last LTI</th>
+                                <td>
+                                    <span t-out="data['days_since_lti']['days']"/>
+                                    <span t-if="data['days_since_lti']['last_date']">
+                                        (last: <span t-out="data['days_since_lti']['last_date']"/>)
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- YTD -->
+                    <table class="table table-sm table-bordered hse_ytd">
+                        <thead>
+                            <tr class="table-secondary">
+                                <th colspan="6">Year-to-Date (<span t-out="data['month_label']"/>)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Man-hours</th>
+                                <td t-out="int(data['ytd_to_month']['man_hours'])"/>
+                                <th>LTI</th>
+                                <td t-out="data['ytd_to_month']['lti']"/>
+                                <th>Recordable</th>
+                                <td t-out="data['ytd_to_month']['recordable']"/>
+                            </tr>
+                            <tr>
+                                <th>LTIFR (YTD)</th>
+                                <td>
+                                    <span t-if="data['ytd_to_month']['ltifr'] is not None"
+                                          t-out="'%.2f' % data['ytd_to_month']['ltifr']"/>
+                                    <span t-else="">n/a</span>
+                                </td>
+                                <th>TRIR (YTD)</th>
+                                <td>
+                                    <span t-if="data['ytd_to_month']['trir'] is not None"
+                                          t-out="'%.2f' % data['ytd_to_month']['trir']"/>
+                                    <span t-else="">n/a</span>
+                                </td>
+                                <th>Severity (YTD)</th>
+                                <td>
+                                    <span t-if="data['ytd_to_month']['severity'] is not None"
+                                          t-out="'%.2f' % data['ytd_to_month']['severity']"/>
+                                    <span t-else="">n/a</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Near misses</th>
+                                <td t-out="data['ytd_to_month']['near_misses']"/>
+                                <th>Observations</th>
+                                <td t-out="data['ytd_to_month']['observations']"/>
+                                <th>Incidents</th>
+                                <td t-out="data['ytd_to_month']['incidents']"/>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Data health -->
+                    <h4>Data Health</h4>
+                    <table class="table table-sm table-bordered hse_health">
+                        <thead>
+                            <tr>
+                                <th style="width:30px">#</th>
+                                <th style="width:60px">Status</th>
+                                <th style="width:50px">Count</th>
+                                <th>Check</th>
+                                <th>Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="data['health']" t-as="chk">
+                                <td t-out="chk['no']"/>
+                                <td>
+                                    <span t-if="chk['ok']" class="text-success">✓ OK</span>
+                                    <span t-else="" class="text-danger fw-bold">⚠ Review</span>
+                                </td>
+                                <td t-out="chk['count']"/>
+                                <td t-out="chk['label']"/>
+                                <td t-out="chk['detail']"/>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Registers for the month -->
+                    <h4>Registers — <span t-out="data['month_name']"/></h4>
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr class="table-light">
+                                <th colspan="7">Injury Log (<span t-out="len(data['registers']['injuries'])"/> shown)</th>
+                            </tr>
+                            <tr>
+                                <th>ID</th><th>Date</th><th>Type</th><th>Department</th>
+                                <th>Person</th><th>Lost Days</th><th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="data['registers']['injuries']" t-as="r">
+                                <td t-out="r['name']"/><td t-out="r['date']"/>
+                                <td t-out="r['type']"/><td t-out="r['department']"/>
+                                <td t-out="r['person']"/><td t-out="r['lost_workdays']"/>
+                                <td t-out="r['status']"/>
+                            </tr>
+                            <tr t-if="not data['registers']['injuries']">
+                                <td colspan="7" class="text-muted">No injuries recorded in this month ✓</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr class="table-light">
+                                <th colspan="6">Corrective Actions — Open (<span t-out="data['registers']['open_cas_total']"/> total)</th>
+                            </tr>
+                            <tr>
+                                <th>ID</th><th>Related</th><th>Action</th>
+                                <th>Responsible</th><th>Target</th><th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="data['registers']['open_cas']" t-as="ca">
+                                <td t-out="ca['name']"/><td t-out="ca['related']"/>
+                                <td t-out="ca['action']"/><td t-out="ca['responsible']"/>
+                                <td t-out="ca['target_date']"/>
+                                <td>
+                                    <span t-out="ca['state']"/>
+                                    <span t-if="ca['overdue']" class="text-danger">(overdue)</span>
+                                </td>
+                            </tr>
+                            <tr t-if="not data['registers']['open_cas']">
+                                <td colspan="6" class="text-muted">No open corrective actions ✓</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================= -->
+    <!-- Yearly safety report — printable PDF                            -->
+    <!-- ============================================================= -->
+    <template id="report_hse_yearly">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page hse_report">
+                    <t t-set="data" t-value="docs.get_payload()"/>
+                    <h2 class="text-center">
+                        <span t-out="data['company']"/> — HSE Yearly Safety Report <span t-out="data['year']"/>
+                    </h2>
+                    <p class="text-muted text-center">
+                        Report date: <span t-out="data['report_date']"/>
+                        · Rate base: <span t-out="int(data['rate_base'])"/> man-hours
+                    </p>
+
+                    <h4>Year-to-Date Summary</h4>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <th>Man-hours</th><td t-out="int(data['ytd_full']['man_hours'])"/>
+                                <th>LTI</th><td t-out="data['ytd_full']['lti']"/>
+                                <th>Recordable</th><td t-out="data['ytd_full']['recordable']"/>
+                                <th>Lost Workdays</th><td t-out="data['ytd_full']['lost_workdays']"/>
+                            </tr>
+                            <tr>
+                                <th>LTIFR</th>
+                                <td>
+                                    <span t-if="data['ytd_full']['ltifr'] is not None" t-out="'%.2f' % data['ytd_full']['ltifr']"/>
+                                    <span t-else="">n/a</span>
+                                </td>
+                                <th>TRIR</th>
+                                <td>
+                                    <span t-if="data['ytd_full']['trir'] is not None" t-out="'%.2f' % data['ytd_full']['trir']"/>
+                                    <span t-else="">n/a</span>
+                                </td>
+                                <th>Severity</th>
+                                <td>
+                                    <span t-if="data['ytd_full']['severity'] is not None" t-out="'%.2f' % data['ytd_full']['severity']"/>
+                                    <span t-else="">n/a</span>
+                                </td>
+                                <th>Days since LTI</th>
+                                <td t-out="data['days_since_lti_year']['days']"/>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Month by Month</h4>
+                    <table class="table table-sm table-bordered table-sm">
+                        <thead>
+                            <tr>
+                                <th>Month</th><th>Hours</th><th>LTI</th><th>MTC</th>
+                                <th>Record.</th><th>Lost d.</th><th>NM</th><th>Obs</th>
+                                <th>Inc</th><th>CAs</th><th>Overdue</th>
+                                <th>PTW</th><th>Talks</th><th>LTIFR</th><th>TRIR</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="data['months']" t-as="m">
+                                <td t-out="m['label']"/>
+                                <td>
+                                    <span t-if="m['man_hours']" t-out="int(m['man_hours'])"/>
+                                    <span t-else="">—</span>
+                                </td>
+                                <td t-out="m['lti']"/><td t-out="m['mtc']"/>
+                                <td t-out="m['recordable']"/><td t-out="m['lost_workdays']"/>
+                                <td t-out="m['near_misses']"/><td t-out="m['observations']"/>
+                                <td t-out="m['incidents']"/><td t-out="m['ca_linked']"/>
+                                <td t-out="m['ca_overdue']"/>
+                                <td>
+                                    <span t-out="m['ptw_issued']"/>/<span t-out="m['ptw_register_rows']"/>
+                                </td>
+                                <td t-out="m['toolbox_talks']"/>
+                                <td>
+                                    <span t-if="m['ltifr'] is not None" t-out="'%.2f' % m['ltifr']"/>
+                                    <span t-else="">n/a</span>
+                                </td>
+                                <td>
+                                    <span t-if="m['trir'] is not None" t-out="'%.2f' % m['trir']"/>
+                                    <span t-else="">n/a</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Data Health — items that can make the numbers look better or worse than reality</h4>
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr>
+                                <th style="width:30px">#</th>
+                                <th style="width:60px">Status</th>
+                                <th style="width:50px">Count</th>
+                                <th>Check</th>
+                                <th>Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="data['health']" t-as="chk">
+                                <td t-out="chk['no']"/>
+                                <td>
+                                    <span t-if="chk['ok']" class="text-success">✓ OK</span>
+                                    <span t-else="" class="text-danger fw-bold">⚠ Review</span>
+                                </td>
+                                <td t-out="chk['count']"/>
+                                <td t-out="chk['label']"/>
+                                <td t-out="chk['detail']"/>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

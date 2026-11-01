@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hse_safety_settings_form" model="ir.ui.view">
+        <field name="name">hse.safety.settings.form</field>
+        <field name="model">hse.safety.settings</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard Settings">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="label"/>
+                        <h1><field name="label" placeholder="Dashboard Settings"/></h1>
+                    </div>
+                    <group>
+                        <group string="Reporting">
+                            <field name="reporting_year"/>
+                            <field name="rate_base"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        These settings replace the yellow cells of the Excel
+                        Settings sheet (reporting year, rate base per 200,000
+                        man-hours). The dashboard reads them live — no re-fill,
+                        no #REF!.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hse_safety_settings" model="ir.actions.act_window">
+        <field name="name">Dashboard Settings</field>
+        <field name="res_model">hse.safety.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem id="menu_hse_safety_config"
+              name="Configuration"
+              parent="hse_safety_dashboard.menu_hse_safety_root"
+              sequence="90"
+              groups="hse_safety_dashboard.group_hse_safety_manager"/>
+
+    <menuitem id="menu_hse_safety_settings"
+              name="Dashboard Settings"
+              parent="menu_hse_safety_config"
+              action="action_hse_safety_settings"
+              sequence="10"/>
+</odoo>

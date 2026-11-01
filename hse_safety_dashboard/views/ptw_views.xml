@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ===================== PTW Register ===================== -->
+    <record id="view_hse_ptw_register_tree" model="ir.ui.view">
+        <field name="name">hse.ptw.register.tree</field>
+        <field name="model">hse.ptw.register</field>
+        <field name="arch" type="xml">
+            <tree string="Permit to Work Register" multi_edit="1">
+                <field name="name"/>
+                <field name="date_issue"/>
+                <field name="department"/>
+                <field name="contractor"/>
+                <field name="nature_of_work"/>
+                <field name="type_text"/>
+                <field name="location"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'closed'"
+                       decoration-warning="status == 'open'"
+                       decoration-muted="status == 'expired'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hse_ptw_register_form" model="ir.ui.view">
+        <field name="name">hse.ptw.register.form</field>
+        <field name="model">hse.ptw.register</field>
+        <field name="arch" type="xml">
+            <form string="Permit to Work">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date_issue"/>
+                            <field name="department"/>
+                            <field name="contractor"/>
+                        </group>
+                        <group>
+                            <field name="nature_of_work"/>
+                            <field name="type_text"
+                                   placeholder="e.g. Cold Work / Work at Height"/>
+                            <field name="location"/>
+                            <field name="status"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hse_ptw_register_search" model="ir.ui.view">
+        <field name="name">hse.ptw.register.search</field>
+        <field name="model">hse.ptw.register</field>
+        <field name="arch" type="xml">
+            <search string="Permits to Work">
+                <field name="name"/>
+                <field name="department"/>
+                <field name="contractor"/>
+                <field name="type_text" string="Permit Type"/>
+                <filter name="filter_open" string="Open" domain="[('status','=','open')]"/>
+                <filter name="filter_hot" string="Hot Work" domain="[('type_text','ilike','Hot Work')]"/>
+                <filter name="filter_height" string="Work at Height" domain="[('type_text','ilike','Work at Height')]"/>
+                <filter name="filter_date" string="Date of Issue" date="date_issue"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_dept" string="Department" context="{'group_by': 'department'}"/>
+                    <filter name="group_month" string="Month" context="{'group_by': 'date_issue:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hse_ptw_register" model="ir.actions.act_window">
+        <field name="name">Permit to Work Register</field>
+        <field name="res_model">hse.ptw.register</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_hse_ptw_register" name="PTW Register"
+              parent="hse_safety_dashboard.menu_hse_registers"
+              action="action_hse_ptw_register" sequence="60"/>
+</odoo>

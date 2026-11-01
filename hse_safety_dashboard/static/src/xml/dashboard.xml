@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hse_safety_dashboard.HseDashboard">
+        <div class="hse_dashboard o_action_manager">
+            <!-- ============ Header ============ -->
+            <div class="hse_header d-flex align-items-center gap-3 flex-wrap">
+                <div class="flex-grow-1">
+                    <h2 class="hse_title mb-0">
+                        <i class="fa fa-shield me-2"/>HSE Safety Dashboard
+                    </h2>
+                    <div class="text-muted hse_subtitle">
+                        <span t-out="d.company"/> · Reporting year <span t-out="d.year"/>
+                        · Rate base <span t-esc="d.rate_base.toLocaleString()"/> man-hours
+                    </div>
+                </div>
+                <!-- mode toggle -->
+                <div class="btn-group" role="group" aria-label="Dashboard mode">
+                    <button type="button"
+                            t-att-class="'btn btn-sm ' + (state.mode === 'monthly' ? 'btn-primary' : 'btn-outline-secondary')"
+                            t-on-click="() => this.onModeChange('monthly')">Monthly</button>
+                    <button type="button"
+                            t-att-class="'btn btn-sm ' + (state.mode === 'yearly' ? 'btn-primary' : 'btn-outline-secondary')"
+                            t-on-click="() => this.onModeChange('yearly')">Yearly</button>
+                </div>
+                <!-- month selector (monthly mode only) -->
+                <div t-if="state.mode === 'monthly'" class="d-flex align-items-center gap-2">
+                    <label class="fw-bold mb-0 hse_month_label" for="hse_month_select">SELECT MONTH ▶</label>
+                    <select id="hse_month_select" class="form-select form-select-sm hse_month_select"
+                            t-on-change="onMonthChange">
+                        <option t-foreach="state.months" t-as="m" t-key="m.no"
+                                t-att-value="m.no"
+                                t-att-selected="m.no === state.monthNo ? 'selected' : undefined"
+                                t-esc="m.label"/>
+                    </select>
+                </div>
+            </div>
+
+            <!-- ============ Status strip ============ -->
+            <div t-if="state.mode === 'monthly'"
+                 t-att-class="'hse_status_strip d-flex align-items-center gap-2 ' + (healthAttention ? 'hse-strip-warn' : 'hse-strip-ok')">
+                <span>Showing <b t-esc="d.month_name"/></span>
+                <span class="text-muted">|</span>
+                <span>data checks:
+                    <b t-esc="healthAttention"/> item(s) to review
+                </span>
+                <a href="#" class="ms-2" t-on-click="toggleHealth">
+                    <t t-if="state.showHealth">hide checks ▾</t>
+                    <t t-else="">show checks ▾</t>
+                </a>
+            </div>
+
+            <!-- ============ Health checks (expandable) ============ -->
+            <div t-if="state.showHealth" class="hse_health_panel mt-2">
+                <div class="hse_health_title">DATA HEALTH — items that can make the numbers
+                    look better or worse than reality</div>
+                <table class="table table-sm table-bordered mb-0 hse_health_table">
+                    <thead>
+                        <tr>
+                            <th style="width:30px">#</th>
+                            <th style="width:80px">Status</th>
+                            <th style="width:50px">Count</th>
+                            <th>Check</th>
+                            <th>Detail</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="d.health" t-as="chk" t-key="chk['no']">
+                            <td t-esc="chk['no']"/>
+                            <td>
+                                <span t-if="chk['ok']" class="hse-ok">✓ OK</span>
+                                <span t-else="" class="hse-warn">⚠ Review</span>
+                            </td>
+                            <td t-esc="chk['count']"/>
+                            <td t-esc="chk['label']"/>
+                            <td class="text-muted" t-esc="chk['detail']"/>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ============ YEARLY MODE ============ -->
+            <div t-if="state.mode === 'yearly'" class="mt-3">
+                <div class="hse_section_title">YEAR-TO-DATE SUMMARY — <span t-esc="d.year"/></div>
+                <div class="row g-2">
+                    <div class="col-md-3" t-foreach="yearlyCards" t-as="c" t-key="c[0]">
+                        <div class="hse_kpi_card hse_kpi_small">
+                            <div class="hse_kpi_label" t-esc="c[0]"/>
+                            <div class="hse_kpi_value" t-esc="c[1]"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hse_section_title mt-3">MONTH BY MONTH</div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered hse_month_table">
+                        <thead>
+                            <tr>
+                                <th>Month</th><th>Hours</th><th>LTI</th><th>MTC</th>
+                                <th>Recordable</th><th>Lost d.</th><th>NM</th><th>Obs</th>
+                                <th>Inc</th><th>CAs</th><th>Overdue</th>
+                                <th>PTW (entered/register)</th><th>Talks</th>
+                                <th>LTIFR</th><th>TRIR</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="d.months" t-as="m" t-key="m['label']"
+                                t-att-class="m['month_no'] === d.month_no ? 'hse_row_selected' : ''">
+                                <td t-esc="m['label']"/>
+                                <td>
+                                    <t t-if="m['man_hours']" t-esc="m['man_hours'].toLocaleString()"/>
+                                    <t t-else="">—</t>
+                                </td>
+                                <td t-esc="m['lti']"/><td t-esc="m['mtc']"/>
+                                <td t-esc="m['recordable']"/><td t-esc="m['lost_workdays']"/>
+                                <td t-esc="m['near_misses']"/><td t-esc="m['observations']"/>
+                                <td t-esc="m['incidents']"/><td t-esc="m['ca_linked']"/>
+                                <td>
+                                    <span t-esc="m['ca_overdue']"
+                                          t-att-class="m['ca_overdue'] ? 'hse-warn fw-bold' : ''"/>
+                                </td>
+                                <td>
+                                    <span t-esc="m['ptw_issued']"/>/<span t-esc="m['ptw_register_rows']"/>
+                                    <span t-if="m['ptw_register_rows'] !== m['ptw_issued']" class="hse-warn">≠</span>
+                                </td>
+                                <td t-esc="m['toolbox_talks']"/>
+                                <td>
+                                    <t t-if="m['ltifr'] !== null" t-esc="m['ltifr'].toFixed(2)"/>
+                                    <t t-else="">n/a</t>
+                                </td>
+                                <td>
+                                    <t t-if="m['trir'] !== null" t-esc="m['trir'].toFixed(2)"/>
+                                    <t t-else="">n/a</t>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ============ MONTHLY MODE: KPI CARDS ============ -->
+            <div t-if="state.mode === 'monthly' &amp;&amp; state.data" class="mt-3">
+                <div class="hse_section_title">INJURY OUTCOMES</div>
+                <div class="row g-2">
+                    <div class="col-md-4 col-sm-6" t-foreach="cardsInjury" t-as="card" t-key="card.label">
+                        <t t-call="hse_safety_dashboard.KpiCard"/>
+                    </div>
+                </div>
+
+                <div class="hse_section_title mt-3">EXPOSURE &amp; RATES (per <t t-esc="d.rate_base.toLocaleString()"/> man-hours)</div>
+                <div class="row g-2">
+                    <div class="col-md-4 col-sm-6" t-foreach="cardsExposure" t-as="card" t-key="card.label">
+                        <t t-call="hse_safety_dashboard.KpiCard"/>
+                    </div>
+                </div>
+
+                <div class="hse_section_title mt-3">OBSERVATIONS &amp; CORRECTIVE ACTIONS</div>
+                <div class="row g-2">
+                    <div class="col-md-4 col-sm-6" t-foreach="cardsObs" t-as="card" t-key="card.label">
+                        <t t-call="hse_safety_dashboard.KpiCard"/>
+                    </div>
+                </div>
+
+                <div class="hse_section_title mt-3">LEADING INDICATORS</div>
+                <div class="row g-2">
+                    <div class="col-md-4 col-sm-6" t-foreach="cardsLeading" t-as="card" t-key="card.label">
+                        <t t-call="hse_safety_dashboard.KpiCard"/>
+                    </div>
+                </div>
+
+                <!-- Trend chart -->
+                <div class="hse_section_title mt-3">12-MONTH TREND — observations &amp; injuries</div>
+                <div class="hse_chart_box">
+                    <canvas t-ref="trendChart"/>
+                </div>
+
+                <!-- ============ Registers ============ -->
+                <div class="hse_section_title mt-3">REGISTERS — <span t-esc="d.month_name"/></div>
+                <div class="row g-3">
+                    <!-- Injuries -->
+                    <div class="col-lg-6">
+                        <div class="hse_reg_panel">
+                            <div class="hse_reg_title">
+                                Injury Log — <span t-esc="openRegisters.injuries_total"/> this month
+                            </div>
+                            <div t-if="openRegisters.injuries.length" class="table-responsive">
+                                <table class="table table-sm table-striped mb-0">
+                                    <thead><tr>
+                                        <th>ID</th><th>Date</th><th>Type</th><th>Department</th>
+                                        <th>Person</th><th>Days</th><th>Status</th>
+                                    </tr></thead>
+                                    <tbody>
+                                        <tr t-foreach="openRegisters.injuries" t-as="r" t-key="r.name">
+                                            <td t-esc="r.name"/><td t-esc="r.date"/>
+                                            <td t-esc="r.type"/><td t-esc="r.department"/>
+                                            <td t-esc="r.person"/><td t-esc="r.lost_workdays"/>
+                                            <td><span t-att-class="'badge ' + (r.status === 'closed' ? 'bg-success' : 'bg-warning text-dark')" t-esc="r.status"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div t-else="" class="hse_no_data">No injuries recorded in <span t-esc="d.month_label"/> ✓</div>
+                        </div>
+                    </div>
+                    <!-- Near misses -->
+                    <div class="col-lg-6">
+                        <div class="hse_reg_panel">
+                            <div class="hse_reg_title">
+                                Near-Miss Log — <span t-esc="openRegisters.near_misses_total"/> this month
+                            </div>
+                            <div t-if="openRegisters.near_misses.length" class="table-responsive">
+                                <table class="table table-sm table-striped mb-0">
+                                    <thead><tr>
+                                        <th>ID</th><th>Date</th><th>Department</th>
+                                        <th>Severity</th><th>Reported By</th>
+                                    </tr></thead>
+                                    <tbody>
+                                        <tr t-foreach="openRegisters.near_misses" t-as="r" t-key="r.name">
+                                            <td t-esc="r.name"/><td t-esc="r.date"/>
+                                            <td t-esc="r.department"/>
+                                            <td><span t-att-class="'badge ' + (r.severity === 'high' ? 'bg-danger' : (r.severity === 'medium' ? 'bg-warning text-dark' : 'bg-success'))" t-esc="r.severity"/></td>
+                                            <td t-esc="r.reported_by"/>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div t-else="" class="hse_no_data">No near misses recorded in <span t-esc="d.month_label"/> ✓</div>
+                        </div>
+                    </div>
+                    <!-- Incidents -->
+                    <div class="col-lg-6">
+                        <div class="hse_reg_panel">
+                            <div class="hse_reg_title">
+                                Incident Log — <span t-esc="openRegisters.incidents_total"/> this month
+                            </div>
+                            <div t-if="openRegisters.incidents.length" class="table-responsive">
+                                <table class="table table-sm table-striped mb-0">
+                                    <thead><tr>
+                                        <th>ID</th><th>Date</th><th>Type</th><th>Area/Asset</th><th>Impact</th>
+                                    </tr></thead>
+                                    <tbody>
+                                        <tr t-foreach="openRegisters.incidents" t-as="r" t-key="r.name">
+                                            <td t-esc="r.name"/><td t-esc="r.date"/>
+                                            <td t-esc="r.type"/><td t-esc="r.area"/>
+                                            <td t-esc="r.impact"/>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div t-else="" class="hse_no_data">No incidents recorded in <span t-esc="d.month_label"/> ✓</div>
+                        </div>
+                    </div>
+                    <!-- Open CAs -->
+                    <div class="col-lg-6">
+                        <div class="hse_reg_panel">
+                            <div class="hse_reg_title">
+                                Corrective Actions — Open
+                                (<span t-esc="openRegisters.open_cas_total"/> from this month)
+                            </div>
+                            <div t-if="openRegisters.open_cas.length" class="table-responsive">
+                                <table class="table table-sm table-striped mb-0">
+                                    <thead><tr>
+                                        <th>ID</th><th>Related</th><th>Action</th>
+                                        <th>Responsible</th><th>Target</th><th>Status</th>
+                                    </tr></thead>
+                                    <tbody>
+                                        <tr t-foreach="openRegisters.open_cas" t-as="ca" t-key="ca.name">
+                                            <td t-esc="ca.name"/><td t-esc="ca.related"/>
+                                            <td class="hse_cell_trunc" t-esc="ca.action"/>
+                                            <td t-esc="ca.responsible"/><td t-esc="ca.target_date"/>
+                                            <td>
+                                                <span t-att-class="'badge ' + (ca.state === 'closed' ? 'bg-success' : 'bg-warning text-dark')" t-esc="ca.state"/>
+                                                <span t-if="ca.overdue" class="badge bg-danger">overdue</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div t-else="" class="hse_no_data">No open corrective actions for <span t-esc="d.month_label"/> ✓</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- Single KPI card -->
+    <t t-name="hse_safety_dashboard.KpiCard">
+        <div class="hse_kpi_card" t-att-class="card.cls">
+            <div class="hse_kpi_label" t-esc="card.label"/>
+            <div class="hse_kpi_value" t-esc="card.value"/>
+            <div class="hse_kpi_delta" t-att-class="card.delta.cls" t-esc="card.delta.text"/>
+            <div t-if="card.ytd" class="hse_kpi_ytd" t-esc="card.ytd"/>
+        </div>
+    </t>
+
+</templates>
