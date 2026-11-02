@@ -37,7 +37,13 @@ Dashboards
 Reports
 -------
 * Printable monthly/annual KPI report (QWeb PDF)
+* KPI Calculations PDF and Leading Indicators PDF (landscape, live engine data)
+* One report per workflow: Injury, Near-Miss, Unsafe Act/Condition, Incident,
+  Corrective Actions, PTW Register, Monthly Figures — each filtered by
+  dynamic year / month / department / status selections driven by the data
+* Dashboard year + month selectors fed from the registers themselves
 * Excel export that regenerates the workbook sheets from live data
+  (same dynamic filters as the PDFs)
 * Excel import wizard that reads the original workbook (both PTW layouts,
   d/m/y text dates handled like the CalcRows parser)
 
@@ -64,6 +70,7 @@ Company: Poly Pack Films (Pvt.) Ltd. (or your own — the dashboard reads res.co
         'views/monthly_figure_views.xml',
         'views/report_wizard_views.xml',
         'report/kpi_report_templates.xml',
+        'report/workflow_report_templates.xml',
         'report/kpi_report_actions.xml',
     ],
     'demo': [

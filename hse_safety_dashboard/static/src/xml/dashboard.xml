@@ -23,7 +23,18 @@
                             t-att-class="'btn btn-sm ' + (state.mode === 'yearly' ? 'btn-primary' : 'btn-outline-secondary')"
                             t-on-click="() => this.onModeChange('yearly')">Yearly</button>
                 </div>
-                <!-- month selector (monthly mode only) -->
+                <!-- year selector — options come from the registers (dynamic) -->
+                <div class="d-flex align-items-center gap-2">
+                    <label class="fw-bold mb-0 hse_month_label" for="hse_year_select">SELECT YEAR ▶</label>
+                    <select id="hse_year_select" class="form-select form-select-sm hse_month_select"
+                            t-on-change="onYearChange">
+                        <option t-foreach="state.years" t-as="y" t-key="y.no"
+                                t-att-value="y.no"
+                                t-att-selected="y.no === state.year ? 'selected' : undefined"
+                                t-esc="y.label"/>
+                    </select>
+                </div>
+                <!-- month selector (monthly mode only) — months with data for the year -->
                 <div t-if="state.mode === 'monthly'" class="d-flex align-items-center gap-2">
                     <label class="fw-bold mb-0 hse_month_label" for="hse_month_select">SELECT MONTH ▶</label>
                     <select id="hse_month_select" class="form-select form-select-sm hse_month_select"

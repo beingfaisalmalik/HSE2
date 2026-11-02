@@ -19,4 +19,53 @@
         <field name="binding_model_id" ref="model_hse_report_wizard"/>
         <field name="binding_type">report</field>
     </record>
+
+    <!-- Landscape paperformat for the wide tabular reports -->
+    <record id="paperformat_hse_landscape" model="report.paperformat">
+        <field name="name">HSE Landscape A4</field>
+        <field name="default">False</field>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">12</field>
+        <field name="margin_bottom">12</field>
+        <field name="margin_left">8</field>
+        <field name="margin_right">8</field>
+        <field name="header_spacing">8</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_report_hse_kpi" model="ir.actions.report">
+        <field name="name">KPI Calculations (PDF)</field>
+        <field name="model">hse.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hse_safety_dashboard.report_hse_kpi</field>
+        <field name="report_file">hse_safety_dashboard.report_hse_kpi</field>
+        <field name="paperformat_id" ref="paperformat_hse_landscape"/>
+        <field name="binding_model_id" ref="model_hse_report_wizard"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_hse_leading" model="ir.actions.report">
+        <field name="name">Leading Indicators (PDF)</field>
+        <field name="model">hse.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hse_safety_dashboard.report_hse_leading</field>
+        <field name="report_file">hse_safety_dashboard.report_hse_leading</field>
+        <field name="paperformat_id" ref="paperformat_hse_landscape"/>
+        <field name="binding_model_id" ref="model_hse_report_wizard"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- One action renders all seven workflow register reports — the wizard
+         record carries report_type, so the template branches on it. -->
+    <record id="action_report_hse_workflow" model="ir.actions.report">
+        <field name="name">Workflow Register Report (PDF)</field>
+        <field name="model">hse.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hse_safety_dashboard.report_hse_workflow</field>
+        <field name="report_file">hse_safety_dashboard.report_hse_workflow</field>
+        <field name="paperformat_id" ref="paperformat_hse_landscape"/>
+        <field name="binding_model_id" ref="model_hse_report_wizard"/>
+        <field name="binding_type">report</field>
+    </record>
 </odoo>

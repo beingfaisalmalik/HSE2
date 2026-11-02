@@ -15,44 +15,113 @@ MONTHS = [(str(i), n) for i, n in enumerate(
     ['January', 'February', 'March', 'April', 'May', 'June', 'July',
      'August', 'September', 'October', 'November', 'December'], start=1)]
 
+# One report per workflow — every register of the suite is reportable.
+WORKFLOW_REPORTS = {
+    'injury_pdf': 'Injury Log Report',
+    'near_miss_pdf': 'Near-Miss Log Report',
+    'uac_pdf': 'Unsafe Act / Condition Report',
+    'incident_pdf': 'Incident Log Report',
+    'ca_pdf': 'Corrective Actions Report',
+    'ptw_pdf': 'PTW Register Report',
+    'figures_pdf': 'Monthly Figures Report',
+}
+
 
 class HseReportWizard(models.TransientModel):
-    """Pick a month (or full year) and generate the safety reports."""
+    """Pick a dynamic period (year / month) and generate any safety report.
+
+    Every choice — year options, month options on the dashboard, departments
+    and statuses offered here — is derived from the data itself, never
+    hardcoded.  Workflow reports are filtered by period + department + status;
+    entries that can never fall inside the period (no date at all) are shown
+    in a clearly labelled section instead of being silently dropped.
+    """
     _name = 'hse.report.wizard'
     _description = 'HSE Safety Report Wizard'
 
-    year = fields.Integer(
+    # ------------------------------------------------------------- fields
+    year = fields.Selection(
+        selection='_selection_year',
         string='Year', required=True,
-        default=lambda self: self.env['hse.safety.settings'].get_settings().reporting_year)
+        default=lambda self: str(
+            self.env['hse.safety.settings'].get_settings().reporting_year),
+        help='Years present in the registers / monthly figures (data-driven).')
     month = fields.Selection(MONTHS, string='Month',
                              help="Leave empty for the full-year report.")
+    department = fields.Selection(
+        selection='_selection_department',
+        string='Department', default='all',
+        help='Filters the workflow/register reports. “All departments” '
+             'shows everything.')
+    status_filter = fields.Selection(
+        [('all', 'All statuses'), ('open', 'Open / not closed'),
+         ('closed', 'Closed / expired')],
+        string='Status', default='all',
+        help='Filters the workflow/register reports by status '
+             '(applies where the register has one).')
     report_type = fields.Selection(
         [('monthly_pdf', 'Monthly Dashboard (PDF)'),
          ('yearly_pdf', 'Yearly Report (PDF)'),
+         ('kpi_pdf', 'KPI Calculations (PDF)'),
+         ('leading_pdf', 'Leading Indicators (PDF)'),
+         ('injury_pdf', 'Injury Log Report (PDF)'),
+         ('near_miss_pdf', 'Near-Miss Log Report (PDF)'),
+         ('uac_pdf', 'Unsafe Act / Condition Report (PDF)'),
+         ('incident_pdf', 'Incident Log Report (PDF)'),
+         ('ca_pdf', 'Corrective Actions Report (PDF)'),
+         ('ptw_pdf', 'PTW Register Report (PDF)'),
+         ('figures_pdf', 'Monthly Figures Report (PDF)'),
          ('xlsx', 'Excel Workbook (XLSX — KPI + registers + health checks)')],
         string='Report', required=True, default='monthly_pdf')
 
+    # ------------------------------------------------ dynamic selections
+    @api.model
+    def _selection_year(self):
+        """Year options straight from the data (newest first)."""
+        engine = self.env['hse.kpi.engine']
+        return [(str(y), str(y)) for y in engine.available_years()]
+
+    @api.model
+    def _selection_department(self):
+        """Department options = every distinct department on the registers."""
+        deps = set()
+        for model in ('hse.injury.log', 'hse.near.miss.log',
+                      'hse.uac.log', 'hse.incident.log', 'hse.ptw.register'):
+            for d in self.env[model].search([]).mapped('department'):
+                if d:
+                    deps.add(d)
+        return [('all', 'All departments')] + [(d, d) for d in sorted(deps)]
+
+    # ----------------------------------------------------------- routing
     def action_generate(self):
         self.ensure_one()
         if self.report_type == 'xlsx':
             return self._generate_xlsx()
-        # PDF via QWeb report action
-        report_ref = ('hse_safety_dashboard.action_report_hse_monthly'
-                      if self.report_type == 'monthly_pdf'
-                      else 'hse_safety_dashboard.action_report_hse_yearly')
-        return self.env.ref(report_ref).report_action(self)
+        return self.env.ref(self._report_xmlid()).report_action(self)
 
-    # ------------------------------------------------------------------
+    def _report_xmlid(self):
+        fixed = {
+            'monthly_pdf': 'hse_safety_dashboard.action_report_hse_monthly',
+            'yearly_pdf': 'hse_safety_dashboard.action_report_hse_yearly',
+            'kpi_pdf': 'hse_safety_dashboard.action_report_hse_kpi',
+            'leading_pdf': 'hse_safety_dashboard.action_report_hse_leading',
+        }
+        if self.report_type in fixed:
+            return fixed[self.report_type]
+        return 'hse_safety_dashboard.action_report_hse_workflow'
+
+    # ----------------------------------------------------------- payload
     def _engine(self):
         return self.env['hse.kpi.engine']
 
     def _payload(self):
         engine = self._engine()
+        year = int(self.year)
         month_no = int(self.month) if self.month else 12
-        data = engine.get_dashboard(self.year, month_no)
+        data = engine.get_dashboard(year, month_no)
         if not self.month:
             data['ytd_only'] = True
-            data['month_name'] = str(self.year)
+            data['month_name'] = str(year)
         return data
 
     def get_payload(self):
@@ -60,12 +129,244 @@ class HseReportWizard(models.TransientModel):
         self.ensure_one()
         return self._payload()
 
+    # --------------------------------------------- period / filter helpers
+    def _period_label(self):
+        year = int(self.year)
+        if self.month:
+            return '%s %s' % (dict(MONTHS)[self.month], year)
+        return '%s (full year)' % year
+
+    def _in_period(self, d):
+        if not d or d.year != int(self.year):
+            return False
+        if self.month and d.month != int(self.month):
+            return False
+        return True
+
+    def _dept_ok(self, rec):
+        if not self.department or self.department == 'all':
+            return True
+        return (rec.department or '') == self.department
+
+    def _filters_label(self, report_type):
+        parts = ['Period: %s' % self._period_label()]
+        has_dept = report_type not in ('ca_pdf', 'figures_pdf')
+        if has_dept and self.department and self.department != 'all':
+            parts.append('Department: %s' % self.department)
+        if self.status_filter != 'all' and report_type != 'figures_pdf':
+            parts.append('Status: %s' % dict(
+                self._fields['status_filter'].selection)[self.status_filter])
+        return '  ·  '.join(parts)
+
+    @api.model
+    def _fmt_date(self, d):
+        return d.strftime('%d-%b-%Y') if d else ''
+
+    @staticmethod
+    def _clip(text, n=200):
+        text = text or ''
+        return text if len(text) <= n else text[:n - 1] + '…'
+
+    # --------------------------------------------------- workflow reports
+    def workflow_rows(self, report_type=None, display=True):
+        """Rows for one workflow report, filtered by year (+ month,
+        department, status).  Returns title / period / headers / rows plus an
+        `unmatched` bucket: entries with no date (or a corrective action
+        whose related entry has no date) can never fall inside the period,
+        so they are reported separately instead of vanishing."""
+        self.ensure_one()
+        rt = report_type or self.report_type
+        if rt not in WORKFLOW_REPORTS:
+            raise UserError(_('Not a workflow report: %s') % rt)
+        year = int(self.year)
+        title = WORKFLOW_REPORTS[rt]
+        headers, rows, unmatched = [], [], []
+
+        def _status_ok_log(rec):
+            if self.status_filter == 'all':
+                return True
+            if self.status_filter == 'open':
+                return rec.status == 'open'
+            return rec.status == 'closed'
+
+        if rt == 'injury_pdf':
+            headers = ['Injury ID', 'Date', 'Type', 'Department', 'Person',
+                       'Lost Workdays', 'Status', 'Description']
+            for r in self.env['hse.injury.log'].search([], order='name'):
+                if not self._dept_ok(r) or not _status_ok_log(r):
+                    continue
+                row = [r.name, self._fmt_date(r.date), r._type_label(),
+                       r.department or '', r.person_involved or '',
+                       r.lost_workdays or 0,
+                       dict(r._fields['status'].selection).get(r.status, ''),
+                       self._clip(r.description)]
+                if not r.date:
+                    unmatched.append(row)
+                elif self._in_period(r.date):
+                    rows.append(row)
+
+        elif rt == 'near_miss_pdf':
+            headers = ['Near-Miss ID', 'Date', 'Department', 'Severity',
+                       'Reported By', 'Status', 'Description']
+            for r in self.env['hse.near.miss.log'].search([], order='name'):
+                if not self._dept_ok(r) or not _status_ok_log(r):
+                    continue
+                row = [r.name, self._fmt_date(r.date), r.department or '',
+                       dict(r._fields['potential_severity'].selection).get(
+                           r.potential_severity, ''),
+                       r.reported_by or '',
+                       dict(r._fields['status'].selection).get(r.status, ''),
+                       self._clip(r.description)]
+                if not r.date:
+                    unmatched.append(row)
+                elif self._in_period(r.date):
+                    rows.append(row)
+
+        elif rt == 'uac_pdf':
+            headers = ['Observation ID', 'Date', 'Type', 'Department',
+                       'Reported By', 'Status', 'Description']
+            for r in self.env['hse.uac.log'].search([], order='name'):
+                if not self._dept_ok(r) or not _status_ok_log(r):
+                    continue
+                row = [r.name, self._fmt_date(r.date), r._type_label(),
+                       r.department or '', r.reported_by or '',
+                       dict(r._fields['status'].selection).get(r.status, ''),
+                       self._clip(r.description)]
+                if not r.date:
+                    unmatched.append(row)
+                elif self._in_period(r.date):
+                    rows.append(row)
+
+        elif rt == 'incident_pdf':
+            headers = ['Incident ID', 'Date', 'Type', 'Department',
+                       'Area / Asset', 'Estimated Impact', 'Status',
+                       'Description']
+            for r in self.env['hse.incident.log'].search([], order='name'):
+                if not self._dept_ok(r) or not _status_ok_log(r):
+                    continue
+                row = [r.name, self._fmt_date(r.date), r._type_label(),
+                       r.department or '', r.area_asset or '',
+                       r.estimated_impact or '',
+                       dict(r._fields['status'].selection).get(r.status, ''),
+                       self._clip(r.description)]
+                if not r.date:
+                    unmatched.append(row)
+                elif self._in_period(r.date):
+                    rows.append(row)
+
+        elif rt == 'ca_pdf':
+            headers = ['CA ID', 'Related Log Entry ID', 'Action Description',
+                       'Responsible', 'Target Date', 'Status', 'Closure Date',
+                       'Verification', 'Overdue?']
+            for r in self.env['hse.corrective.action'].search(
+                    [], order='name'):
+                if self.status_filter != 'all':
+                    is_closed = r.state == 'closed'
+                    if self.status_filter == 'closed' and not is_closed:
+                        continue
+                    if self.status_filter == 'open' and is_closed:
+                        continue
+                row = [r.name, r.related_display or r.related_ref or '',
+                       self._clip(r.action_description),
+                       r.responsible_person or '',
+                       self._fmt_date(r.target_date),
+                       dict(r._fields['state'].selection).get(r.state, ''),
+                       self._fmt_date(r.closure_date),
+                       self._clip(r.verification),
+                       'Yes' if r.overdue else 'No']
+                if not r.related_date:
+                    # no resolvable related-entry date — can never be placed
+                    # inside the period; keep it visible, never invent one
+                    unmatched.append(row)
+                elif self._in_period(r.related_date):
+                    rows.append(row)
+
+        elif rt == 'ptw_pdf':
+            headers = ['PTW No.', 'Date', 'Department',
+                       'Company / Contractor', 'Nature of Work',
+                       'Permit Type', 'Location', 'Status']
+            for r in self.env['hse.ptw.register'].search([], order='name'):
+                if not self._dept_ok(r):
+                    continue
+                if self.status_filter != 'all':
+                    if self.status_filter == 'open' and r.status != 'open':
+                        continue
+                    if self.status_filter == 'closed' \
+                            and r.status not in ('closed', 'expired'):
+                        continue
+                row = [r.name, self._fmt_date(r.date_issue),
+                       r.department or '', r.contractor or '',
+                       r.nature_of_work or '', r.type_text or '',
+                       r.location or '',
+                       dict(r._fields['status'].selection).get(r.status, '')]
+                if not r.date_issue:
+                    unmatched.append(row)
+                elif self._in_period(r.date_issue):
+                    rows.append(row)
+
+        elif rt == 'figures_pdf':
+            headers = ['Month', 'Man-hours', 'Insp. Planned',
+                       'Insp. Completed', 'Talks', 'PTW Issued',
+                       'Training Hours', 'Audit Score']
+            figures = self.env['hse.monthly.figure'].search(
+                [('year', '=', year)], order='month')
+            for f in figures:
+                if self.month and str(f.month) != str(int(self.month)):
+                    continue
+
+                def _num(v):
+                    if display and isinstance(v, float):
+                        return '%g' % v
+                    return v
+
+                def _audit(v):
+                    # 0 / blank = "no audit entered" → n/a, never a fake 0.00
+                    if not v:
+                        return 'n/a'
+                    return '%0.2f' % v if display else v
+                rows.append([
+                    self._engine().month_label(year, int(f.month)),
+                    _num(f.man_hours), f.planned_inspections or 0,
+                    f.completed_inspections or 0, f.toolbox_talks or 0,
+                    f.ptw_issued or 0, _num(f.training_hours),
+                    _audit(f.audit_score)])
+
+        if display:
+            # PDF safety: the PDF engine sizes table columns from content —
+            # a very long cell in a narrow column can become taller than the
+            # page and abort the render.  Clip text for display only; the
+            # Excel export keeps full values.
+            def _safe(row):
+                return [self._clip(v, 120) if isinstance(v, str) else v
+                        for v in row]
+            rows = [_safe(r) for r in rows]
+            unmatched = [_safe(r) for r in unmatched]
+        return {
+            'title': title,
+            'period': self._period_label(),
+            'filters': self._filters_label(rt),
+            'report_date': fields.Date.context_today(self),
+            'headers': headers,
+            'rows': rows,
+            'count': len(rows),
+            'empty_note': _('No records match the selected filters for %s.'
+                            ) % self._period_label(),
+            'unmatched_headers': headers,
+            'unmatched': unmatched,
+            'unmatched_count': len(unmatched),
+        }
+
+    def get_workflow(self):
+        """Entry point used by the workflow QWeb report template."""
+        self.ensure_one()
+        return self.workflow_rows()
+
     # ------------------------------------------------------------------
     def _generate_xlsx(self):
         if xlsxwriter is None:
             raise UserError(_('The XlsxWriter Python library is required for Excel export.'))
         engine = self._engine()
-        year = self.year
+        year = int(self.year)
         month_no = int(self.month) if self.month else 12
         data = engine.get_dashboard(year, month_no)
         settings = self.env['hse.safety.settings'].get_settings()
@@ -137,7 +438,7 @@ class HseReportWizard(models.TransientModel):
                 else:
                     ws.write(row_i, i, v, cell)
 
-        # ---------------- Registers ----------------
+        # ---------------- Registers (same dynamic filters as the PDFs) --
         def sheet(name, headers, rows, widths):
             s = wb.add_worksheet(name)
             for i, h in enumerate(headers):
@@ -151,79 +452,25 @@ class HseReportWizard(models.TransientModel):
                         s.write(r, c, val or '', cell)
             return s
 
-        reg = data['registers']
-        sheet('Injury Log',
-              ['Injury ID', 'Date', 'Type', 'Department', 'Person',
-               'Lost Workdays', 'Status', 'Description'],
-              [[r['name'], r['date'], r['type'], r['department'], r['person'],
-                r['lost_workdays'], r['status'], r['desc']]
-               for r in reg['injuries']],
-              [12, 14, 22, 18, 20, 14, 10, 60])
-        sheet('Near Miss Log',
-              ['Near-Miss ID', 'Date', 'Department', 'Severity', 'Reported By',
-               'Status', 'Description'],
-              [[r['name'], r['date'], r['department'], r['severity'],
-                r['reported_by'], r['status'], r['desc']]
-               for r in reg['near_misses']],
-              [14, 14, 18, 12, 22, 10, 60])
-        sheet('UnsafeAct Condition Log',
-              ['Observation ID', 'Date', 'Type', 'Department', 'Reported By',
-               'Status', 'Description'],
-              [[r['name'], r['date'], r['type'], r['department'],
-                r['reported_by'], r['status'], r['desc']]
-               for r in reg['uacs']],
-              [16, 14, 20, 22, 20, 10, 60])
-        sheet('Incident Log',
-              ['Incident ID', 'Date', 'Type', 'Department', 'Area/Asset',
-               'Estimated Impact', 'Status', 'Description'],
-              [[r['name'], r['date'], r['type'], r['department'], r['area'],
-                r['impact'], r['status'], r['desc']]
-               for r in reg['incidents']],
-              [14, 14, 18, 18, 22, 18, 10, 60])
+        def wf_sheet(name, rt, widths):
+            wf = self.workflow_rows(rt, display=False)
+            return sheet(name, wf['headers'], wf['rows'] + wf['unmatched'],
+                         widths)
 
-        ca_env = self.env['hse.corrective.action']
-        ca_rows = []
-        for ca in ca_env.search([]):
-            ca_rows.append([ca.name, ca.related_display,
-                            (ca.action_description or '')[:200],
-                            ca.responsible_person or '',
-                            ca.target_date.isoformat() if ca.target_date else '',
-                            dict(ca._fields['state'].selection).get(ca.state, ''),
-                            ca.closure_date.isoformat() if ca.closure_date else '',
-                            (ca.verification or '')[:200],
-                            'Yes' if ca.overdue else 'No'])
-        sheet('Corrective Actions',
-              ['CA ID', 'Related Log Entry ID', 'Action Description',
-               'Responsible', 'Target Date', 'Status', 'Closure Date',
-               'Verification', 'Overdue?'],
-              ca_rows,
-              [10, 18, 60, 20, 14, 12, 14, 40, 10])
-
-        ptw_rows = []
-        for p in self.env['hse.ptw.register'].search([]):
-            ptw_rows.append([p.name,
-                             p.date_issue.isoformat() if p.date_issue else '',
-                             p.department or '', p.contractor or '',
-                             p.nature_of_work or '', p.type_text or '',
-                             p.location or '',
-                             dict(p._fields['status'].selection).get(p.status, '')])
-        sheet('PTW Register',
-              ['PTW No.', 'Date', 'Department', 'Company / Contractor',
-               'Nature of Work', 'Permit Type', 'Location', 'Status'],
-              ptw_rows,
-              [12, 14, 18, 24, 28, 34, 24, 10])
-
-        fig_rows = []
-        for f in self.env['hse.monthly.figure'].search(
-                [('year', '=', year)], order='month'):
-            fig_rows.append([f.label, f.man_hours, f.planned_inspections,
-                             f.completed_inspections, f.toolbox_talks,
-                             f.ptw_issued, f.training_hours, f.audit_score])
-        sheet('Leading Indicators',
-              ['Month', 'Man-hours', 'Insp. Planned', 'Insp. Completed',
-               'Talks', 'PTW Issued', 'Training Hours', 'Audit Score'],
-              fig_rows,
-              [16, 14, 14, 16, 10, 12, 16, 14])
+        wf_sheet('Injury Log', 'injury_pdf',
+                 [12, 14, 22, 18, 20, 14, 10, 60])
+        wf_sheet('Near Miss Log', 'near_miss_pdf',
+                 [14, 14, 18, 12, 22, 10, 60])
+        wf_sheet('UnsafeAct Condition Log', 'uac_pdf',
+                 [16, 14, 20, 22, 20, 10, 60])
+        wf_sheet('Incident Log', 'incident_pdf',
+                 [14, 14, 18, 18, 22, 18, 10, 60])
+        wf_sheet('Corrective Actions', 'ca_pdf',
+                 [10, 18, 60, 20, 14, 12, 14, 40, 10])
+        wf_sheet('PTW Register', 'ptw_pdf',
+                 [12, 14, 18, 24, 28, 34, 24, 10])
+        wf_sheet('Leading Indicators', 'figures_pdf',
+                 [16, 14, 14, 16, 10, 12, 16, 14])
 
         # ---------------- Data health ----------------
         hs = wb.add_worksheet('Data Health')

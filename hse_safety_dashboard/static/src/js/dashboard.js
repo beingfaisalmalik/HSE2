@@ -5,9 +5,6 @@ import { Component, useState, onWillStart, useRef, useEffect } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 
-const MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
 /**
  * Format a number like the Excel workbook: #,##0 for counts, 0.00 for rates.
  */
@@ -62,6 +59,7 @@ export class HseSafetyDashboard extends Component {
         this.state = useState({
             mode: this.props.action.context?.default_mode === "yearly" ? "yearly" : "monthly",
             year: null,
+            years: [],
             monthNo: null,
             months: [],
             data: null,
@@ -90,20 +88,32 @@ export class HseSafetyDashboard extends Component {
         const settings = await this.orm.call(
             "hse.safety.settings", "get_settings", [], {});
         this.state.year = settings.reporting_year;
-        this.state.months = MONTH_LABELS.map((m, i) => ({
-            no: i + 1, label: `${m}-${String(this.state.year).slice(2)}`,
-        }));
     }
 
     async loadDashboard() {
         this.state.loading = true;
         const data = await this.orm.call(
-            "hse.kpi.engine", "get_dashboard", [],
+            "hse.kpi.engine", "get_dashboard", [], 
             { year: this.state.year, month_no: this.state.monthNo || undefined });
         this.state.data = data;
+        this.state.year = data.year;
+        // Dynamic options straight from the data — nothing hardcoded
+        this.state.years = (data.years || []).map((y) => ({ no: y, label: String(y) }));
         this.state.monthNo = data.month_no;
-        this.state.months = data.months.map((m) => ({ no: m.month_no, label: m.label }));
+        const labelByNo = {};
+        for (const m of data.months) { labelByNo[m.month_no] = m.label; }
+        this.state.months = (data.available_months || []).map((no) => ({
+            no, label: labelByNo[no] || String(no),
+        }));
         this.state.loading = false;
+    }
+
+    async onYearChange(ev) {
+        this.state.year = parseInt(ev.target.value, 10);
+        // Let the engine pick the best month for the new year (current
+        // month when it holds data, otherwise the latest month with data).
+        this.state.monthNo = null;
+        await this.loadDashboard();
     }
 
     async onMonthChange(ev) {

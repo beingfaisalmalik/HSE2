@@ -51,10 +51,18 @@
         <field name="model">hse.report.wizard</field>
         <field name="arch" type="xml">
             <form string="Generate Safety Reports">
+                <div class="alert alert-info" role="alert">
+                    The <b>year</b> list is built from the registers
+                    themselves (data-driven); the <b>month</b>,
+                    <b>department</b> and <b>status</b> filters apply to the
+                    workflow/register reports and the Excel workbook.
+                </div>
                 <group>
                     <field name="report_type"/>
                     <field name="year"/>
                     <field name="month"/>
+                    <field name="department"/>
+                    <field name="status_filter"/>
                 </group>
                 <footer>
                     <button name="action_generate" type="object"
@@ -74,6 +82,72 @@
         <field name="target">new</field>
     </record>
 
+    <!-- Per-workflow shortcuts: each opens the wizard pre-set to that
+         report so every workflow report is directly visible in the menu. -->
+    <record id="action_hse_report_kpi" model="ir.actions.act_window">
+        <field name="name">KPI Calculations Report</field>
+        <field name="res_model">hse.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': 'kpi_pdf'}</field>
+    </record>
+    <record id="action_hse_report_leading" model="ir.actions.act_window">
+        <field name="name">Leading Indicators Report</field>
+        <field name="res_model">hse.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': 'leading_pdf'}</field>
+    </record>
+    <record id="action_hse_report_injury" model="ir.actions.act_window">
+        <field name="name">Injury Log Report</field>
+        <field name="res_model">hse.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': 'injury_pdf'}</field>
+    </record>
+    <record id="action_hse_report_near_miss" model="ir.actions.act_window">
+        <field name="name">Near-Miss Log Report</field>
+        <field name="res_model">hse.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': 'near_miss_pdf'}</field>
+    </record>
+    <record id="action_hse_report_uac" model="ir.actions.act_window">
+        <field name="name">Unsafe Act / Condition Report</field>
+        <field name="res_model">hse.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': 'uac_pdf'}</field>
+    </record>
+    <record id="action_hse_report_incident" model="ir.actions.act_window">
+        <field name="name">Incident Log Report</field>
+        <field name="res_model">hse.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': 'incident_pdf'}</field>
+    </record>
+    <record id="action_hse_report_ca" model="ir.actions.act_window">
+        <field name="name">Corrective Actions Report</field>
+        <field name="res_model">hse.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': 'ca_pdf'}</field>
+    </record>
+    <record id="action_hse_report_ptw" model="ir.actions.act_window">
+        <field name="name">PTW Register Report</field>
+        <field name="res_model">hse.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': 'ptw_pdf'}</field>
+    </record>
+    <record id="action_hse_report_figures" model="ir.actions.act_window">
+        <field name="name">Monthly Figures Report</field>
+        <field name="res_model">hse.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_report_type': 'figures_pdf'}</field>
+    </record>
+
     <!-- ===================== Reporting menus (after the actions) ======== -->
     <menuitem id="menu_hse_import_excel"
               name="Import Excel Workbook"
@@ -87,4 +161,58 @@
               parent="menu_hse_reporting"
               action="action_hse_report_wizard"
               sequence="20"/>
+
+    <menuitem id="menu_hse_report_kpi"
+              name="KPI Calculations"
+              parent="menu_hse_reporting"
+              action="action_hse_report_kpi"
+              sequence="30"/>
+
+    <menuitem id="menu_hse_report_leading"
+              name="Leading Indicators"
+              parent="menu_hse_reporting"
+              action="action_hse_report_leading"
+              sequence="35"/>
+
+    <!-- One menu entry per workflow — every workflow report is visible -->
+    <menuitem id="menu_hse_workflow_reports"
+              name="Workflow Reports"
+              parent="menu_hse_reporting"
+              sequence="40"/>
+
+    <menuitem id="menu_hse_report_injury"
+              name="Injury Log"
+              parent="menu_hse_workflow_reports"
+              action="action_hse_report_injury"
+              sequence="10"/>
+    <menuitem id="menu_hse_report_near_miss"
+              name="Near-Miss Log"
+              parent="menu_hse_workflow_reports"
+              action="action_hse_report_near_miss"
+              sequence="20"/>
+    <menuitem id="menu_hse_report_uac"
+              name="Unsafe Act / Condition"
+              parent="menu_hse_workflow_reports"
+              action="action_hse_report_uac"
+              sequence="30"/>
+    <menuitem id="menu_hse_report_incident"
+              name="Incident Log"
+              parent="menu_hse_workflow_reports"
+              action="action_hse_report_incident"
+              sequence="40"/>
+    <menuitem id="menu_hse_report_ca"
+              name="Corrective Actions"
+              parent="menu_hse_workflow_reports"
+              action="action_hse_report_ca"
+              sequence="50"/>
+    <menuitem id="menu_hse_report_ptw"
+              name="PTW Register"
+              parent="menu_hse_workflow_reports"
+              action="action_hse_report_ptw"
+              sequence="60"/>
+    <menuitem id="menu_hse_report_figures"
+              name="Monthly Figures"
+              parent="menu_hse_workflow_reports"
+              action="action_hse_report_figures"
+              sequence="70"/>
 </odoo>

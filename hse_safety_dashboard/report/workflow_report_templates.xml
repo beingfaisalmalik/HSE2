@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================= -->
+    <!-- KPI Calculations — printable PDF (landscape)                   -->
+    <!-- Mirrors the Excel 'KPI Calculations' sheet: every KPI per      -->
+    <!-- month plus the YTD rows, computed live by the engine.          -->
+    <!-- ============================================================= -->
+    <template id="report_hse_kpi">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page hse_report">
+                    <t t-set="data" t-value="docs.get_payload()"/>
+                    <t t-set="period" t-value="docs._period_label()"/>
+                    <h2 class="text-center">
+                        <span t-out="data['company']"/> — KPI Calculations
+                    </h2>
+                    <h3 class="text-center" t-out="period"/>
+                    <p class="text-muted text-center">
+                        Report date: <span t-out="data['report_date']"/>
+                        · Rate base: <span t-out="int(data['rate_base'])"/> man-hours
+                        · Rates are n/a in months without man-hours
+                    </p>
+
+                    <t t-set="ytd_rows"
+                       t-value="[('YTD (full year)', data['ytd_full']),
+                                 ('YTD to ' + data['month_label'], data['ytd_to_month'])]"/>
+                    <t t-set="allrows"
+                       t-value="[(m['label'], m) for m in data['months']] + ytd_rows"/>
+
+                    <h4>Injury KPIs &amp; Exposure Rates</h4>
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr class="table-primary">
+                                <th>Month</th><th>Man-hours</th><th>LTI</th>
+                                <th>MTC</th><th>First Aid</th><th>Recordable</th>
+                                <th>All injuries</th><th>Lost workdays</th>
+                                <th>LTIFR</th><th>TRIR</th><th>Severity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="allrows" t-as="rw"
+                                t-att-class="'table-secondary fw-bold' if str(rw[0]).startswith('YTD') else ''">
+                                <td t-out="rw[0]"/>
+                                <td>
+                                    <t t-if="rw[1]['man_hours']" t-out="int(rw[1]['man_hours'])"/>
+                                    <t t-else="">0</t>
+                                </td>
+                                <td t-out="rw[1]['lti']"/><td t-out="rw[1]['mtc']"/>
+                                <td t-out="rw[1]['first_aid']"/>
+                                <td t-out="rw[1]['recordable']"/>
+                                <td t-out="rw[1]['all_injuries']"/>
+                                <td t-out="rw[1]['lost_workdays']"/>
+                                <td t-out="'%0.2f' % rw[1]['ltifr'] if rw[1]['ltifr'] is not None else 'n/a'"/>
+                                <td t-out="'%0.2f' % rw[1]['trir'] if rw[1]['trir'] is not None else 'n/a'"/>
+                                <td t-out="'%0.2f' % rw[1]['severity'] if rw[1]['severity'] is not None else 'n/a'"/>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Observations &amp; Corrective Actions</h4>
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr class="table-primary">
+                                <th>Month</th><th>Near misses</th>
+                                <th>Unsafe acts</th><th>Unsafe cond.</th>
+                                <th>Observations</th><th>Obs. closed</th>
+                                <th>Incidents</th><th>CAs linked</th>
+                                <th>CAs closed</th><th>CAs open</th>
+                                <th>CAs overdue</th><th>CA closure %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="allrows" t-as="rw"
+                                t-att-class="'table-secondary fw-bold' if str(rw[0]).startswith('YTD') else ''">
+                                <td t-out="rw[0]"/>
+                                <td t-out="rw[1]['near_misses']"/>
+                                <td t-out="rw[1]['unsafe_acts']"/>
+                                <td t-out="rw[1]['unsafe_conditions']"/>
+                                <td t-out="rw[1]['observations']"/>
+                                <td t-out="rw[1]['observations_closed']"/>
+                                <td t-out="rw[1]['incidents']"/>
+                                <td t-out="rw[1]['ca_linked']"/>
+                                <td t-out="rw[1]['ca_closed']"/>
+                                <td t-out="rw[1]['ca_open']"/>
+                                <td t-out="rw[1]['ca_overdue']"/>
+                                <td t-out="'{:.0f}%'.format(rw[1]['ca_closure_rate'] * 100) if rw[1]['ca_closure_rate'] is not None else 'n/a'"/>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Leading Indicators &amp; Activity</h4>
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr class="table-primary">
+                                <th>Month</th><th>PTW issued</th>
+                                <th>PTW register</th><th>Talks</th>
+                                <th>Training h</th><th>Insp. planned</th>
+                                <th>Insp. done</th><th>Insp. %</th>
+                                <th>Audit score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="allrows" t-as="rw"
+                                t-att-class="'table-secondary fw-bold' if str(rw[0]).startswith('YTD') else ''">
+                                <td t-out="rw[0]"/>
+                                <td t-out="rw[1]['ptw_issued']"/>
+                                <td>
+                                    <span t-out="rw[1]['ptw_register_rows']"/>
+                                    <span t-if="rw[1]['ptw_register_rows'] != rw[1]['ptw_issued']"
+                                          class="text-danger fw-bold">(differs)</span>
+                                </td>
+                                <td t-out="rw[1]['toolbox_talks']"/>
+                                <td t-out="'%g' % rw[1]['training_hours'] if rw[1]['training_hours'] else '0'"/>
+                                <td t-out="rw[1]['insp_planned']"/>
+                                <td t-out="rw[1]['insp_completed']"/>
+                                <td t-out="'{:.0f}%'.format(rw[1]['insp_compliance'] * 100) if rw[1]['insp_compliance'] is not None else 'n/a'"/>
+                                <td t-out="'%0.2f' % rw[1]['audit_score'] if rw[1]['audit_score'] else 'n/a'"/>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Data Health</h4>
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr>
+                                <th style="width:30px">#</th>
+                                <th style="width:60px">Status</th>
+                                <th style="width:50px">Count</th>
+                                <th>Check</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="data['health']" t-as="chk">
+                                <td t-out="chk['no']"/>
+                                <td>
+                                    <span t-if="chk['ok']" class="text-success">OK</span>
+                                    <span t-else="" class="text-danger fw-bold">REVIEW</span>
+                                </td>
+                                <td t-out="chk['count']"/>
+                                <td>
+                                    <span t-out="chk['label']"/>
+                                    <br/>
+                                    <small class="text-muted" t-out="chk['detail']"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================= -->
+    <!-- Leading Indicators — printable PDF (landscape)                 -->
+    <!-- Mirrors the Excel 'Leading Indicators' sheet.                  -->
+    <!-- ============================================================= -->
+    <template id="report_hse_leading">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page hse_report">
+                    <t t-set="data" t-value="docs.get_payload()"/>
+                    <t t-set="period" t-value="docs._period_label()"/>
+                    <h2 class="text-center">
+                        <span t-out="data['company']"/> — Leading Indicators
+                    </h2>
+                    <h3 class="text-center" t-out="period"/>
+                    <p class="text-muted text-center">
+                        Report date: <span t-out="data['report_date']"/>
+                        · Prevention &amp; preparedness measures — higher is better
+                    </p>
+
+                    <t t-set="ytd_rows"
+                       t-value="[('YTD (full year)', data['ytd_full']),
+                                 ('YTD to ' + data['month_label'], data['ytd_to_month'])]"/>
+                    <t t-set="allrows"
+                       t-value="[(m['label'], m) for m in data['months']] + ytd_rows"/>
+
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr class="table-primary">
+                                <th>Month</th>
+                                <th>Man-hours</th>
+                                <th>Insp. Planned</th>
+                                <th>Insp. Completed</th>
+                                <th>Compliance %</th>
+                                <th>Toolbox Talks</th>
+                                <th>PTW Issued</th>
+                                <th>PTW Register rows</th>
+                                <th>Training Hours</th>
+                                <th>Internal Audit Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="allrows" t-as="rw"
+                                t-att-class="'table-secondary fw-bold' if str(rw[0]).startswith('YTD') else ''">
+                                <td t-out="rw[0]"/>
+                                <td>
+                                    <t t-if="rw[1]['man_hours']" t-out="int(rw[1]['man_hours'])"/>
+                                    <t t-else="">0</t>
+                                </td>
+                                <td t-out="rw[1]['insp_planned']"/>
+                                <td t-out="rw[1]['insp_completed']"/>
+                                <td t-out="'{:.0f}%'.format(rw[1]['insp_compliance'] * 100) if rw[1]['insp_compliance'] is not None else 'n/a'"/>
+                                <td t-out="rw[1]['toolbox_talks']"/>
+                                <td t-out="rw[1]['ptw_issued']"/>
+                                <td>
+                                    <span t-out="rw[1]['ptw_register_rows']"/>
+                                    <span t-if="rw[1]['ptw_register_rows'] != rw[1]['ptw_issued']"
+                                          class="text-danger fw-bold">(differs)</span>
+                                </td>
+                                <td t-out="'%g' % rw[1]['training_hours'] if rw[1]['training_hours'] else '0'"/>
+                                <td t-out="'%0.2f' % rw[1]['audit_score'] if rw[1]['audit_score'] else 'n/a'"/>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="alert alert-info">
+                        <b>How to read:</b> inspection compliance =
+                        completed ÷ planned. PTW register rows are counted
+                        live from the permit register and compared with the
+                        figure typed into Monthly Figures (“differs” marks a
+                        mismatch — see the data-health checks). Audit score
+                        shows n/a when no audit result was entered for the
+                        month.
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================= -->
+    <!-- Workflow register report — one template for all seven          -->
+    <!-- workflows; the wizard record carries report_type, period and   -->
+    <!-- filters.  Undated entries are listed separately, never dropped.-->
+    <!-- ============================================================= -->
+    <template id="report_hse_workflow">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page hse_report">
+                    <t t-set="wf" t-value="docs.get_workflow()"/>
+                    <h2 class="text-center">
+                        <span t-out="wf['title']"/>
+                    </h2>
+                    <h3 class="text-center" t-out="wf['period']"/>
+                    <p class="text-muted text-center" t-out="wf['filters']"/>
+                    <p class="text-muted text-center">
+                        Report date: <span t-out="wf['report_date']"/>
+                    </p>
+
+                    <!-- Tables are rendered in chunks of 10 rows with the
+                         header repeated: each chunk always fits on a page,
+                         so the PDF engine never has to split a table (a
+                         split of a wide styled table aborts the render). -->
+                    <t t-if="wf['rows']">
+                        <t t-set="rowchunks"
+                           t-value="[wf['rows'][i:i + 10] for i in range(0, len(wf['rows']), 10)]"/>
+                        <t t-foreach="rowchunks" t-as="chunk">
+                            <table class="table table-sm table-bordered table-striped">
+                                <thead>
+                                    <tr class="table-primary">
+                                        <th t-foreach="wf['headers']" t-as="h" t-out="h"/>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="chunk" t-as="row">
+                                        <td t-foreach="row" t-as="cell" t-out="cell"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                        <p class="fw-bold">
+                            <span t-out="wf['count']"/> record(s) in the selected period.
+                        </p>
+                    </t>
+                    <div t-else="" class="alert alert-info"
+                         t-out="wf['empty_note']"/>
+
+                    <t t-if="wf['unmatched']">
+                        <h4 class="text-danger">
+                            Entries that cannot be placed inside the period
+                            (<span t-out="wf['unmatched_count']"/>)
+                        </h4>
+                        <p class="text-muted">
+                            These rows have no readable date (or a corrective
+                            action whose related log entry has none), so they
+                            cannot be filtered by period. They are shown here
+                            instead of being dropped — no data is ever
+                            invented.
+                        </p>
+                        <t t-set="unmatchedchunks"
+                           t-value="[wf['unmatched'][i:i + 10] for i in range(0, len(wf['unmatched']), 10)]"/>
+                        <t t-foreach="unmatchedchunks" t-as="chunk">
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr class="table-warning">
+                                        <th t-foreach="wf['unmatched_headers']" t-as="h" t-out="h"/>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="chunk" t-as="row">
+                                        <td t-foreach="row" t-as="cell" t-out="cell"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

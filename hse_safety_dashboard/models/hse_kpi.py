@@ -59,6 +59,76 @@ class HseKpiEngine(models.AbstractModel):
         return 0
 
     # ------------------------------------------------------------------
+    # Dynamic period selectors — years / months driven by the data itself
+    # ------------------------------------------------------------------
+    @api.model
+    def _dated_models(self):
+        """(model, date-field) pairs that carry a stored period date.
+        (Corrective actions are handled separately: their related_date is a
+        non-stored compute, so it must be read record-by-record — domains on
+        non-stored fields are not reliable.)"""
+        return [
+            ('hse.injury.log', 'date'),
+            ('hse.near.miss.log', 'date'),
+            ('hse.uac.log', 'date'),
+            ('hse.incident.log', 'date'),
+            ('hse.ptw.register', 'date_issue'),
+        ]
+
+    @api.model
+    def _ca_dates(self):
+        """Linked-entry dates of all corrective actions (non-stored compute)."""
+        return [ca.related_date
+                for ca in self.env['hse.corrective.action'].search([])
+                if ca.related_date]
+
+    @api.model
+    def available_years(self):
+        """Every year present in any register or monthly figure, merged with
+        the configured reporting year and the current year so the selector is
+        never empty.  Newest first — pure data, nothing hardcoded."""
+        years = set()
+        for model, fname in self._dated_models():
+            for d in self.env[model].search(
+                    [(fname, '!=', False)]).mapped(fname):
+                if d:
+                    years.add(d.year)
+        for d in self._ca_dates():
+            years.add(d.year)
+        for y in self.env['hse.monthly.figure'].search([]).mapped('year'):
+            if y:
+                years.add(int(y))
+        settings = self.env['hse.safety.settings'].get_settings()
+        years.add(settings.reporting_year)
+        years.add(fields.Date.context_today(self).year)
+        return sorted(years, reverse=True)
+
+    @api.model
+    def available_months(self, year):
+        """Months of `year` that actually hold data (events, permits,
+        dated corrective actions or a monthly figure).  When the year has no
+        data at all, fall back to all twelve calendar months so the selector
+        still offers a choice."""
+        year = int(year)
+        months = set()
+        for model, fname in self._dated_models():
+            recs = self.env[model].search([
+                (fname, '>=', date(year, 1, 1)),
+                (fname, '<=', date(year, 12, 31))])
+            for d in recs.mapped(fname):
+                if d:
+                    months.add(d.month)
+        for d in self._ca_dates():
+            if d.year == year:
+                months.add(d.month)
+        for f in self.env['hse.monthly.figure'].search([('year', '=', year)]):
+            try:
+                months.add(int(f.month))
+            except (TypeError, ValueError):
+                continue
+        return sorted(months) or list(range(1, 13))
+
+    # ------------------------------------------------------------------
     # One month — mirror of Calc row 17
     # ------------------------------------------------------------------
     @api.model
@@ -404,7 +474,7 @@ class HseKpiEngine(models.AbstractModel):
                 "Unsafe-act log entries whose Type is neither 'Unsafe Act' nor 'Unsafe Condition'"),
                 _("Type is a controlled drop-down in Odoo")),
             _row(9, c9, _(
-                "Months where PTW register rows ≠ 'Permits to Work Issued' typed in Monthly Figures"),
+                "Months where PTW register rows do not match 'Permits to Work Issued' typed in Monthly Figures"),
                 _("Dashboard uses the Leading Indicators figure; register count shown beside it")),
             _row(10, c10, _(
                 'KPI Calculations sheet totals that differ from the dashboard (LTI, Recordable, Near-miss, Violations)'),
@@ -417,10 +487,19 @@ class HseKpiEngine(models.AbstractModel):
     @api.model
     def get_dashboard(self, year=None, month_no=None):
         settings = self.env['hse.safety.settings'].get_settings()
-        year = year or settings.reporting_year
+        years = self.available_years()
+        year = int(year) if year else settings.reporting_year
+        if year not in years:          # explicit year outside the data wins
+            years = sorted(set(years) | {year}, reverse=True)
+        avail_months = self.available_months(year)
         if not month_no:
+            # Default: current month when the data covers it, otherwise the
+            # latest month that actually holds data.  An explicit month_no is
+            # always honoured verbatim (the wizard offers every calendar month).
             today = fields.Date.context_today(self)
-            month_no = today.month if today.year == year else 12
+            month_no = (today.month if today.year == year
+                        and today.month in avail_months
+                        else max(avail_months))
         data = self._load(year)
         y = self.year_stats(year, month_no, settings.rate_base, data)
         checks = self.health_checks(year, month_no, data)
@@ -454,6 +533,8 @@ class HseKpiEngine(models.AbstractModel):
 
         return {
             'year': year,
+            'years': years,                      # dynamic year options
+            'available_months': avail_months,    # dynamic month options
             'month_no': month_no,
             'month_label': self.month_label(year, month_no),
             'month_name': date(year, month_no, 1).strftime('%B %Y'),
